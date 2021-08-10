@@ -34,6 +34,7 @@ fun Greeting(name: String, lastName: String) {
     Column{
         Text(text = "Hello $name!")
         Spacer(modifier = Modifier.width(8.dp))
+        Spacer(modifier = Modifier.width(8.dp))
         Text(text = "Hello $lastName!")
     }
 
