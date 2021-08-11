@@ -22,7 +22,7 @@ class MainActivity : ComponentActivity() {
             Compose2Theme {
                 // A surface container using the 'background' color from the theme
                 Surface(color = MaterialTheme.colors.background) {
-                    Greeting("WOrld!!!", "Android")
+                    Greeting("World!!!", "Android")
                 }
             }
         }
