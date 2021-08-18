@@ -54,7 +54,7 @@ class MainActivity : ComponentActivity() {
                         NavHost(navController = navController,
                             startDestination = "list"){
                             composable("list"){ ListScreen(navController)}
-                            composable("search"){ SearchScreen()}
+                            composable("search"){ SearchScreen(navController)}
                             composable("push"){ PushScreen()}
                             composable("details"){ DetailsScreen()}
                         }
