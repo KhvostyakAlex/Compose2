@@ -3,6 +3,7 @@ package ru.leroymerlin.internal.compose2
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
@@ -16,10 +17,12 @@ import androidx.navigation.NavHost
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import cru.leroymerlin.internal.compose2.ui.screens.cards.CardsViewModel
 import ru.leroymerlin.internal.compose2.ui.screens.DetailsScreen
 import ru.leroymerlin.internal.compose2.ui.screens.ListScreen
 import ru.leroymerlin.internal.compose2.ui.screens.PushScreen
 import ru.leroymerlin.internal.compose2.ui.screens.SearchScreen
+import ru.leroymerlin.internal.compose2.ui.screens.cards.CardsScreen
 
 
 import ru.leroymerlin.internal.compose2.ui.theme.Compose2Theme
@@ -27,6 +30,7 @@ import ru.leroymerlin.internal.compose2.ui.theme.Compose2Theme
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val cardsViewModel by viewModels<CardsViewModel>()
         setContent {
             Compose2Theme (darkTheme = false){
                 // A surface container using the 'background' color from the theme
@@ -34,7 +38,7 @@ class MainActivity : ComponentActivity() {
                    // Greeting("World!!!", "Android")
 
                     val navController = rememberNavController()
-                    val bottomItems = listOf("list", "search", "push")
+                    val bottomItems = listOf("list", "search", "push", "cards")
                     Scaffold(
                         bottomBar = {
                             BottomNavigation {
@@ -56,6 +60,7 @@ class MainActivity : ComponentActivity() {
                             composable("list"){ ListScreen(navController)}
                             composable("search"){ SearchScreen(navController)}
                             composable("push"){ PushScreen()}
+                            composable("cards"){ CardsScreen(cardsViewModel) }
                             composable("details"){ DetailsScreen()}
                         }
                         //Greeting("World!!!", "Android")
