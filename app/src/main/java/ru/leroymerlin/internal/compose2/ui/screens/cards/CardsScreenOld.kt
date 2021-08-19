@@ -1,7 +1,6 @@
 package ru.leroymerlin.internal.compose2.ui.screens.cards
 
 import android.annotation.SuppressLint
-import android.util.Log
 import androidx.compose.animation.*
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.clickable
@@ -14,7 +13,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
@@ -27,11 +25,12 @@ import cru.leroymerlin.internal.compose2.ui.screens.cards.CardsViewModel
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import ru.leroymerlin.internal.compose2.R
-
+import ru.leroymerlin.internal.compose2.ui.theme.cardCollapsedBackgroundColor
+import ru.leroymerlin.internal.compose2.ui.theme.cardExpandedBackgroundColor
 
 @ExperimentalCoroutinesApi
 @Composable
-fun CardsScreen(viewModel: CardsViewModel) {
+fun CardsScreenOld(viewModel: CardsViewModel) {
     val cards = viewModel.cards.collectAsState()
     val expandedCardIds = viewModel.expandedCardIdsList.collectAsState()
     Scaffold(
@@ -56,7 +55,7 @@ fun CardsScreen(viewModel: CardsViewModel) {
 
 @SuppressLint("UnusedTransitionTargetStateParameter")
 @Composable
-fun ExpandableCard(
+fun ExpandableCardOld(
     card: ExpandableCardModel,
     onCardArrowClick: () -> Unit,
     expanded: Boolean,
@@ -67,6 +66,32 @@ fun ExpandableCard(
         }
     }
     val transition = updateTransition(transitionState, label = "transition")
+    val cardBgColor by transition.animateColor({
+        tween(durationMillis = EXPAND_ANIMATION_DURATION)
+    }, label = "bgColorTransition") {
+       // if (expanded) Color.White else cardCollapsedBackgroundColor //другой фон при раскрытии
+        Color.White
+    }
+    val cardPaddingHorizontal by transition.animateDp({
+        tween(durationMillis = EXPAND_ANIMATION_DURATION)
+    }, label = "paddingTransition") {
+        if (expanded) 12.dp else 12.dp
+    }
+    val cardElevation by transition.animateDp({
+        tween(durationMillis = EXPAND_ANIMATION_DURATION)
+    }, label = "elevationTransition") {
+        if (expanded) 24.dp else 4.dp
+    }
+
+    val cardRoundedCorners by transition.animateDp({
+        tween(
+            durationMillis = EXPAND_ANIMATION_DURATION,
+            easing = FastOutSlowInEasing
+        )
+    }, label = "cornersTransition") {
+       // if (expanded) 8.dp else 8.dp
+        8.dp
+    }
 
     val arrowRotationDegree by transition.animateFloat({
         tween(durationMillis = EXPAND_ANIMATION_DURATION)
@@ -75,29 +100,25 @@ fun ExpandableCard(
     }
 
     Card(
-        backgroundColor = Color.White,
+        backgroundColor = cardBgColor,
         contentColor = Color(
             ContextCompat.getColor(
                 LocalContext.current,
                 R.color.black
             )
         ),
-        elevation = 4.dp,
-        shape = RoundedCornerShape(8.dp),
+        elevation = cardElevation,
+        shape = RoundedCornerShape(cardRoundedCorners),
         modifier = Modifier
             .fillMaxWidth()
             .padding(
-                horizontal = 12.dp,
+                horizontal = cardPaddingHorizontal,
                 vertical = 8.dp
             )
     ) {
         Column {
-            Box (modifier = Modifier
-                .clickable(onClick = onCardArrowClick)
-            ){
-                CardTitle(title = card.title
-                 //   onClick = onCardArrowClick
-                )
+            Box() {
+                CardTitle(title = card.title/*, onClick = onCardArrowClick*/)
                 CardArrow(
                     degrees = arrowRotationDegree,
                     onClick = onCardArrowClick
@@ -110,7 +131,7 @@ fun ExpandableCard(
 }
 
 @Composable
-fun CardArrow(
+fun CardArrowOld(
     degrees: Float,
     onClick: () -> Unit
 ) {
@@ -127,20 +148,19 @@ fun CardArrow(
 }
 
 @Composable
-fun CardTitle(title: String/*, onClick: () -> Unit*/) {
+fun CardTitleOld(title: String) {
     Text(
         text = title,
         modifier = Modifier
             .fillMaxWidth()
             .padding(8.dp),
-            //.clickable(onClick = onClick),
-        textAlign = TextAlign.End,
+        textAlign = TextAlign.Start,
     )
 }
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
-fun ExpandableContent(
+fun ExpandableContentOld(
     visible: Boolean = true,
 ) {
     val enterFadeIn = remember {
@@ -175,11 +195,11 @@ fun ExpandableContent(
             Row() {
                 Text(
                     text = "Здесь будут данные",
-                    textAlign = TextAlign.Start
+                    textAlign = TextAlign.Center
                 )
                 Text(
                     text = "Здесь будут данные",
-                    textAlign = TextAlign.End
+                    textAlign = TextAlign.Center
                 )
             }
             Text(
