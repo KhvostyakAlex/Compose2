@@ -77,10 +77,7 @@ fun ExpandableCard(
     Card(
         backgroundColor = Color.White,
         contentColor = Color(
-            ContextCompat.getColor(
-                LocalContext.current,
-                R.color.black
-            )
+            ContextCompat.getColor(LocalContext.current, R.color.black)
         ),
         elevation = 4.dp,
         shape = RoundedCornerShape(8.dp),
@@ -91,9 +88,12 @@ fun ExpandableCard(
                 vertical = 8.dp
             )
     ) {
-        Column {
+        Column (
+           // horizontalAlignment = Alignment.CenterHorizontally
+                ){
             Box (modifier = Modifier
                 .clickable(onClick = onCardArrowClick)
+
             ){
                 CardTitle(title = card.title
                  //   onClick = onCardArrowClick
@@ -114,28 +114,47 @@ fun CardArrow(
     degrees: Float,
     onClick: () -> Unit
 ) {
-    IconButton(
-        onClick = onClick,
-        content = {
-            Icon(
-                painter = painterResource(id = R.drawable.ic_expand_less_24),
-                contentDescription = "Expandable Arrow",
-                modifier = Modifier.rotate(degrees)
-            )
-        }
-    )
+    Column(
+        ) {
+
+
+        IconButton(
+            onClick = onClick,
+            modifier = Modifier
+                ,
+                    //.absolutePadding(left = 310.dp),
+
+                    content = {
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_expand_less_24),
+                    contentDescription = "Expandable Arrow",
+                    modifier = Modifier
+                        .rotate(degrees)
+
+
+                )
+            }
+        )
+    }
 }
 
 @Composable
 fun CardTitle(title: String/*, onClick: () -> Unit*/) {
-    Text(
-        text = title,
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(8.dp),
-            //.clickable(onClick = onClick),
-        textAlign = TextAlign.End,
-    )
+
+
+
+       Text(
+           text = title,
+           modifier = Modifier
+               .fillMaxWidth()
+               .padding(8.dp),
+
+
+           //.clickable(onClick = onClick),
+           textAlign = TextAlign.Start,
+
+           )
+
 }
 
 @OptIn(ExperimentalAnimationApi::class)
