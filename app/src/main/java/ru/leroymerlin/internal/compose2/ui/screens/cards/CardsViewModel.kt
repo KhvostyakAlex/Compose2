@@ -23,7 +23,7 @@ class CardsViewModel : ViewModel() {
     private fun getFakeData() {
         viewModelScope.launch(Dispatchers.Default) {
             val testList = arrayListOf<ExpandableCardModel>()
-            repeat(20) { testList += ExpandableCardModel(id = it, title = "Card $it") }
+            repeat(3) { testList += ExpandableCardModel(id = it, title = "Карточка $it") }
             _cards.emit(testList)
         }
     }

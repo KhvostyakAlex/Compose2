@@ -68,12 +68,12 @@ fun ExpandableCard(
     val cardBgColor by transition.animateColor({
         tween(durationMillis = EXPAND_ANIMATION_DURATION)
     }, label = "bgColorTransition") {
-        if (expanded) cardExpandedBackgroundColor else cardCollapsedBackgroundColor
+        if (expanded) Color.White else cardCollapsedBackgroundColor
     }
     val cardPaddingHorizontal by transition.animateDp({
         tween(durationMillis = EXPAND_ANIMATION_DURATION)
     }, label = "paddingTransition") {
-        if (expanded) 48.dp else 24.dp
+        if (expanded) 12.dp else 12.dp
     }
     val cardElevation by transition.animateDp({
         tween(durationMillis = EXPAND_ANIMATION_DURATION)
@@ -86,7 +86,7 @@ fun ExpandableCard(
             easing = FastOutSlowInEasing
         )
     }, label = "cornersTransition") {
-        if (expanded) 0.dp else 16.dp
+        if (expanded) 8.dp else 8.dp
     }
     val arrowRotationDegree by transition.animateFloat({
         tween(durationMillis = EXPAND_ANIMATION_DURATION)
@@ -147,8 +147,8 @@ fun CardTitle(title: String) {
         text = title,
         modifier = Modifier
             .fillMaxWidth()
-            .padding(16.dp),
-        textAlign = TextAlign.Center,
+            .padding(8.dp),
+        textAlign = TextAlign.Start,
     )
 }
 
@@ -185,9 +185,19 @@ fun ExpandableContent(
         exit = exitCollapse + exitFadeOut
     ) {
         Column(modifier = Modifier.padding(8.dp)) {
-            Spacer(modifier = Modifier.heightIn(100.dp))
+            Spacer(modifier = Modifier.heightIn(4.dp))
+            Row() {
+                Text(
+                    text = "Здесь будут данные",
+                    textAlign = TextAlign.Center
+                )
+                Text(
+                    text = "Здесь будут данные",
+                    textAlign = TextAlign.Center
+                )
+            }
             Text(
-                text = "Expandable content here",
+                text = "Здесь будут данные",
                 textAlign = TextAlign.Center
             )
         }
