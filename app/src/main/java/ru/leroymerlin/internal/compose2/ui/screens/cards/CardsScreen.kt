@@ -68,7 +68,8 @@ fun ExpandableCard(
     val cardBgColor by transition.animateColor({
         tween(durationMillis = EXPAND_ANIMATION_DURATION)
     }, label = "bgColorTransition") {
-        if (expanded) Color.White else cardCollapsedBackgroundColor
+       // if (expanded) Color.White else cardCollapsedBackgroundColor //другой фон при раскрытии
+        Color.White
     }
     val cardPaddingHorizontal by transition.animateDp({
         tween(durationMillis = EXPAND_ANIMATION_DURATION)
@@ -80,14 +81,17 @@ fun ExpandableCard(
     }, label = "elevationTransition") {
         if (expanded) 24.dp else 4.dp
     }
+
     val cardRoundedCorners by transition.animateDp({
         tween(
             durationMillis = EXPAND_ANIMATION_DURATION,
             easing = FastOutSlowInEasing
         )
     }, label = "cornersTransition") {
-        if (expanded) 8.dp else 8.dp
+       // if (expanded) 8.dp else 8.dp
+        8.dp
     }
+
     val arrowRotationDegree by transition.animateFloat({
         tween(durationMillis = EXPAND_ANIMATION_DURATION)
     }, label = "rotationDegreeTransition") {
@@ -99,7 +103,7 @@ fun ExpandableCard(
         contentColor = Color(
             ContextCompat.getColor(
                 LocalContext.current,
-                R.color.colorDayNightPurple
+                R.color.black
             )
         ),
         elevation = cardElevation,
@@ -113,11 +117,12 @@ fun ExpandableCard(
     ) {
         Column {
             Box {
+                CardTitle(title = card.title)
                 CardArrow(
                     degrees = arrowRotationDegree,
                     onClick = onCardArrowClick
                 )
-                CardTitle(title = card.title)
+
             }
             ExpandableContent(visible = expanded)
         }
@@ -135,7 +140,7 @@ fun CardArrow(
             Icon(
                 painter = painterResource(id = R.drawable.ic_expand_less_24),
                 contentDescription = "Expandable Arrow",
-                modifier = Modifier.rotate(degrees),
+                modifier = Modifier.rotate(degrees)
             )
         }
     )
