@@ -1,4 +1,4 @@
-package ru.leroymerlin.internal.compose2.ui.screens.cards
+package values
 
 const val EXPAND_ANIMATION_DURATION = 300
 const val COLLAPSE_ANIMATION_DURATION = 300

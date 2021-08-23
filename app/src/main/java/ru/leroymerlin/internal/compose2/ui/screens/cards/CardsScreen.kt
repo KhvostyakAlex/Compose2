@@ -1,7 +1,6 @@
 package ru.leroymerlin.internal.compose2.ui.screens.cards
 
 import android.annotation.SuppressLint
-import android.util.Log
 import androidx.compose.animation.*
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.clickable
@@ -22,11 +21,16 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
 import cru.leroymerlin.internal.compose2.ui.screens.cards.CardsViewModel
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import ru.leroymerlin.internal.compose2.R
+import values.COLLAPSE_ANIMATION_DURATION
+import values.EXPAND_ANIMATION_DURATION
+import values.FADE_IN_ANIMATION_DURATION
+import values.FADE_OUT_ANIMATION_DURATION
 
 
 @ExperimentalCoroutinesApi
@@ -46,8 +50,8 @@ fun CardsScreen(viewModel: CardsViewModel) {
             itemsIndexed(cards.value) { _, card ->
                 ExpandableCard(
                     card = card,
-                    onCardArrowClick = { viewModel.onCardArrowClicked(card.id) },
-                    expanded = expandedCardIds.value.contains(card.id),
+                    onCardArrowClick = { viewModel.onCardArrowClicked(card.account) },
+                    expanded = expandedCardIds.value.contains(card.account),
                 )
             }
         }
@@ -76,35 +80,38 @@ fun ExpandableCard(
 
     Card(
         backgroundColor = Color.White,
-        contentColor = Color(
-            ContextCompat.getColor(LocalContext.current, R.color.black)
-        ),
+        contentColor = Color(ContextCompat.getColor(LocalContext.current, R.color.black)),
         elevation = 4.dp,
         shape = RoundedCornerShape(8.dp),
         modifier = Modifier
             .fillMaxWidth()
             .padding(
-                horizontal = 12.dp,
-                vertical = 8.dp
+                horizontal = 8.dp,
+                vertical = 4.dp
             )
     ) {
-        Column (
-           // horizontalAlignment = Alignment.CenterHorizontally
+        Column ( // horizontalAlignment = Alignment.CenterHorizontally
                 ){
             Box (modifier = Modifier
                 .clickable(onClick = onCardArrowClick)
-
             ){
-                CardTitle(title = card.title
-                 //   onClick = onCardArrowClick
-                )
-                CardArrow(
-                    degrees = arrowRotationDegree,
-                    onClick = onCardArrowClick
-                )
-
+                Row() {
+                    Column(Modifier
+                        .weight(1f)
+                    ) {
+                        CardTitle(title = "${card.firstName} ${card.lastName}")
+                    }
+                    Column(Modifier
+                        .weight(1f)
+                    ) {
+                        CardOrgUnitName(title = "${card.orgUnitName}")
+                    }
+                    Column() {
+                        CardArrow(degrees = arrowRotationDegree, onClick = onCardArrowClick)
+                    }
+                }
             }
-            ExpandableContent(visible = expanded)
+            ExpandableContent(visible = expanded, card = card)
         }
     }
 }
@@ -114,24 +121,15 @@ fun CardArrow(
     degrees: Float,
     onClick: () -> Unit
 ) {
-    Column(
-        ) {
-
-
+    Column() {
         IconButton(
             onClick = onClick,
-            modifier = Modifier
-                ,
-                    //.absolutePadding(left = 310.dp),
-
                     content = {
                 Icon(
                     painter = painterResource(id = R.drawable.ic_expand_less_24),
                     contentDescription = "Expandable Arrow",
                     modifier = Modifier
                         .rotate(degrees)
-
-
                 )
             }
         )
@@ -140,20 +138,20 @@ fun CardArrow(
 
 @Composable
 fun CardTitle(title: String/*, onClick: () -> Unit*/) {
-
-
-
        Text(
            text = title,
-           modifier = Modifier
-               .fillMaxWidth()
-               .padding(8.dp),
-
-
-           //.clickable(onClick = onClick),
+           modifier = Modifier.padding(8.dp),
            textAlign = TextAlign.Start,
-
            )
+}
+@Composable
+fun CardOrgUnitName(title: String/*, onClick: () -> Unit*/) {
+    Text(
+        text = title,
+        modifier = Modifier.padding(8.dp),
+        textAlign = TextAlign.Start,
+        fontSize = 12.sp
+    )
 
 }
 
@@ -161,6 +159,7 @@ fun CardTitle(title: String/*, onClick: () -> Unit*/) {
 @Composable
 fun ExpandableContent(
     visible: Boolean = true,
+    card: ExpandableCardModel,
 ) {
     val enterFadeIn = remember {
         fadeIn(
@@ -189,21 +188,42 @@ fun ExpandableContent(
         enter = enterExpand + enterFadeIn,
         exit = exitCollapse + exitFadeOut
     ) {
-        Column(modifier = Modifier.padding(8.dp)) {
-            Spacer(modifier = Modifier.heightIn(4.dp))
-            Row() {
+        Column(modifier = Modifier
+            .padding(start = 16.dp, end = 8.dp, bottom = 8.dp)
+
+        ) {
+           // Spacer(modifier = Modifier.heightIn(2.dp))
+
                 Text(
-                    text = "Здесь будут данные",
-                    textAlign = TextAlign.Start
+                    text = "LDAP - ${card.account}",
+                    textAlign = TextAlign.Start,
+                    fontSize = 12.sp
                 )
                 Text(
-                    text = "Здесь будут данные",
-                    textAlign = TextAlign.End
+                    text = "№Тел ${card.workPhone}",
+                    textAlign = TextAlign.Start,
+                    fontSize = 12.sp
                 )
-            }
             Text(
-                text = "Здесь будут данные",
-                textAlign = TextAlign.Center
+                text = "№Тел ${card.mobilePhone}",
+                textAlign = TextAlign.Start,
+                fontSize = 12.sp
+            )
+
+                Text(
+                    text = card.workEmail,
+                    textAlign = TextAlign.Start,
+                    fontSize = 12.sp
+                )
+            Text(
+                text = "Должность - ${card.jobTitle}",
+                textAlign = TextAlign.Start,
+                fontSize = 12.sp
+            )
+            Text(
+                text = card.orgUnitName,
+                textAlign = TextAlign.Start,
+                fontSize = 12.sp
             )
         }
     }

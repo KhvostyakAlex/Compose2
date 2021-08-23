@@ -36,7 +36,7 @@ fun SearchScreen(navController: NavController, viewModel: CardsViewModel){
 
 
         Column {
-            Text("Search Screen", modifier = Modifier.padding(24.dp))
+            Text("Поиск по сотруднику", modifier = Modifier.padding(24.dp))
 
             Row (
                // horizontalArrangement = Arrangement.SpaceAround
@@ -70,8 +70,8 @@ fun SearchScreen(navController: NavController, viewModel: CardsViewModel){
                     itemsIndexed(cards.value) { _, card ->
                         ExpandableCard(
                             card = card,
-                            onCardArrowClick = { viewModel.onCardArrowClicked(card.id) },
-                            expanded = expandedCardIds.value.contains(card.id),
+                            onCardArrowClick = { viewModel.onCardArrowClicked(card.account) },
+                            expanded = expandedCardIds.value.contains(card.account),
                         )
                     }
                 }
