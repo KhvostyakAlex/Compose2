@@ -8,6 +8,8 @@ import androidx.compose.material.Card
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontSynthesis.Companion.All
@@ -17,6 +19,9 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun PushScreen(){
     Scaffold() {
+
+        val bottomItems = listOf("list", "search", "push", "cards")
+        val textStateLogin = remember { mutableStateOf("") }
         Text("Push Screen", modifier = Modifier.padding(24.dp))
         Card(elevation = 8.dp,
         backgroundColor = Color.White,
@@ -24,8 +29,12 @@ fun PushScreen(){
         ) {
             Row(horizontalArrangement = Arrangement.SpaceBetween) {
                 //CardTitle(title = card.title)
-                Text("Hello")
-                Text("Hello")
+                AutoCompleteText("value: String",
+                    { textStateLogin.value = it },
+                    { textStateLogin.value = it },
+                Modifier,
+                    null,
+                bottomItems)
 
                 // CardArrow(degrees = arrowRotationDegree, onClick = onCardArrowClick)
 

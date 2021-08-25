@@ -47,7 +47,7 @@ fun SearchScreen(navController: NavController, viewModel: CardsViewModel){
                     onValueChange = { value -> textState.value = value},
                     placeholder = {Text("Ввведи Фамилию/LDAP")},
                     trailingIcon = { if(textState.value.length ==8){ Text("V")} }, //при вводе 8 знаков появится иконка
-                    modifier = Modifier.padding(8.dp)
+                    modifier = Modifier.padding(8.dp).height(50.dp)
                 )
 
 

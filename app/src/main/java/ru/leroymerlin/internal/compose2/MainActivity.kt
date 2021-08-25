@@ -18,10 +18,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import cru.leroymerlin.internal.compose2.ui.screens.cards.CardsViewModel
-import ru.leroymerlin.internal.compose2.ui.screens.DetailsScreen
+import ru.leroymerlin.internal.compose2.ui.screens.*
 import ru.leroymerlin.internal.compose2.ui.screens.ListScreen
-import ru.leroymerlin.internal.compose2.ui.screens.PushScreen
-import ru.leroymerlin.internal.compose2.ui.screens.SearchScreen
 import ru.leroymerlin.internal.compose2.ui.screens.cards.CardsScreen
 
 
@@ -56,7 +54,8 @@ class MainActivity : ComponentActivity() {
                         }
                     ) {
                         NavHost(navController = navController,
-                            startDestination = "list"){
+                            startDestination = "login"){
+                            composable("login"){ LoginScreen(navController)}
                             composable("list"){ ListScreen(navController)}
                             composable("search"){ SearchScreen(navController, cardsViewModel)}
                             composable("push"){ PushScreen()}
