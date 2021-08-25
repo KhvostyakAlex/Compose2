@@ -50,6 +50,7 @@ fun LoginScreen(navController:NavController, loginViewModel: LoginViewModel){
         var passwordVisibility by remember { mutableStateOf(false) }
         val context = LocalContext.current
         val activity = LocalContext.current as Activity
+
     Column(//verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
 
@@ -104,10 +105,19 @@ fun LoginScreen(navController:NavController, loginViewModel: LoginViewModel){
             if(textStateLogin.value.isNotEmpty() && textStateLogin.value.length ==8){
                 if(password.isNotEmpty()){
                     Log.e("onClick", "${textStateLogin.value} $password")
+                    Log.e("application - ",  (activity.application as? PhoneBookApplication?).toString())
+                    Log.e("application - ",  (activity.application).toString())
+                    Log.e("context - ",  (context as Activity).toString())
 
+                  //  Log.e("context as Activity - ",  (context as Activity).application.toString())
+//" ru.leroymerlin.internal.phonebook.PhoneBookApplication@7cb0cf4"
 
-                    loginViewModel.authIntraru(phoneBookApi = (activity?.application as? PhoneBookApplication)?.phoneBookApi!!,
+                    /*loginViewModel.authIntraru(phoneBookApi = ((context as Activity).application as? PhoneBookApplication)?.phoneBookApi!!,
                         textStateLogin.value, password)
+
+                     */
+
+
 
 
 
