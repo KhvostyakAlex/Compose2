@@ -1,20 +1,18 @@
 package cru.leroymerlin.internal.compose2.ui.screens.cards
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import ru.leroymerlin.internal.compose2.BaseCellModel
+import ru.leroymerlin.internal.compose2.dataclass.IntraruUserDataList
 import ru.leroymerlin.internal.compose2.ui.screens.cards.ExpandableCardModel
 
 class CardsViewModel : ViewModel() {
 
-    private val _cards = MutableStateFlow(listOf<ExpandableCardModel>())
-    val cards: StateFlow<List<ExpandableCardModel>> get() = _cards
+    private val _cards = MutableStateFlow(listOf<IntraruUserDataList>())
+    val cards: StateFlow<List<IntraruUserDataList>> get() = _cards
 
    // private val _cards = MutableStateFlow(listOf<ExpandableCardModel>())
   //  val cards: StateFlow<List<ExpandableCardModel>> get() = _cards
@@ -37,10 +35,11 @@ class CardsViewModel : ViewModel() {
             _cards.emit(testList)
         }*/
         viewModelScope.launch(Dispatchers.Default) {
-            val testData = ArrayList<ExpandableCardModel>()
+            val testData = ArrayList<IntraruUserDataList>()
 
-            testData.add(ExpandableCardModel(
-                account = 60032246,
+            testData.add(
+                IntraruUserDataList(
+                account = "60032246",
                 firstName = "Алексей",
                 lastName = "Хвостяк",
                 orgUnitName = "Магазин Барнаул 1",
@@ -54,9 +53,10 @@ class CardsViewModel : ViewModel() {
                 mobilePhone =  "7999999999",
                 personalEmail =  "personalEmail",
                 workEmail = "Aleksey.Hvostyak@leroymerlin.ru",
-            ))
-            testData.add(ExpandableCardModel(
-                account = 60032247,
+            )
+            )
+            testData.add(IntraruUserDataList(
+                account = "60032247",
                 firstName = "Петр",
                 lastName = "Иванов",
                 orgUnitName = "Магазин Барнаул 2",
@@ -71,8 +71,8 @@ class CardsViewModel : ViewModel() {
                 personalEmail =  "String",
                 workEmail = "String",
             ))
-            testData.add(ExpandableCardModel(
-                account = 60032248,
+            testData.add(IntraruUserDataList(
+                account = "60032248",
                 firstName = "Иван",
                 lastName = "Петров",
                 orgUnitName = "Магазин Барнаул 2",

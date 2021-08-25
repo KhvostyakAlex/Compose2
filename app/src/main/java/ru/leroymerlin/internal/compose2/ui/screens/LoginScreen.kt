@@ -1,8 +1,15 @@
 package ru.leroymerlin.internal.compose2.ui.screens
 
+import android.app.Activity
+import android.content.Context
+import android.content.Intent
 import android.content.res.Resources
 import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
+import android.util.Log
+import android.widget.TextView
+import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
@@ -19,6 +26,7 @@ import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontSynthesis.Companion.All
 import androidx.compose.ui.text.input.KeyboardType
@@ -26,30 +34,22 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.core.content.res.ResourcesCompat
+import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
+import ru.leroymerlin.internal.compose2.PhoneBookApplication
 import ru.leroymerlin.internal.compose2.R
+import ru.leroymerlin.internal.compose2.dataclass.IntraruAuthUserList
 
 
 @Composable
-fun LoginScreen(navController:NavController){
+fun LoginScreen(navController:NavController, loginViewModel: LoginViewModel){
+
     Scaffold() {
         val textStateLogin = remember { mutableStateOf("") }
-        val textStatePassword = remember { mutableStateOf("") }
-//Icon(painter = painterResource(R.drawable.abc_vector_test), contentDescription = "logo")
-       // val imageLogo: Painter = imageResource(id = R.drawable.image2vector)
-
-/*
-        Image(
-            (ResourcesCompat.getDrawable(Resources, R.drawable.logo_mid, null) as BitmapDrawable).bitmap
-        )*/
-
-                    // Image(bitmap = , contentDescription = )
-
-
         var password by rememberSaveable { mutableStateOf("") }
         var passwordVisibility by remember { mutableStateOf(false) }
-
-
+        val context = LocalContext.current
+        val activity = LocalContext.current as Activity
     Column(//verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
 
@@ -97,11 +97,28 @@ fun LoginScreen(navController:NavController){
                     .padding(8.dp)
                 .width(200.dp)
                 .height(50.dp)
-
-
         )
 
-        Button(onClick = {},
+        Button(onClick = {
+
+            if(textStateLogin.value.isNotEmpty() && textStateLogin.value.length ==8){
+                if(password.isNotEmpty()){
+                    Log.e("onClick", "${textStateLogin.value} $password")
+
+
+                    loginViewModel.authIntraru(phoneBookApi = (activity?.application as? PhoneBookApplication)?.phoneBookApi!!,
+                        textStateLogin.value, password)
+
+
+
+
+                }else{
+                    Toast.makeText( context, "Неправильный логин или пароль", Toast.LENGTH_SHORT).show()
+                }
+            }else{
+                Toast.makeText( context, "Что-то не то с LDAP", Toast.LENGTH_SHORT).show()
+            }
+                         },
             colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.primary),
         modifier = Modifier.size(150.dp, 50.dp)) {
             Text("Войти", color = Color.White)
@@ -110,21 +127,24 @@ fun LoginScreen(navController:NavController){
     }
 
 
-     /*   Card(elevation = 8.dp,
-        backgroundColor = Color.White,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(12.dp)
-        ) {
-            Row(horizontalArrangement = Arrangement.SpaceBetween) {
-                //CardTitle(title = card.title)
-                Text("Hello")
-                Text("Hello")
+    }
+}
 
-                // CardArrow(degrees = arrowRotationDegree, onClick = onCardArrowClick)
 
-            }
-        }*/
+
+fun onClickLogin(context:Context, login:String, password:String){
+
+    if(login.isNotEmpty() && login.length ==8){
+        if(password.isNotEmpty()){
+            Log.e("onClick", "$login $password")
+
+
+
+
+    }else{
+        Toast.makeText( context, "Неправильный логин", Toast.LENGTH_SHORT).show()
+    }
 
     }
+
 }

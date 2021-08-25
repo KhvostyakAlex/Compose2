@@ -27,6 +27,7 @@ import cru.leroymerlin.internal.compose2.ui.screens.cards.CardsViewModel
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import ru.leroymerlin.internal.compose2.R
+import ru.leroymerlin.internal.compose2.dataclass.IntraruUserDataList
 import values.COLLAPSE_ANIMATION_DURATION
 import values.EXPAND_ANIMATION_DURATION
 import values.FADE_IN_ANIMATION_DURATION
@@ -50,8 +51,8 @@ fun CardsScreen(viewModel: CardsViewModel) {
             itemsIndexed(cards.value) { _, card ->
                 ExpandableCard(
                     card = card,
-                    onCardArrowClick = { viewModel.onCardArrowClicked(card.account) },
-                    expanded = expandedCardIds.value.contains(card.account),
+                    onCardArrowClick = { viewModel.onCardArrowClicked(card.account.toInt()) },
+                    expanded = expandedCardIds.value.contains(card.account.toInt()),
                 )
             }
         }
@@ -61,7 +62,7 @@ fun CardsScreen(viewModel: CardsViewModel) {
 @SuppressLint("UnusedTransitionTargetStateParameter")
 @Composable
 fun ExpandableCard(
-    card: ExpandableCardModel,
+    card: IntraruUserDataList,
     onCardArrowClick: () -> Unit,
     expanded: Boolean,
 ) {
@@ -159,7 +160,7 @@ fun CardOrgUnitName(title: String/*, onClick: () -> Unit*/) {
 @Composable
 fun ExpandableContent(
     visible: Boolean = true,
-    card: ExpandableCardModel,
+    card: IntraruUserDataList,
 ) {
     val enterFadeIn = remember {
         fadeIn(

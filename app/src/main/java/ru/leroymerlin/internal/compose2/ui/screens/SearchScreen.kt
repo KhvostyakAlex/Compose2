@@ -70,8 +70,8 @@ fun SearchScreen(navController: NavController, viewModel: CardsViewModel){
                     itemsIndexed(cards.value) { _, card ->
                         ExpandableCard(
                             card = card,
-                            onCardArrowClick = { viewModel.onCardArrowClicked(card.account) },
-                            expanded = expandedCardIds.value.contains(card.account),
+                            onCardArrowClick = { viewModel.onCardArrowClicked(card.account.toInt()) },
+                            expanded = expandedCardIds.value.contains(card.account.toInt()),
                         )
                     }
                 }

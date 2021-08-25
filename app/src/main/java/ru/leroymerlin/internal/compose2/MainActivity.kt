@@ -1,6 +1,9 @@
 package ru.leroymerlin.internal.compose2
 
+import android.app.Activity
+import android.content.Context
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
@@ -29,6 +32,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val cardsViewModel by viewModels<CardsViewModel>()
+
         setContent {
             Compose2Theme (darkTheme = false){
                 // A surface container using the 'background' color from the theme
@@ -55,7 +59,7 @@ class MainActivity : ComponentActivity() {
                     ) {
                         NavHost(navController = navController,
                             startDestination = "login"){
-                            composable("login"){ LoginScreen(navController)}
+                            composable("login"){ LoginScreen(navController, LoginViewModel())}
                             composable("list"){ ListScreen(navController)}
                             composable("search"){ SearchScreen(navController, cardsViewModel)}
                             composable("push"){ PushScreen()}
