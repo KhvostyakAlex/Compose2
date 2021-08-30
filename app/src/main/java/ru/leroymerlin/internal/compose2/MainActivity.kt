@@ -22,6 +22,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import cru.leroymerlin.internal.compose2.ui.screens.cards.CardsViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import ru.leroymerlin.internal.compose2.repository.PhoneBookRepository
 import ru.leroymerlin.internal.compose2.ui.screens.*
 import ru.leroymerlin.internal.compose2.ui.screens.ListScreen
 import ru.leroymerlin.internal.compose2.ui.screens.cards.CardsScreen
@@ -29,7 +30,7 @@ import ru.leroymerlin.internal.compose2.ui.screens.cards.CardsScreen
 
 import ru.leroymerlin.internal.compose2.ui.theme.Compose2Theme
 
-@AndroidEntryPoint
+//@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -61,7 +62,7 @@ class MainActivity : ComponentActivity() {
                     ) {
                         NavHost(navController = navController,
                             startDestination = "login"){
-                            composable("login"){ LoginScreen(navController, LoginViewModel())}
+                            composable("login"){ LoginScreen(navController)}
                             composable("list"){ ListScreen(navController)}
                             composable("search"){ SearchScreen(navController, cardsViewModel)}
                             composable("push"){ PushScreen()}
