@@ -30,7 +30,7 @@ import ru.leroymerlin.internal.compose2.ui.screens.cards.CardsScreen
 
 import ru.leroymerlin.internal.compose2.ui.theme.Compose2Theme
 
-//@AndroidEntryPoint
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

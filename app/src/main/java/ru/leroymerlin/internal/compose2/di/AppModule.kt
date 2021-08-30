@@ -1,6 +1,5 @@
 package ru.leroymerlin.internal.compose2.di
 
-import android.preference.PreferenceManager
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
