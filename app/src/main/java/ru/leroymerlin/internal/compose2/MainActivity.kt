@@ -21,6 +21,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import cru.leroymerlin.internal.compose2.ui.screens.cards.CardsViewModel
+import dagger.hilt.android.AndroidEntryPoint
 import ru.leroymerlin.internal.compose2.ui.screens.*
 import ru.leroymerlin.internal.compose2.ui.screens.ListScreen
 import ru.leroymerlin.internal.compose2.ui.screens.cards.CardsScreen
@@ -28,6 +29,7 @@ import ru.leroymerlin.internal.compose2.ui.screens.cards.CardsScreen
 
 import ru.leroymerlin.internal.compose2.ui.theme.Compose2Theme
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
