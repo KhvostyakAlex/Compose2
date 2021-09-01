@@ -32,6 +32,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val cardsViewModel by viewModels<CardsViewModel>()
+        val loginViewModel by viewModels<LoginViewModel>()
 
         setContent {
             Compose2Theme (darkTheme = false){
@@ -57,7 +58,7 @@ class MainActivity : ComponentActivity() {
                     ) {
                         NavHost(navController = navController,
                             startDestination = "login"){
-                            composable("login"){ LoginScreen(navController)}
+                            composable("login"){ LoginScreen(loginViewModel, navController)}
                             composable("list"){ ListScreen(navController)}
                             composable("search"){ SearchScreen(navController, cardsViewModel)}
                             composable("push"){ PushScreen()}
