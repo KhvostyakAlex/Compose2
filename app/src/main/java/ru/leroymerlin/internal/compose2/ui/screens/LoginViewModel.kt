@@ -41,7 +41,10 @@ class LoginViewModel (
     private val _count:MutableLiveData<Int> = MutableLiveData(3)
     val count:LiveData<Int> = _count
 
-
+    override fun onCleared() {
+        compositeDisposable.dispose()
+        super.onCleared()
+    }
 
 
 
@@ -50,10 +53,6 @@ class LoginViewModel (
 
     private val _userData: MutableLiveData<List<IntraruUserDataList>> = MutableLiveData()
     var userData: LiveData<List<IntraruUserDataList>> = _userData
-
-    private val _dat = MutableStateFlow(listOf<IntraruAuthUserList>())
-    val dat: StateFlow<List<IntraruAuthUserList>> get() = _dat
-
 
     private val _error = MutableLiveData<String>("")
     var error: LiveData<String> =_error
@@ -83,22 +82,11 @@ class LoginViewModel (
                             response.refreshToken,
                             response.expiresIn,
                             response.expiresOn))
-
                         _authData.postValue(testData)
-                          // _dat.emit(testData)
-
-
                     }, {
-
                         // _error.postValue("Er - ${it.localizedMessage}")
                         _error.postValue("Неверный логин или пароль")
                     })
-
-
-
-
-
-
               }
         }
 

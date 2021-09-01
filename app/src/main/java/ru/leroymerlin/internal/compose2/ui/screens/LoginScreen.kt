@@ -40,29 +40,35 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import cru.leroymerlin.internal.compose2.ui.screens.cards.CardsViewModel
-import ru.leroymerlin.internal.compose2.PhoneBookApi
 
-import ru.leroymerlin.internal.compose2.PhoneBookApplication
-import ru.leroymerlin.internal.compose2.R
 import ru.leroymerlin.internal.compose2.dataclass.IntraruAuthUserList
 import ru.leroymerlin.internal.compose2.di.AppModule
-import ru.leroymerlin.internal.compose2.hideKeyboard
 import ru.leroymerlin.internal.compose2.repository.PhoneBookRepository
+import android.preference.PreferenceManager
+
+import android.content.SharedPreferences
+import android.text.method.TextKeyListener.clear
+import ru.leroymerlin.internal.compose2.*
+import ru.leroymerlin.internal.compose2.R
+import ru.leroymerlin.internal.compose2.dataclass.IntraruUserDataList
 
 
 @Composable
 fun LoginScreen(loginViewModel: LoginViewModel, navController:NavController){
     val authData:List<IntraruAuthUserList> by loginViewModel.authData.observeAsState(emptyList())
+    val userData:List<IntraruUserDataList> by loginViewModel.userData.observeAsState(emptyList())
     val error:String by loginViewModel.error.observeAsState("")
     val context = LocalContext.current
+    val activity = LocalContext.current as Activity
+    val sharedPref = activity.getPreferences(Context.MODE_PRIVATE)
+    val textStateLogin = remember { mutableStateOf("") }
+    var password by rememberSaveable { mutableStateOf("") }
+    var passwordVisibility by remember { mutableStateOf(false) }
 
   //  val authDat = loginViewModel.authDat.collectAsState()
     Scaffold() {
-        val textStateLogin = remember { mutableStateOf("") }
-        var password by rememberSaveable { mutableStateOf("") }
-        var passwordVisibility by remember { mutableStateOf(false) }
-        val context = LocalContext.current
-        val activity = LocalContext.current as Activity
+
+
 
     Column(//verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -117,14 +123,18 @@ fun LoginScreen(loginViewModel: LoginViewModel, navController:NavController){
 
             if(textStateLogin.value.isNotEmpty() && textStateLogin.value.length ==8){
                 if(password.isNotEmpty()){
-                    val login = textStateLogin.value
+                   val  login = textStateLogin.value
                     //Log.e("onClick", "${textStateLogin.value} $password")
 
 
                       loginViewModel.authIntraru(login, password)
 
-                    Log.e("authDat in button  - ", authData.toString())
+                  //  Log.e("authDat in button  - ", authData.toString())
                         hideKeyboard(activity)
+
+
+
+
 
 
                    // val item by LoginViewModel().authData
@@ -163,8 +173,62 @@ fun LoginScreen(loginViewModel: LoginViewModel, navController:NavController){
 
     }
 
+
+    if (authData.isNotEmpty()) {
+        val t = authData[0] as IntraruAuthUserList
+        with (sharedPref.edit()) {
+            putString("token", t.token)
+            putString("refreshToken", t.refreshToken)
+            putInt("expiresIn", t.expiresIn)
+            putInt("expiresOn", t.expiresOn)
+            apply()
+        }
+        val authHeader = "Bearer " + t.token
+        loginViewModel.getInfoUser(textStateLogin.value, authHeader)
+
+
+    }
+
+    if (userData.isNotEmpty()) {
+
+        val uData = userData[0] as IntraruUserDataList
+        Log.e("uData", uData.toString())
+        //  Log.e("Login fragment USER DATA mobilePhone - ", uData.workPhone)
+        val today = getCalculatedDate("yyyy-M-dd", 0)
+        with (sharedPref.edit()) {
+            putString("account", uData.account)
+            putString("firstName", uData.firstName)
+            putString("lastName", uData.lastName)
+            putString("shopNumber", uData.shopNumber)
+            putString("cluster", uData.cluster)
+            putString("region", uData.region)
+            putString("jobTitle", uData.jobTitle)
+            putString("department", uData.department)
+            putString("subDivision", uData.subDivision)
+            putString("workPhone", uData.workPhone)
+            putString("mobilePhone", uData.mobilePhone)
+            putString("personalEmail", uData.personalEmail)
+            putString("today", today)
+            putBoolean("signin?", true)
+            apply()
+        }
+
+        //navController.navigate("search")
+
+    }
+
+
+
+
+
+
     Log.e("authDat - ", authData.toString())
+    Log.e("userData - ", userData.toString())
     Log.e("error - ", error.toString())
+
+
+    val token = sharedPref.getString("token", "") //достаем данные из shared prefs
+   // Log.e("sharePrefs", highScore.toString())
 
 /*
     if(error.isNotEmpty()) {
@@ -173,7 +237,10 @@ fun LoginScreen(loginViewModel: LoginViewModel, navController:NavController){
 
  */
 }
-
+ fun test(activity: Activity){
+    // val myPreferences = PreferenceManager.getDefaultSharedPreferences(context)
+     val sharedPref = activity.getPreferences(Context.MODE_PRIVATE)
+ }
 
 
 
