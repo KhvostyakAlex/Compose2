@@ -34,12 +34,16 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.core.content.res.ResourcesCompat
-import androidx.hilt.navigation.compose.hiltNavGraphViewModel
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.Observer
 import androidx.navigation.NavController
+import cru.leroymerlin.internal.compose2.ui.screens.cards.CardsViewModel
+import ru.leroymerlin.internal.compose2.PhoneBookApi
 
 import ru.leroymerlin.internal.compose2.PhoneBookApplication
 import ru.leroymerlin.internal.compose2.R
-
+import ru.leroymerlin.internal.compose2.di.AppModule
+import ru.leroymerlin.internal.compose2.repository.PhoneBookRepository
 
 
 @Composable
@@ -105,12 +109,18 @@ fun LoginScreen(navController:NavController){
 
             if(textStateLogin.value.isNotEmpty() && textStateLogin.value.length ==8){
                 if(password.isNotEmpty()){
+                    val login = textStateLogin.value
                     Log.e("onClick", "${textStateLogin.value} $password")
                     Log.e("application - ",  (activity.application as? PhoneBookApplication?).toString())
                     Log.e("application - ",  (activity.application).toString())
                     Log.e("context - ",  (context as Activity).toString())
 
-                   // LoginViewModel().authIntraru()
+
+
+                     val authData = LoginViewModel().authIntraru(login, password)
+                    Log.e("authData", authData.toString())
+
+                    val item by LoginViewModel().authData
                     ///PhonebookList(navController, LoginViewModel(), textStateLogin.value, password)
 
                   //  Log.e("context as Activity - ",  (context as Activity).application.toString())
@@ -154,7 +164,7 @@ fun onClickLogin(context:Context, login:String, password:String){
     if(login.isNotEmpty() && login.length ==8){
         if(password.isNotEmpty()){
             Log.e("onClick", "$login $password")
-
+//LoginViewModel_old().authIntraru(PhoneBookApi(),login, password)
 
 
 
@@ -166,14 +176,3 @@ fun onClickLogin(context:Context, login:String, password:String){
 
 }
 
-@Composable
-fun PhonebookList(navController: NavController,
-viewModel: LoginViewModel = hiltNavGraphViewModel(),
-login: String,
-pass: String){
-    val phonebookList by remember {viewModel.authData}
-    val endReached by remember {viewModel.endReached}
-    val loadError by remember {viewModel.loadError}
-    val isLoading by remember {viewModel.isLoading}
-viewModel.authIntraru(login, pass)
-}

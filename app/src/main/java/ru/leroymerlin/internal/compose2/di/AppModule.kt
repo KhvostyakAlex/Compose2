@@ -2,8 +2,6 @@ package ru.leroymerlin.internal.compose2.di
 
 import dagger.Module
 import dagger.Provides
-import dagger.hilt.InstallIn
-import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -20,23 +18,21 @@ import javax.net.ssl.*
 import javax.security.cert.CertificateException
 
 @Module
-@InstallIn(SingletonComponent::class)
 object AppModule {
-    lateinit var phoneBookApi: PhoneBookApi
-    private val sp = "https://locdev.hq.ru.corp.leroymerlin.com/ld/"
-    private val nameApi ="PhoneBookAPI"
 
+/*
     @Singleton
     @Provides
-    fun providePhonebookRepository(api: PhoneBookApi) = PhoneBookRepository(api)
+    fun providePhonebookRepository(api: PhoneBookApi) = PhoneBookRepository(PhoneBookApi)*/
+
+    /* @Singleton
+    @Provides
+    fun provideApi(api: PhoneBookApi) = PhoneBookApi()*/
+
 
     @Singleton
     @Provides
     fun  providePhonebookApi(): PhoneBookApi {
-      /*  val myPreferences = PreferenceManager.getDefaultSharedPreferences(this)
-        val servPath = myPreferences.getString("servPath", sp+nameApi+"/")*/
-
-
         val loggingInterceptor = HttpLoggingInterceptor()
         loggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
 
@@ -57,6 +53,8 @@ object AppModule {
       return  retrofit.create()
     }
 
+    @Singleton
+    @Provides
     fun getUnsafeOkHttpClientR(): OkHttpClient.Builder? {
         return try {
             // Create a trust manager that does not validate certificate chains
