@@ -10,4 +10,10 @@
     <color name="colorDayNightWhite">#FFFFFF</color>
     <color name="colorDayNighCardBg">#FFFFFF</color>
     <color name="colorDayNightPurple">#B388FF</color>
+    <color name="colorPrimary">#bc214b</color>
+    <color name="colorPrimaryDark">#9e1c40</color>
+    <color name="colorAccent">#D81B60</color>
+    <color name="lmNCKD">#78BE20</color>
+
+
 </resources>

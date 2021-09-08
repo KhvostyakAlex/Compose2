@@ -1,6 +1,5 @@
 package ru.leroymerlin.internal.compose2.ui.screens
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -12,7 +11,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontSynthesis.Companion.All
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import cru.leroymerlin.internal.compose2.ui.screens.cards.CardsViewModel
@@ -20,23 +18,38 @@ import ru.leroymerlin.internal.compose2.ui.screens.cards.ExpandableCard
 
 
 @Composable
-fun SearchScreen( viewModel: CardsViewModel){
+fun FindDepartmentScreen( viewModel: CardsViewModel){
 
-    val testArray = listOf("Иванов", "Петров", "Сидоров", "Васечкин", "World", "Android", "Hello", "World", "Android", "Android", "Hello", "World", "Android")
     Scaffold {
-     /*   topBar = {
-            TopAppBar{
-                Text(text = "text")
-            }
-        }*/
             val textState = remember { mutableStateOf("")}
             val isEnabled = remember { mutableStateOf(false)}
             val isCompleteLogin = remember { mutableStateOf(0)}
 
+        val bottomItems = listOf("list", "search", "push", "cards")
+        val textStateLogin = remember { mutableStateOf("") }
 
 
         Column {
-            Text("Поиск по сотруднику", modifier = Modifier.padding(24.dp))
+            Text("Поиск по подразделению", modifier = Modifier.padding(24.dp))
+
+        /*    Card(elevation = 8.dp,
+                backgroundColor = Color.White,
+                modifier = Modifier.fillMaxWidth().padding(12.dp)
+            ) {
+                Row(horizontalArrangement = Arrangement.SpaceBetween) {
+                    //CardTitle(title = card.title)
+                    AutoCompleteText("value: String",
+                        { textStateLogin.value = it },
+                        { textStateLogin.value = it },
+                        Modifier,
+                        null,
+                        bottomItems)
+
+                    // CardArrow(degrees = arrowRotationDegree, onClick = onCardArrowClick)
+
+                }
+            }*/
+
 
             Row (
                // horizontalArrangement = Arrangement.SpaceAround
@@ -49,8 +62,6 @@ fun SearchScreen( viewModel: CardsViewModel){
                     trailingIcon = { if(textState.value.length ==8){ Text("V")} }, //при вводе 8 знаков появится иконка
                     modifier = Modifier.padding(8.dp).height(50.dp)
                 )
-
-
 
                 Button(onClick = {
                     isEnabled.value = isEnabled.value==false

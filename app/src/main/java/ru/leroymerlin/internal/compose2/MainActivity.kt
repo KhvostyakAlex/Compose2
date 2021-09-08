@@ -18,10 +18,14 @@ import androidx.compose.material.icons.filled.PushPin
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -32,7 +36,9 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.google.accompanist.pager.*
 import cru.leroymerlin.internal.compose2.ui.screens.cards.CardsViewModel
+import kotlinx.coroutines.launch
 import ru.leroymerlin.internal.compose2.dataclass.BottomNavItem
 import ru.leroymerlin.internal.compose2.ui.screens.*
 import ru.leroymerlin.internal.compose2.ui.screens.ListScreen
@@ -45,10 +51,11 @@ import ru.leroymerlin.internal.compose2.ui.theme.Compose2Theme
 class MainActivity : ComponentActivity() {
     val loginViewModel by viewModels<LoginViewModel>()
     val cardsViewModel by viewModels<CardsViewModel>()
+    @ExperimentalPagerApi
     @ExperimentalMaterialApi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        Toast.makeText( baseContext, "onCreate", Toast.LENGTH_SHORT).show()
 
 
         setContent {
@@ -61,11 +68,15 @@ class MainActivity : ComponentActivity() {
                     //val bottomItems = listOf("list", "search", "push", "cards")
                     val bottomItems = listOf(
                         BottomNavItem("List", "list", Icons.Default.Home),
-                        BottomNavItem("Search", "search", Icons.Default.Search),
-                        BottomNavItem("Push", "push", Icons.Default.PushPin),
-                        BottomNavItem("Cards", "cards", Icons.Default.Settings))
+                        BottomNavItem("Поиск", "push", Icons.Default.Search),
+                        BottomNavItem("Настройки", "settings", Icons.Default.Settings))
                     Scaffold(
-                        
+                        topBar={ TopAppBar(
+                            title = { Text(text = stringResource(R.string.app_name), fontSize = 18.sp) },
+                            backgroundColor = colorResource(id = R.color.lmNCKD),
+                            contentColor = Color.White
+                        )},
+
                         bottomBar = {
                             BottomNavigationBar(items = bottomItems,
                                 navController = navController ,
@@ -73,28 +84,9 @@ class MainActivity : ComponentActivity() {
                                     navController.navigate(it.route)
                                 } )
                         }
-                     /*   bottomBar = {
-                            BottomNavigation {
-                                bottomItems.forEach{screen ->
-                                    BottomNavigationItem(selected = false,
-                                        onClick = { navController.navigate(screen) },
-                                        label = {Text(screen)},
-                                        icon={}
-                                    )
 
-                                }
-                            }
-                        }*/
                     ) {
-                       /* NavHost(navController = navController,
-                            startDestination = "login"){
-                            composable("login"){ LoginScreen(loginViewModel, navController)}
-                            composable("list"){ ListScreen(navController)}
-                            composable("search"){ SearchScreen(navController, cardsViewModel)}
-                            composable("push"){ PushScreen()}
-                            composable("cards"){ CardsScreen(cardsViewModel) }
-                            composable("details"){ DetailsScreen()}
-                        }*/
+
                         Navigation(navController = navController, loginViewModel = loginViewModel, cardsViewModel = cardsViewModel )
 
 
@@ -109,6 +101,8 @@ class MainActivity : ComponentActivity() {
 
 }
 
+@ExperimentalMaterialApi
+@ExperimentalPagerApi
 @Composable
 fun Navigation(navController: NavHostController,
              loginViewModel: LoginViewModel,
@@ -116,10 +110,11 @@ fun Navigation(navController: NavHostController,
     NavHost(navController = navController, startDestination = "login"){
         composable("login"){ LoginScreen(loginViewModel, navController)}
         composable("list"){ ListScreen(navController)}
-        composable("search"){ SearchScreen(navController, cardsViewModel)}
+     //   composable("search"){ SearchScreen(cardsViewModel)}
         composable("push"){ PushScreen()}
         composable("cards"){ CardsScreen(cardsViewModel) }
         composable("details"){ DetailsScreen()}
+        composable("settings"){ SettingsScreen() }
     }
 
 }
@@ -176,8 +171,6 @@ fun BottomNavigationBar(
 
 
 
-
-
 @Composable
 fun Greeting(name: String, lastName: String) {
     Column{
@@ -202,3 +195,8 @@ fun DefaultPreview() {
 
     }
 }
+
+
+
+
+

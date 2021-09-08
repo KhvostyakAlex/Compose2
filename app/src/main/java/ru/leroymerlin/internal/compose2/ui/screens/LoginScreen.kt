@@ -128,33 +128,7 @@ fun LoginScreen(loginViewModel: LoginViewModel, navController:NavController){
 
 
                       loginViewModel.authIntraru(login, password)
-
-                  //  Log.e("authDat in button  - ", authData.toString())
                         hideKeyboard(activity)
-
-
-
-
-
-
-                   // val item by LoginViewModel().authData
-                    ///PhonebookList(navController, LoginViewModel(), textStateLogin.value, password)
-
-                  //  Log.e("context as Activity - ",  (context as Activity).application.toString())
-//" ru.leroymerlin.internal.phonebook.PhoneBookApplication@7cb0cf4"
-
-                    /*loginViewModel.authIntraru(phoneBookApi = ((context as Activity).application as? PhoneBookApplication)?.phoneBookApi!!,
-                        textStateLogin.value, password)
-
-                     */
-                  /* val result =  loginViewModel.authIntraru(textStateLogin.value, password)
-                    Log.e("result - ",  result.toString())
-
-                   */
-
-
-
-
 
                 }else{
                     Toast.makeText( activity, "Неправильный логин или пароль", Toast.LENGTH_SHORT).show()
@@ -164,13 +138,10 @@ fun LoginScreen(loginViewModel: LoginViewModel, navController:NavController){
             }
                          },
             colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.primary),
-        modifier = Modifier.size(150.dp, 50.dp)) {
+            modifier = Modifier.size(150.dp, 50.dp)) {
             Text("Войти", color = Color.White)
         }
-
     }
-
-
     }
 
 
@@ -185,12 +156,10 @@ fun LoginScreen(loginViewModel: LoginViewModel, navController:NavController){
         }
         val authHeader = "Bearer " + t.token
         loginViewModel.getInfoUser(textStateLogin.value, authHeader)
-
-
     }
 
+    //как только появляются данные, то записываем их в ref и переходим в поиск
     if (userData.isNotEmpty()) {
-
         val uData = userData[0] as IntraruUserDataList
         Log.e("uData", uData.toString())
         //  Log.e("Login fragment USER DATA mobilePhone - ", uData.workPhone)
@@ -213,8 +182,9 @@ fun LoginScreen(loginViewModel: LoginViewModel, navController:NavController){
             apply()
         }
 
-        //navController.navigate("search")
-
+        navController.navigate("search"){
+            launchSingleTop = true //переходим только 1 раз
+        }
     }
 
 

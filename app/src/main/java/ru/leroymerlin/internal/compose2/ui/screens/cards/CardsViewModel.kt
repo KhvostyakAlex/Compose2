@@ -7,7 +7,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import ru.leroymerlin.internal.compose2.dataclass.IntraruUserDataList
-import ru.leroymerlin.internal.compose2.ui.screens.cards.ExpandableCardModel
 
 class CardsViewModel : ViewModel() {
 
