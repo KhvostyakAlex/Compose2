@@ -20,9 +20,8 @@ import ru.leroymerlin.internal.compose2.ui.screens.cards.ExpandableCard
 
 
 @Composable
-fun SearchScreen( viewModel: CardsViewModel){
+fun FindUsersScreen( viewModel: CardsViewModel){
 
-    val testArray = listOf("Иванов", "Петров", "Сидоров", "Васечкин", "World", "Android", "Hello", "World", "Android", "Android", "Hello", "World", "Android")
     Scaffold {
      /*   topBar = {
             TopAppBar{

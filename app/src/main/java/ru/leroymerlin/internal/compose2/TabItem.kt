@@ -5,9 +5,9 @@ import androidx.compose.runtime.Composable
 import androidx.lifecycle.ViewModel
 import com.google.accompanist.pager.ExperimentalPagerApi
 import cru.leroymerlin.internal.compose2.ui.screens.cards.CardsViewModel
-import ru.leroymerlin.internal.compose2.ui.screens.DetailsScreen
 import ru.leroymerlin.internal.compose2.ui.screens.FindDepartmentScreen
-import ru.leroymerlin.internal.compose2.ui.screens.SearchScreen
+import ru.leroymerlin.internal.compose2.ui.screens.FindUsersScreen
+
 
 
 typealias ComposableFun = @Composable () -> Unit
@@ -20,7 +20,7 @@ val cardsViewModel:ViewModel = CardsViewModel()
     @ExperimentalMaterialApi
     @ExperimentalPagerApi
     object FindUsers : TabItem(R.drawable.ic_search_black, "Поиск по сотруднику",
-        { SearchScreen(viewModel = CardsViewModel()) })
+        { FindUsersScreen(viewModel = CardsViewModel()) })
     @ExperimentalMaterialApi
     @ExperimentalPagerApi
     object FindDepartment : TabItem(R.drawable.ic_search_black, "Поиск по подразделению",
