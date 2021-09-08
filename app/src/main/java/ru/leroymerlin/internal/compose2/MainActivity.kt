@@ -3,6 +3,9 @@ package ru.leroymerlin.internal.compose2
 import android.app.Activity
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
+import android.view.View
+import android.view.View.GONE
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -43,6 +46,7 @@ import ru.leroymerlin.internal.compose2.dataclass.BottomNavItem
 import ru.leroymerlin.internal.compose2.ui.screens.*
 import ru.leroymerlin.internal.compose2.ui.screens.ListScreen
 import ru.leroymerlin.internal.compose2.ui.screens.cards.CardsScreen
+import ru.leroymerlin.internal.compose2.ui.screens.settings.SettingsScreen
 
 
 import ru.leroymerlin.internal.compose2.ui.theme.Compose2Theme
@@ -78,11 +82,20 @@ class MainActivity : ComponentActivity() {
                         )},
 
                         bottomBar = {
-                            BottomNavigationBar(items = bottomItems,
-                                navController = navController ,
-                                onItemClick ={
-                                    navController.navigate(it.route)
-                                } )
+
+                            val backStackEntry = navController.currentBackStackEntryAsState()
+                            if(backStackEntry.value?.destination?.route != "login"){
+                                BottomNavigationBar(items = bottomItems,
+                                    navController = navController ,
+                                    onItemClick ={
+                                        navController.navigate(it.route)
+                                    } )
+                            }else{
+                                BottomNavigationBar(items = listOf(),
+                                    navController = navController ,
+                                    onItemClick ={
+                                    } )
+                            }
                         }
 
                     ) {
@@ -129,43 +142,49 @@ fun BottomNavigationBar(
 
 ){
     val backStackEntry = navController.currentBackStackEntryAsState()
-    BottomNavigation(
-        modifier = modifier,
-        backgroundColor = Color.White,
-        elevation = 5.dp
-    ){
-      items.forEach{ item ->
-          val selected = item.route == backStackEntry.value?.destination?.route
-          BottomNavigationItem(selected = item.route == navController.currentDestination?.route,
-              onClick = { onItemClick(item) },
-              selectedContentColor = Color.Green,
-              unselectedContentColor = Color.Gray,
-              icon = {
-                    Column(horizontalAlignment = CenterHorizontally){
-                        if(item.badgeCount >0){
-                            BadgeBox(
-                               badgeContent = {
-                                   Text(text = item.badgeCount.toString())
-                               }
-                            ) {
+
+        BottomNavigation(
+            modifier = modifier,
+            backgroundColor = Color.White,
+            elevation = 5.dp
+        ){
+            items.forEach{ item ->
+                val selected = item.route == backStackEntry.value?.destination?.route
+               // Log.e("route - ", backStackEntry.value?.destination?.route.toString())
+                BottomNavigationItem(selected = item.route == navController.currentDestination?.route,
+                    onClick = { onItemClick(item) },
+                    selectedContentColor = colorResource(id = R.color.lmNCKD),
+                    unselectedContentColor = Color.Gray,
+                    icon = {
+                        Column(horizontalAlignment = CenterHorizontally){
+                            if(item.badgeCount >0){
+                                BadgeBox(
+                                    badgeContent = {
+                                        Text(text = item.badgeCount.toString())
+                                    }
+                                ) {
+                                    Icon(imageVector = item.icon, contentDescription = item.name)
+                                }
+                            }else{
                                 Icon(imageVector = item.icon, contentDescription = item.name)
                             }
-                        }else{
-                            Icon(imageVector = item.icon, contentDescription = item.name)
+                            if(selected){
+                                Text(text = item.name,
+                                    textAlign = TextAlign.Center,
+                                    fontSize = 10.sp)
+                            }
                         }
-                        if(selected){
-                            Text(text = item.name,
-                            textAlign = TextAlign.Center,
-                            fontSize = 10.sp)
-                        }
-
                     }
+                )
+            }
 
-              }
 
-          )
-      }
-    }
+        }
+
+  /*  if(backStackEntry.value?.destination?.route != "login"){
+
+    }*/
+
 }
 
 

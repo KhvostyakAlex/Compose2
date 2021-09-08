@@ -2,14 +2,8 @@ package ru.leroymerlin.internal.compose2.ui.screens
 
 import android.app.Activity
 import android.content.Context
-import android.content.Intent
-import android.content.res.Resources
-import android.graphics.Bitmap
-import android.graphics.drawable.BitmapDrawable
 import android.util.Log
-import android.widget.TextView
 import android.widget.Toast
-import androidx.activity.viewModels
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
@@ -23,31 +17,14 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ImageBitmap
-import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontSynthesis.Companion.All
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
-import androidx.core.content.res.ResourcesCompat
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.Observer
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import cru.leroymerlin.internal.compose2.ui.screens.cards.CardsViewModel
-
 import ru.leroymerlin.internal.compose2.dataclass.IntraruAuthUserList
-import ru.leroymerlin.internal.compose2.di.AppModule
-import ru.leroymerlin.internal.compose2.repository.PhoneBookRepository
-import android.preference.PreferenceManager
-
-import android.content.SharedPreferences
-import android.text.method.TextKeyListener.clear
 import ru.leroymerlin.internal.compose2.*
 import ru.leroymerlin.internal.compose2.R
 import ru.leroymerlin.internal.compose2.dataclass.IntraruUserDataList
