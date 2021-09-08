@@ -221,10 +221,12 @@ fun LoginScreen(loginViewModel: LoginViewModel, navController:NavController){
 
 
 
-
+/*
     Log.e("authDat - ", authData.toString())
     Log.e("userData - ", userData.toString())
     Log.e("error - ", error.toString())
+
+ */
 
 
     val token = sharedPref.getString("token", "") //достаем данные из shared prefs

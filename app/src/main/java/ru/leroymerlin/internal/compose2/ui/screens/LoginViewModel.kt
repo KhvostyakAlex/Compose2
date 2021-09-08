@@ -1,11 +1,6 @@
 package ru.leroymerlin.internal.compose2.ui.screens
 
 
-import android.os.Parcel
-import android.os.Parcelable
-import android.util.Log
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -14,25 +9,16 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody.Companion.toRequestBody
 import org.json.JSONObject
-import ru.leroymerlin.internal.compose2.PhoneBookApi
-import ru.leroymerlin.internal.compose2.dataclass.BaseCellModel
 import ru.leroymerlin.internal.compose2.dataclass.IntraruAuthUserList
 import ru.leroymerlin.internal.compose2.dataclass.IntraruUserDataList
 import ru.leroymerlin.internal.compose2.di.AppModule
-import javax.inject.Inject
 
 
-class LoginViewModel (
-  //  private val repository: PhoneBookRepository
-): ViewModel() {
+class LoginViewModel: ViewModel() {
     private val compositeDisposable: CompositeDisposable = CompositeDisposable()
 /*
     private val _authDat = MutableStateFlow(listOf<IntraruAuthUserList>())
@@ -57,12 +43,6 @@ class LoginViewModel (
     private val _error = MutableLiveData<String>("")
     var error: LiveData<String> =_error
 
-
-    var loadError = mutableStateOf("")
-    var isLoading = mutableStateOf(false)
-    var endReached = mutableStateOf(false)
-
-
     fun authIntraru(login:String, pass:String){
         viewModelScope.launch(Dispatchers.Default) {
             val body = JSONObject()
@@ -75,8 +55,6 @@ class LoginViewModel (
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe({response ->
-
-                       // Log.e("response - ", response.toString())
                         testData.add(IntraruAuthUserList(response.userHash,
                             response.token,
                             response.refreshToken,
@@ -97,12 +75,6 @@ class LoginViewModel (
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe({response ->
                         val testData = ArrayList<IntraruUserDataList>()
-                        /*Log.e("LOG mess", "response mess "+response.toString())
-                        Log.e("LOG mess", "response mess "+response?.account.toString())
-                        Log.e("LOG mess", "response mess "+response?.common?.firstName)
-
-                         */
-
                         testData.add(IntraruUserDataList(
                             response?.common!!.account,
                             response?.common!!.firstName.toString(),
