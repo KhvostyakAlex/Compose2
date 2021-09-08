@@ -3,6 +3,7 @@ package ru.leroymerlin.internal.compose2
 import android.app.Activity
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -79,7 +80,9 @@ class MainActivity : ComponentActivity() {
                         )},
 
                         bottomBar = {
-                            if(navController.currentDestination?.route != "login"){
+                            val backStackEntry = navController.currentBackStackEntryAsState()
+                            if(backStackEntry.value?.destination?.route!= "login"){
+                                Log.e("route - ", navController.currentDestination?.route.toString())
                                 BottomNavigationBar(items = bottomItems,
                                     navController = navController ,
                                     onItemClick ={
