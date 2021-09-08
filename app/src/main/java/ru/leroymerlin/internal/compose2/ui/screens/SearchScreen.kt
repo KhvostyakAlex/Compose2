@@ -20,7 +20,7 @@ import ru.leroymerlin.internal.compose2.TabItem
 @ExperimentalPagerApi
 @ExperimentalMaterialApi
 @Composable
-fun PushScreen() {
+fun SearchScreen() {
     val tabs = listOf(TabItem.FindUsers, TabItem.FindDepartment)
     val pagerState = rememberPagerState(pageCount = tabs.size)
     Scaffold(

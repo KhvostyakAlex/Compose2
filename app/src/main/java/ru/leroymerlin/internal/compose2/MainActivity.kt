@@ -3,9 +3,6 @@ package ru.leroymerlin.internal.compose2
 import android.app.Activity
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
-import android.view.View
-import android.view.View.GONE
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -72,7 +69,7 @@ class MainActivity : ComponentActivity() {
                     //val bottomItems = listOf("list", "search", "push", "cards")
                     val bottomItems = listOf(
                         BottomNavItem("List", "list", Icons.Default.Home),
-                        BottomNavItem("Поиск", "push", Icons.Default.Search),
+                        BottomNavItem("Поиск", "search", Icons.Default.Search),
                         BottomNavItem("Настройки", "settings", Icons.Default.Settings))
                     Scaffold(
                         topBar={ TopAppBar(
@@ -82,20 +79,14 @@ class MainActivity : ComponentActivity() {
                         )},
 
                         bottomBar = {
-
-                            val backStackEntry = navController.currentBackStackEntryAsState()
-                            if(backStackEntry.value?.destination?.route != "login"){
+                            if(navController.currentDestination?.route != "login"){
                                 BottomNavigationBar(items = bottomItems,
                                     navController = navController ,
                                     onItemClick ={
                                         navController.navigate(it.route)
                                     } )
-                            }else{
-                                BottomNavigationBar(items = listOf(),
-                                    navController = navController ,
-                                    onItemClick ={
-                                    } )
                             }
+
                         }
 
                     ) {
@@ -124,7 +115,7 @@ fun Navigation(navController: NavHostController,
         composable("login"){ LoginScreen(loginViewModel, navController)}
         composable("list"){ ListScreen(navController)}
      //   composable("search"){ SearchScreen(cardsViewModel)}
-        composable("push"){ PushScreen()}
+        composable("search"){ SearchScreen()}
         composable("cards"){ CardsScreen(cardsViewModel) }
         composable("details"){ DetailsScreen()}
         composable("settings"){ SettingsScreen() }
@@ -142,49 +133,40 @@ fun BottomNavigationBar(
 
 ){
     val backStackEntry = navController.currentBackStackEntryAsState()
-
-        BottomNavigation(
-            modifier = modifier,
-            backgroundColor = Color.White,
-            elevation = 5.dp
-        ){
-            items.forEach{ item ->
-                val selected = item.route == backStackEntry.value?.destination?.route
-               // Log.e("route - ", backStackEntry.value?.destination?.route.toString())
-                BottomNavigationItem(selected = item.route == navController.currentDestination?.route,
-                    onClick = { onItemClick(item) },
-                    selectedContentColor = colorResource(id = R.color.lmNCKD),
-                    unselectedContentColor = Color.Gray,
-                    icon = {
-                        Column(horizontalAlignment = CenterHorizontally){
-                            if(item.badgeCount >0){
-                                BadgeBox(
-                                    badgeContent = {
-                                        Text(text = item.badgeCount.toString())
-                                    }
-                                ) {
-                                    Icon(imageVector = item.icon, contentDescription = item.name)
-                                }
-                            }else{
+    BottomNavigation(
+        modifier = modifier,
+        backgroundColor = Color.White,
+        elevation = 5.dp
+    ){
+      items.forEach{ item ->
+          val selected = item.route == backStackEntry.value?.destination?.route
+          BottomNavigationItem(selected = item.route == navController.currentDestination?.route,
+              onClick = { onItemClick(item) },
+              selectedContentColor = colorResource(id = R.color.lmNCKD),
+              unselectedContentColor = Color.Gray,
+              icon = {
+                    Column(horizontalAlignment = CenterHorizontally){
+                        if(item.badgeCount >0){
+                            BadgeBox(
+                               badgeContent = {
+                                   Text(text = item.badgeCount.toString())
+                               }
+                            ) {
                                 Icon(imageVector = item.icon, contentDescription = item.name)
                             }
-                            if(selected){
-                                Text(text = item.name,
-                                    textAlign = TextAlign.Center,
-                                    fontSize = 10.sp)
-                            }
+                        }else{
+                            Icon(imageVector = item.icon, contentDescription = item.name)
+                        }
+                        if(selected){
+                            Text(text = item.name,
+                            textAlign = TextAlign.Center,
+                            fontSize = 10.sp)
                         }
                     }
-                )
-            }
-
-
-        }
-
-  /*  if(backStackEntry.value?.destination?.route != "login"){
-
-    }*/
-
+              }
+          )
+      }
+    }
 }
 
 
