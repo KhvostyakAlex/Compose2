@@ -1,4 +1,4 @@
-package ru.leroymerlin.internal.compose2.ui.screens
+package ru.leroymerlin.internal.compose2.ui.screens.login
 
 
 import androidx.lifecycle.LiveData
@@ -61,6 +61,7 @@ class LoginViewModel: ViewModel() {
                             response.expiresIn,
                             response.expiresOn))
                         _authData.postValue(testData)
+
                     }, {
                         // _error.postValue("Er - ${it.localizedMessage}")
                         _error.postValue("Неверный логин или пароль")

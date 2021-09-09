@@ -30,7 +30,7 @@ fun FindDepartmentScreen( viewModel: CardsViewModel){
 
 
         Column {
-            Text("Поиск по подразделению", modifier = Modifier.padding(24.dp))
+           // Text("Поиск по подразделению", modifier = Modifier.padding(24.dp))
 
         /*    Card(elevation = 8.dp,
                 backgroundColor = Color.White,
@@ -75,7 +75,7 @@ fun FindDepartmentScreen( viewModel: CardsViewModel){
 
             //если пришли данные, то показываем список
             if(isEnabled.value){
-                val cards = viewModel.cards.collectAsState()
+             /*   val cards = viewModel.cards.collectAsState()
                 val expandedCardIds = viewModel.expandedCardIdsList.collectAsState()
                 LazyColumn {
                     itemsIndexed(cards.value) { _, card ->
@@ -86,6 +86,8 @@ fun FindDepartmentScreen( viewModel: CardsViewModel){
                         )
                     }
                 }
+
+              */
             }
 
 

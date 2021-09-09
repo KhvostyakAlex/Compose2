@@ -12,6 +12,7 @@ import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -37,8 +38,10 @@ import values.FADE_OUT_ANIMATION_DURATION
 @ExperimentalCoroutinesApi
 @Composable
 fun CardsScreen(viewModel: CardsViewModel) {
-    val cards = viewModel.cards.collectAsState()
-    val expandedCardIds = viewModel.expandedCardIdsList.collectAsState()
+   // val cards = viewModel.cards.collectAsState()
+    val cards:List<IntraruUserDataList> by viewModel.cards.observeAsState(emptyList())
+   // val expandedCardIds = viewModel.expandedCardIdsList.collectAsState()
+    val expandedCardIds = viewModel.expandedCardIdsList.observeAsState()
     Scaffold(
         backgroundColor = Color(
             ContextCompat.getColor(
@@ -48,16 +51,41 @@ fun CardsScreen(viewModel: CardsViewModel) {
         )
     ) {
         LazyColumn {
-            itemsIndexed(cards.value) { _, card ->
+            itemsIndexed(cards) { _, card ->
                 ExpandableCard(
                     card = card,
                     onCardArrowClick = { viewModel.onCardArrowClicked(card.account.toInt()) },
-                    expanded = expandedCardIds.value.contains(card.account.toInt()),
+                    expanded = expandedCardIds.value!!.contains(card.account.toInt()),
                 )
             }
         }
     }
 }
+
+@Composable
+fun EmptyCard(title: String){
+    Card(
+        backgroundColor = Color.White,
+        contentColor = Color(ContextCompat.getColor(LocalContext.current, R.color.black)),
+        elevation = 4.dp,
+        shape = RoundedCornerShape(8.dp),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(
+                horizontal = 8.dp,
+                vertical = 4.dp
+            )
+    ) {
+        Column ( // horizontalAlignment = Alignment.CenterHorizontally
+        ){
+
+                Row() {
+                    Text(title, modifier = Modifier.padding(start = 8.dp, top = 8.dp,bottom = 12.dp))
+                }
+        }
+    }
+}
+
 
 @SuppressLint("UnusedTransitionTargetStateParameter")
 @Composable

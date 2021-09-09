@@ -1,7 +1,5 @@
 package ru.leroymerlin.internal.compose2
 
-import android.app.Activity
-import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
@@ -15,17 +13,13 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.PushPin
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -39,11 +33,12 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.pager.*
 import cru.leroymerlin.internal.compose2.ui.screens.cards.CardsViewModel
-import kotlinx.coroutines.launch
 import ru.leroymerlin.internal.compose2.dataclass.BottomNavItem
 import ru.leroymerlin.internal.compose2.ui.screens.*
 import ru.leroymerlin.internal.compose2.ui.screens.ListScreen
 import ru.leroymerlin.internal.compose2.ui.screens.cards.CardsScreen
+import ru.leroymerlin.internal.compose2.ui.screens.login.LoginScreen
+import ru.leroymerlin.internal.compose2.ui.screens.login.LoginViewModel
 import ru.leroymerlin.internal.compose2.ui.screens.settings.SettingsScreen
 
 
@@ -69,6 +64,7 @@ class MainActivity : ComponentActivity() {
                     val navController = rememberNavController()
                     //val bottomItems = listOf("list", "search", "push", "cards")
                     val bottomItems = listOf(
+                        BottomNavItem("Login", "login", Icons.Default.Home),
                         BottomNavItem("List", "list", Icons.Default.Home),
                         BottomNavItem("Поиск", "search", Icons.Default.Search),
                         BottomNavItem("Настройки", "settings", Icons.Default.Settings))
@@ -82,7 +78,7 @@ class MainActivity : ComponentActivity() {
                         bottomBar = {
                             val backStackEntry = navController.currentBackStackEntryAsState()
                             if(backStackEntry.value?.destination?.route!= "login"){
-                                Log.e("route - ", navController.currentDestination?.route.toString())
+                                //Log.e("route - ", navController.currentDestination?.route.toString())
                                 BottomNavigationBar(items = bottomItems,
                                     navController = navController ,
                                     onItemClick ={
@@ -112,16 +108,15 @@ class MainActivity : ComponentActivity() {
 @ExperimentalPagerApi
 @Composable
 fun Navigation(navController: NavHostController,
-             loginViewModel: LoginViewModel,
-             cardsViewModel: CardsViewModel){
-    NavHost(navController = navController, startDestination = "login"){
+               loginViewModel: LoginViewModel,
+               cardsViewModel: CardsViewModel){
+    NavHost(navController = navController, startDestination = "search"){
         composable("login"){ LoginScreen(loginViewModel, navController)}
         composable("list"){ ListScreen(navController)}
-     //   composable("search"){ SearchScreen(cardsViewModel)}
         composable("search"){ SearchScreen()}
         composable("cards"){ CardsScreen(cardsViewModel) }
         composable("details"){ DetailsScreen()}
-        composable("settings"){ SettingsScreen() }
+        composable("settings"){ SettingsScreen(navController) }
     }
 
 }

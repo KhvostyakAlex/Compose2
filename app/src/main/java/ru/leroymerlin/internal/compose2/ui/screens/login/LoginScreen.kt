@@ -1,4 +1,4 @@
-package ru.leroymerlin.internal.compose2.ui.screens
+package ru.leroymerlin.internal.compose2.ui.screens.login
 
 import android.app.Activity
 import android.content.Context
@@ -28,6 +28,7 @@ import ru.leroymerlin.internal.compose2.dataclass.IntraruAuthUserList
 import ru.leroymerlin.internal.compose2.*
 import ru.leroymerlin.internal.compose2.R
 import ru.leroymerlin.internal.compose2.dataclass.IntraruUserDataList
+import ru.leroymerlin.internal.compose2.ui.screens.login.LoginViewModel
 
 
 @Composable
@@ -138,7 +139,6 @@ fun LoginScreen(loginViewModel: LoginViewModel, navController:NavController){
     //как только появляются данные, то записываем их в ref и переходим в поиск
     if (userData.isNotEmpty()) {
         val uData = userData[0] as IntraruUserDataList
-        Log.e("uData", uData.toString())
         //  Log.e("Login fragment USER DATA mobilePhone - ", uData.workPhone)
         val today = getCalculatedDate("yyyy-M-dd", 0)
         with (sharedPref.edit()) {
