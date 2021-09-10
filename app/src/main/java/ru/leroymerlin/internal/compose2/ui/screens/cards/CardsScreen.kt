@@ -9,6 +9,8 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -19,6 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -228,22 +231,33 @@ fun ExpandableContent(
                     textAlign = TextAlign.Start,
                     fontSize = 12.sp
                 )
+            if(card.workPhone !="" && card.workPhone !="null"){
                 Text(
                     text = "№Тел ${card.workPhone}",
                     textAlign = TextAlign.Start,
                     fontSize = 12.sp
                 )
-            Text(
-                text = "№Тел ${card.mobilePhone}",
-                textAlign = TextAlign.Start,
-                fontSize = 12.sp
-            )
+            }
 
+            if(card.mobilePhone !="" && card.mobilePhone !="null"){
                 Text(
-                    text = card.workEmail,
+                    text = "№Тел ${card.mobilePhone}",
                     textAlign = TextAlign.Start,
                     fontSize = 12.sp
                 )
+            }
+            if(card.workEmail != "null" && card.workEmail.length>2){
+                val charA = card.workEmail.indexOf("@",0,false)
+                val charB = card.workEmail.indexOf(", isConfirmed",charA,false)
+               val workEmail = card.workEmail.substring(8,charB)
+
+                Text(
+                    text = "Email - $workEmail",
+                    textAlign = TextAlign.Start,
+                    fontSize = 12.sp
+                )
+            }
+
             Text(
                 text = "Должность - ${card.jobTitle}",
                 textAlign = TextAlign.Start,
@@ -254,6 +268,34 @@ fun ExpandableContent(
                 textAlign = TextAlign.Start,
                 fontSize = 12.sp
             )
+
+            if(card.workPhone != "" && card.workPhone !="null"){
+                Row(  modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = 16.dp, end = 16.dp),
+                    horizontalArrangement = Arrangement.Center){
+                    //Simple FAB
+                    FloatingActionButton(onClick = {//@todo  onclick
+                        },
+                        modifier= Modifier.padding(8.dp),
+                        backgroundColor = colorResource(id = R.color.lmNCKD)
+                    ) {
+                        Icon(Icons.Filled.Phone,"", modifier = Modifier)
+                    }
+
+                    FloatingActionButton(onClick = {
+
+
+                    },
+                        modifier= Modifier.padding(8.dp),
+                        backgroundColor = colorResource(id = R.color.colorCopy)
+                    ) {
+                        Icon(Icons.Filled.ContentCopy,"", modifier = Modifier)
+                    }
+                }
+            }
+
         }
     }
 }
+

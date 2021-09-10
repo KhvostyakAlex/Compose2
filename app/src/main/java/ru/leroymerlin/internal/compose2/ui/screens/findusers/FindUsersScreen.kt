@@ -36,7 +36,7 @@ import ru.leroymerlin.internal.compose2.withIO
 
 
 @Composable
-fun FindUsersScreen( findUsersViewModel: CardsViewModel){
+fun FindUsersScreen( findUsersViewModel: CardsViewModel/*, navController:NavController*/){
     val cards:List<IntraruUserDataList> by findUsersViewModel.cards.observeAsState(emptyList())
     val error:String by findUsersViewModel.error.observeAsState("")
     val activity = LocalContext.current as Activity
@@ -101,9 +101,13 @@ fun FindUsersScreen( findUsersViewModel: CardsViewModel){
             if (error.isNotBlank()) {
                 if(error.contains("401", ignoreCase = true)){
                     Log.e("error - ", "401")
-
+                  /*  navController.navigate("login"){
+                        popUpTo("login") {
+                            inclusive = true
+                        }
+                    }*/
                     // Toast.makeText(context, "Нужно перезайти", Toast.LENGTH_SHORT).show()
-                    GlobalScope.async() { exitApp(activity) }
+                   // GlobalScope.async() { exitApp(activity) }
                 }else if(error.contains("404", ignoreCase = true)){
                     Log.e("error", "true 404")
                     cards
