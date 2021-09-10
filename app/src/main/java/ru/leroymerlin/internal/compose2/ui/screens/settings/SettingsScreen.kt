@@ -94,7 +94,11 @@ fun ExitButton(navController: NavController, activity: Activity   ){
             remove("authHeader")
             commit()
         }
-
+        navController.navigate("login") {
+            popUpTo("login") {
+                inclusive = true
+            }
+        }
 
         //GlobalScope.async() { exitApp(navController) }
                 //  navController.navigate("login")

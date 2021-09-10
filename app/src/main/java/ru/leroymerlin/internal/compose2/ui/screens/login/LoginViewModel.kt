@@ -20,18 +20,18 @@ import ru.leroymerlin.internal.compose2.di.AppModule
 
 
 class LoginViewModel: ViewModel() {
-    private val compositeDisposable: CompositeDisposable = CompositeDisposable()
+   // private val compositeDisposable: CompositeDisposable = CompositeDisposable()
 /*
     private val _authDat = MutableStateFlow(listOf<IntraruAuthUserList>())
     val authDat: StateFlow<List<IntraruAuthUserList>> get() = _authDat*/
 
     private val _count:MutableLiveData<Int> = MutableLiveData(3)
     val count:LiveData<Int> = _count
-
+/*
     override fun onCleared() {
         compositeDisposable.dispose()
         super.onCleared()
-    }
+    }*/
 
 
 

@@ -37,6 +37,11 @@ import ru.leroymerlin.internal.compose2.ui.screens.login.LoginViewModel
 @Composable
 fun LoginScreen(loginViewModel: LoginViewModel, navController:NavController){
     val authData:List<IntraruAuthUserList> by loginViewModel.authData.observeAsState(emptyList())
+
+
+
+
+
     //val userData:List<IntraruUserDataList> by loginViewModel.userData.observeAsState(emptyList())
     val error:String by loginViewModel.error.observeAsState("")
     val context = LocalContext.current
@@ -101,8 +106,8 @@ fun LoginScreen(loginViewModel: LoginViewModel, navController:NavController){
         )
 
         Button(onClick = {
-                         onCLickButtonSignin(login = textStateLogin.value, password = password, activity =activity, navController =navController )
-                           /* Log.e("onClick SignIn", "Login screen")
+                        // onCLickButtonSignin(login = textStateLogin.value, password = password, activity =activity, navController =navController )
+                          //  Log.e("onClick SignIn", "Login screen")
                                         if(textStateLogin.value.isNotEmpty() && textStateLogin.value.length ==8){
                                             if(password.isNotEmpty()){
                                                 val  login = textStateLogin.value
@@ -114,16 +119,43 @@ fun LoginScreen(loginViewModel: LoginViewModel, navController:NavController){
                                             }
                                         }else{
                                             Toast.makeText( context, "Что-то не то с LDAP", Toast.LENGTH_SHORT).show()
-                                        }*/
+                                        }
                          },
             colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.primary),
             modifier = Modifier.size(150.dp, 50.dp)) { Text("Войти", color = Color.White) }
     }
     }
+        //при запуске
+        LaunchedEffect(Unit){
+            Log.e("LaunchedEffect - ", "true")
+            if(signin){
+                navController.navigate("search"){
+                    popUpTo("search") {
+                        inclusive = true
+                    }
+                }
+            }
+        }
+    //при покиданиии
+        DisposableEffect(Unit ){
+            onDispose {
+                //authData.remove()
+                Log.e("onDispose - ", "true")
+            }
+        }
 
 
+   /* for(row in authData){
+        val r = row as IntraruAuthUserList
+        Log.e("row -", r.token.toString())
+        val authData = ""
+    }*/
 
 
+    if (authData.isNotEmpty()) {
+        //Log.e("Authdtata", authData.toString())
+        AuthData(login = textStateLogin.value, authData = authData[0], navController=navController)
+    }
 
 
 
@@ -140,18 +172,24 @@ fun LoginScreen(loginViewModel: LoginViewModel, navController:NavController){
 
  */
 }
- fun authIntraru(loginViewModel: LoginViewModel = LoginViewModel(), login:String, password:String){
+
+
+
+fun authIntraru(loginViewModel: LoginViewModel = LoginViewModel(), login:String, password:String){
     // val myPreferences = PreferenceManager.getDefaultSharedPreferences(context)
    //  val sharedPref = activity.getPreferences(Context.MODE_PRIVATE)
      loginViewModel.authIntraru(login, password)
  }
-@Composable
+
+/*@Composable
 fun onCLickButtonSignin(login:String, password:String,  loginViewModel: LoginViewModel = LoginViewModel(), activity: Activity, navController: NavController){
     Log.e("onClick SignIn", "Login screen")
     val authData:List<IntraruAuthUserList> by loginViewModel.authData.observeAsState(emptyList())
+    val lifecycleOwner = LocalLifecycleOwner.current
 
-    loginViewModel.authData.observe(viewLifecycleOwner, { userData ->
-    })
+   /* loginViewModel.authData.observe(lifecycleOwner, { userData ->
+
+    })*/
 
 
     if(login.isNotEmpty() && login.length ==8){
@@ -164,15 +202,10 @@ fun onCLickButtonSignin(login:String, password:String,  loginViewModel: LoginVie
     }else{
         Toast.makeText( activity, "Что-то не то с LDAP", Toast.LENGTH_SHORT).show()
     }
-/*
-    if (authData.isNotEmpty()) {
-        Log.e("Authdtata", authData.toString())
-        AuthData(login = login, authData = authData[0], navController=navController)
 
 
-    }*/
 
-}
+}*/
 
 @Composable
 fun AuthData(login:String,
@@ -222,8 +255,12 @@ fun AuthData(login:String,
 
 
 
-        navController.navigate("search") {
-            launchSingleTop = true //переходим только 1 раз
+        navController.navigate("search") {  launchSingleTop = true //переходим только 1 раз
+
+         /*   popUpTo("search") {
+                inclusive = true
+            }*/
+
         }
 
 /*
