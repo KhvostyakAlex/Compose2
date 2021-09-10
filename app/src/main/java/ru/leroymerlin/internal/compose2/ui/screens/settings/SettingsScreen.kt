@@ -48,7 +48,7 @@ fun SettingsScreen( navController:NavController) {
     val sharedPref = activity.getPreferences(Context.MODE_PRIVATE)
     val versionName: String = BuildConfig.VERSION_NAME
 
-    Log.e("navController.currentDestination.route-", navController.currentDestination?.route.toString())
+    //Log.e("navController.currentDestination.route-", navController.currentDestination?.route.toString())
     Scaffold() {
         Column(//verticalArrangement = Arrangement.Center,
            modifier= Modifier.fillMaxWidth()
@@ -79,18 +79,26 @@ fun getSettings(activity:Activity, model: SettingsViewModel) {
 fun ExitButton(navController: NavController, activity: Activity   ){
     val onClick = { }
     val sharedPref = activity.getPreferences(Context.MODE_PRIVATE)
+    val signin = sharedPref.getBoolean("signin?", false) //достаем данные из shared prefs
+    val token = sharedPref.getString("token", "") //достаем данные из shared prefs
+    val authHeader = sharedPref.getString("authHeader", "") //достаем данные из shared prefs
+    Log.e("setting signin - ", signin.toString())
+    Log.e("setting - ", "authHeader -"+ authHeader.toString())
+
 //Simple FAB
     FloatingActionButton(onClick = {
-
-     /*   with (sharedPref.edit()) {
+        with (sharedPref.edit()) {
+          //  Log.e("remove sharepref", "- true")
             remove("signin?")
             remove("token")
             remove("authHeader")
+            commit()
+        }
 
-        }*/
 
         //GlobalScope.async() { exitApp(navController) }
-                  navController.navigate("login")
+                //  navController.navigate("login")
+
                                    },
         modifier= Modifier.padding(8.dp),
     backgroundColor = colorResource(id = R.color.lmNCKD)) {
@@ -163,7 +171,7 @@ fun Navigation(navController: NavHostController,
 
 suspend fun exitApp(navController: NavController) {
     Log.e("exitApp-", "true")
-    Log.e("navController.currentDestination.route-", navController.currentDestination?.route.toString())
+   // Log.e("navController.currentDestination.route-", navController.currentDestination?.route.toString())
    // val navController: NavController = NavController(activity)
     // val myPreferences = PreferenceManager.getDefaultSharedPreferences(context)
     //val activity = LocalContext.current as Activity

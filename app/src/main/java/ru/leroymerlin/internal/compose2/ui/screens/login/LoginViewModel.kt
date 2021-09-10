@@ -1,6 +1,7 @@
 package ru.leroymerlin.internal.compose2.ui.screens.login
 
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -34,8 +35,8 @@ class LoginViewModel: ViewModel() {
 
 
 
-    private val _authData: MutableLiveData<List<IntraruAuthUserList>> = MutableLiveData()
-    var authData: LiveData<List<IntraruAuthUserList>> = _authData
+    private val _authData: MutableLiveData<MutableList<IntraruAuthUserList>> = MutableLiveData()
+    var authData: LiveData<MutableList<IntraruAuthUserList>> = _authData
 
     private val _userData: MutableLiveData<List<IntraruUserDataList>> = MutableLiveData()
     var userData: LiveData<List<IntraruUserDataList>> = _userData
@@ -50,12 +51,17 @@ class LoginViewModel: ViewModel() {
             body.put("password", pass)
             val testData = ArrayList<IntraruAuthUserList>()
 
+            Log.e("VM login", login.toString())
+              Log.e("VM pass", pass.toString())
+
               AppModule.providePhonebookApi()
                     .getUserInt(body.toString().toRequestBody("body".toMediaTypeOrNull()))
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe({response ->
-                        testData.add(IntraruAuthUserList(response.userHash,
+                        Log.e("VM response", response.toString())
+                        testData.add(IntraruAuthUserList(
+                            response.userHash,
                             response.token,
                             response.refreshToken,
                             response.expiresIn,
@@ -70,6 +76,8 @@ class LoginViewModel: ViewModel() {
         }
 
     fun getInfoUser(ldap: String, authHeader:String) {
+    //    Log.e("VM ldap", ldap.toString())
+      //  Log.e("VM authHeader", authHeader.toString())
         viewModelScope.launch(Dispatchers.Default) {
             AppModule.providePhonebookApi().getUser(ldap, authHeader)//здесь вызывается API
                     .subscribeOn(Schedulers.io())

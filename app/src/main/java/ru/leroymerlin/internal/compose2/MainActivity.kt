@@ -1,6 +1,9 @@
 package ru.leroymerlin.internal.compose2
 
+import android.app.Activity
+import android.content.Context
 import android.os.Bundle
+import android.preference.PreferenceManager
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
@@ -27,10 +30,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.currentBackStackEntryAsState
-import androidx.navigation.compose.rememberNavController
+import androidx.navigation.compose.*
 import com.google.accompanist.pager.*
 import cru.leroymerlin.internal.compose2.ui.screens.cards.CardsViewModel
 import ru.leroymerlin.internal.compose2.dataclass.BottomNavItem
@@ -52,7 +52,17 @@ class MainActivity : ComponentActivity() {
     @ExperimentalMaterialApi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Toast.makeText( baseContext, "onCreate", Toast.LENGTH_SHORT).show()
+        //Toast.makeText( baseContext, "onCreate", Toast.LENGTH_SHORT).show()
+
+
+
+        val sharedPref = this.getPreferences(Context.MODE_PRIVATE)
+        val firstName = sharedPref.getString("firstName", "") //достаем данные из shared prefs
+        val signin = sharedPref.getBoolean("signin?", false) //достаем данные из shared prefs
+        Log.e("sharedPrefs - ", firstName.toString())
+        Log.e("signin - ", signin.toString())
+
+
 
 
         setContent {
@@ -92,7 +102,11 @@ class MainActivity : ComponentActivity() {
 
                         Navigation(navController = navController, loginViewModel = loginViewModel, cardsViewModel = cardsViewModel )
 
-
+                        if(signin==false){
+                            navController.navigate("login")
+                        }else{
+                            navController.navigate("search")
+                        }
                         //Greeting("World!!!", "Android")
                         //NavHost( navController = navController, startDestination = "list",)
                     }
@@ -110,7 +124,7 @@ class MainActivity : ComponentActivity() {
 fun Navigation(navController: NavHostController,
                loginViewModel: LoginViewModel,
                cardsViewModel: CardsViewModel){
-    NavHost(navController = navController, startDestination = "search"){
+    NavHost(navController = navController, startDestination = "login"){
         composable("login"){ LoginScreen(loginViewModel, navController)}
         composable("list"){ ListScreen(navController)}
         composable("search"){ SearchScreen()}
