@@ -168,7 +168,7 @@ Log.e("response", response.toString())
                             "",
                         ))
                     }*/
-                    Log.e("testData", testData.toString())
+                   // Log.e("testData", testData.toString())
                     _cards.postValue(testData)
                 }, {
                     _error.postValue("Er - ${it.localizedMessage}")

@@ -23,6 +23,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.MutableLiveData
 import androidx.navigation.NavController
 import ru.leroymerlin.internal.compose2.dataclass.IntraruAuthUserList
 import ru.leroymerlin.internal.compose2.*
@@ -45,8 +46,6 @@ fun LoginScreen(loginViewModel: LoginViewModel, navController:NavController){
 
   //  val authDat = loginViewModel.authDat.collectAsState()
     Scaffold() {
-
-
 
     Column(//verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -98,7 +97,7 @@ fun LoginScreen(loginViewModel: LoginViewModel, navController:NavController){
         )
 
         Button(onClick = {
-
+Log.e("onClick SignIn", "Login screen")
             if(textStateLogin.value.isNotEmpty() && textStateLogin.value.length ==8){
                 if(password.isNotEmpty()){
                    val  login = textStateLogin.value
@@ -130,18 +129,22 @@ fun LoginScreen(loginViewModel: LoginViewModel, navController:NavController){
             putString("refreshToken", t.refreshToken)
             putInt("expiresIn", t.expiresIn)
             putInt("expiresOn", t.expiresOn)
+            putString("authHeader", "Bearer " + t.token)
             apply()
         }
         val authHeader = "Bearer " + t.token
         loginViewModel.getInfoUser(textStateLogin.value, authHeader)
     }
 
+    Log.e("Login fragment USER DATA  - ", userData.toString())
     //как только появляются данные, то записываем их в ref и переходим в поиск
+    val lastRoute =navController.previousBackStackEntry?.destination?.route
+    Log.e("login screen navController.previousBackStackEntry?.destination?.route.-", navController.previousBackStackEntry?.destination?.route.toString())
     if (userData.isNotEmpty()) {
         val uData = userData[0] as IntraruUserDataList
-        //  Log.e("Login fragment USER DATA mobilePhone - ", uData.workPhone)
         val today = getCalculatedDate("yyyy-M-dd", 0)
         with (sharedPref.edit()) {
+
             putString("account", uData.account)
             putString("firstName", uData.firstName)
             putString("lastName", uData.lastName)
@@ -158,6 +161,10 @@ fun LoginScreen(loginViewModel: LoginViewModel, navController:NavController){
             putBoolean("signin?", true)
             apply()
         }
+      //  userData.clear()
+     //  val  userData: List<IntraruUserDataList> = userData
+
+
 
         navController.navigate("search"){
             launchSingleTop = true //переходим только 1 раз

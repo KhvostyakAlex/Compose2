@@ -47,13 +47,15 @@ fun SettingsScreen( navController:NavController) {
     val activity = LocalContext.current as Activity
     val sharedPref = activity.getPreferences(Context.MODE_PRIVATE)
     val versionName: String = BuildConfig.VERSION_NAME
+
+    Log.e("navController.currentDestination.route-", navController.currentDestination?.route.toString())
     Scaffold() {
         Column(//verticalArrangement = Arrangement.Center,
            modifier= Modifier.fillMaxWidth()
         ) {
         Row(modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.End){
-            ExitButton(navController = navController)
+            ExitButton(navController = navController, activity=activity)
         }
             getSettings(activity = activity, model = SettingsViewModel())
             Divider()
@@ -74,22 +76,22 @@ fun getSettings(activity:Activity, model: SettingsViewModel) {
 }
 
 @Composable
-fun ExitBtn() {
-    ExtendedFloatingActionButton(
-        icon = { Icon(Icons.Filled.ExitToApp,"") },
-        text = { Text("Выход") },
-        onClick = { /*do something*/ },
-        elevation = FloatingActionButtonDefaults.elevation(8.dp)
-    )
-}
-
-
-@Composable
-fun ExitButton(navController: NavController   ){
+fun ExitButton(navController: NavController, activity: Activity   ){
     val onClick = { }
-
+    val sharedPref = activity.getPreferences(Context.MODE_PRIVATE)
 //Simple FAB
-    FloatingActionButton(onClick = {GlobalScope.async() { exitApp(navController) }},
+    FloatingActionButton(onClick = {
+
+     /*   with (sharedPref.edit()) {
+            remove("signin?")
+            remove("token")
+            remove("authHeader")
+
+        }*/
+
+        //GlobalScope.async() { exitApp(navController) }
+                  navController.navigate("login")
+                                   },
         modifier= Modifier.padding(8.dp),
     backgroundColor = colorResource(id = R.color.lmNCKD)) {
         Icon(Icons.Filled.ExitToApp,"")
