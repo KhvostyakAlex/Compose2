@@ -220,18 +220,19 @@ fun ExpandableContent(
         enter = enterExpand + enterFadeIn,
         exit = exitCollapse + exitFadeOut
     ) {
-        Column(modifier = Modifier
-            .padding(start = 16.dp, end = 8.dp, bottom = 8.dp)
+        Column(
+            modifier = Modifier
+                .padding(start = 16.dp, end = 8.dp, bottom = 8.dp)
 
         ) {
-           // Spacer(modifier = Modifier.heightIn(2.dp))
+            // Spacer(modifier = Modifier.heightIn(2.dp))
 
-                Text(
-                    text = "LDAP - ${card.account}",
-                    textAlign = TextAlign.Start,
-                    fontSize = 12.sp
-                )
-            if(card.workPhone !="" && card.workPhone !="null"){
+            Text(
+                text = "LDAP - ${card.account}",
+                textAlign = TextAlign.Start,
+                fontSize = 12.sp
+            )
+            if (card.workPhone != "" && card.workPhone != "null") {
                 Text(
                     text = "№Тел ${card.workPhone}",
                     textAlign = TextAlign.Start,
@@ -239,17 +240,17 @@ fun ExpandableContent(
                 )
             }
 
-            if(card.mobilePhone !="" && card.mobilePhone !="null"){
+            if (card.mobilePhone != "" && card.mobilePhone != "null") {
                 Text(
                     text = "№Тел ${card.mobilePhone}",
                     textAlign = TextAlign.Start,
                     fontSize = 12.sp
                 )
             }
-            if(card.workEmail != "null" && card.workEmail.length>2){
-                val charA = card.workEmail.indexOf("@",0,false)
-                val charB = card.workEmail.indexOf(", isConfirmed",charA,false)
-               val workEmail = card.workEmail.substring(8,charB)
+            if (card.workEmail != "null" && card.workEmail.length > 2) {
+                val charA = card.workEmail.indexOf("@", 0, false)
+                val charB = card.workEmail.indexOf(", isConfirmed", charA, false)
+                val workEmail = card.workEmail.substring(8, charB)
 
                 Text(
                     text = "Email - $workEmail",
@@ -269,28 +270,33 @@ fun ExpandableContent(
                 fontSize = 12.sp
             )
 
-            if(card.workPhone != "" && card.workPhone !="null"){
-                Row(  modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(start = 16.dp, end = 16.dp),
-                    horizontalArrangement = Arrangement.Center){
+            if (card.workPhone != "" && card.workPhone != "null" ||
+                card.mobilePhone != "" && card.mobilePhone != "null") {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(start = 16.dp, end = 16.dp),
+                    horizontalArrangement = Arrangement.Center
+                ) {
                     //Simple FAB
-                    FloatingActionButton(onClick = {//@todo  onclick
+                    FloatingActionButton(
+                        onClick = {//@todo  onclick
                         },
-                        modifier= Modifier.padding(8.dp),
+                        modifier = Modifier.padding(8.dp),
                         backgroundColor = colorResource(id = R.color.lmNCKD)
                     ) {
-                        Icon(Icons.Filled.Phone,"", modifier = Modifier)
+                        Icon(Icons.Filled.Phone, "", modifier = Modifier)
                     }
 
-                    FloatingActionButton(onClick = {
+                    FloatingActionButton(
+                        onClick = {
 
 
-                    },
-                        modifier= Modifier.padding(8.dp),
+                        },
+                        modifier = Modifier.padding(8.dp),
                         backgroundColor = colorResource(id = R.color.colorCopy)
                     ) {
-                        Icon(Icons.Filled.ContentCopy,"", modifier = Modifier)
+                        Icon(Icons.Filled.ContentCopy, "", modifier = Modifier)
                     }
                 }
             }
