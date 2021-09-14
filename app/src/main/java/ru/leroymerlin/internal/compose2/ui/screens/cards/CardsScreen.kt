@@ -312,6 +312,7 @@ fun ExpandableContent(
                         backgroundColor = colorResource(id = R.color.colorCopy)
                     ) {
                         Icon(Icons.Filled.ContentCopy, "", modifier = Modifier)
+
                     }
                 }
             }

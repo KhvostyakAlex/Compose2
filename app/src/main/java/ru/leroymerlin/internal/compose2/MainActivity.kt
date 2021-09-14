@@ -59,7 +59,7 @@ class MainActivity : ComponentActivity() {
         val sharedPref = this.getPreferences(Context.MODE_PRIVATE)
         val firstName = sharedPref.getString("firstName", "") //достаем данные из shared prefs
         val signin = sharedPref.getBoolean("signin?", false) //достаем данные из shared prefs
-        Log.e("sharedPrefs - ", firstName.toString())
+       // Log.e("sharedPrefs - ", firstName.toString())
         Log.e("signin - ", signin.toString())
 
 
@@ -127,7 +127,7 @@ fun Navigation(navController: NavHostController,
     NavHost(navController = navController, startDestination = "login"){
         composable("login"){ LoginScreen(loginViewModel, navController)}
         composable("list"){ ListScreen(navController)}
-        composable("search"){ SearchScreen()}
+        composable("search"){ SearchScreen(navController)}
         composable("cards"){ CardsScreen(cardsViewModel) }
         composable("details"){ DetailsScreen()}
         composable("settings"){ SettingsScreen(navController) }

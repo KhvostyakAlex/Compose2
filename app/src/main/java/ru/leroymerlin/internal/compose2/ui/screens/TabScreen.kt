@@ -10,9 +10,25 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.google.accompanist.pager.*
+import cru.leroymerlin.internal.compose2.ui.screens.cards.CardsViewModel
 import kotlinx.coroutines.launch
 import ru.leroymerlin.internal.compose2.R
-import ru.leroymerlin.internal.compose2.TabItem
+import ru.leroymerlin.internal.compose2.ui.screens.findusers.FindUsersScreen
+/*
+typealias ComposableFun = @Composable () -> Unit
+sealed class TabItem( var icon: Int, var title: String, var screen: ComposableFun) {
+
+    @ExperimentalMaterialApi
+    @ExperimentalPagerApi
+    object FindUsers : TabItem(R.drawable.ic_search_black, "Поиск по сотруднику",
+        { FindUsersScreen(findUsersViewModel = CardsViewModel() )})
+    @ExperimentalMaterialApi
+    @ExperimentalPagerApi
+    object FindDepartment : TabItem(R.drawable.ic_search_black, "Поиск по подразделению",
+        { FindDepartmentScreen(viewModel = CardsViewModel()) })
+
+}
+
 
 @ExperimentalPagerApi
 @ExperimentalMaterialApi
@@ -49,6 +65,7 @@ fun Tabs(tabs: List<TabItem>, pagerState: PagerState) {
     }
 }
 
+/*
 @ExperimentalMaterialApi
 @ExperimentalPagerApi
 @Preview(showBackground = true)
@@ -60,7 +77,7 @@ fun TabsPreview() {
     )
     val pagerState = rememberPagerState(pageCount = tabs.size)
     Tabs(tabs = tabs, pagerState = pagerState)
-}
+}*/
 
 @ExperimentalPagerApi
 @Composable
@@ -70,6 +87,9 @@ fun TabsContent(tabs: List<TabItem>, pagerState: PagerState) {
     }
 }
 
+
+
+/*
 @ExperimentalMaterialApi
 @ExperimentalPagerApi
 @Preview(showBackground = true)
@@ -81,4 +101,4 @@ fun TabsContentPreview() {
     )
     val pagerState = rememberPagerState(pageCount = tabs.size)
     TabsContent(tabs = tabs, pagerState = pagerState)
-}
+}*/

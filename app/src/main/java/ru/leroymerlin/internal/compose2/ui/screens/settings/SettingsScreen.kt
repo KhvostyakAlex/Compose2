@@ -164,7 +164,7 @@ fun Navigation(navController: NavHostController,
     NavHost(navController = navController, startDestination = "search"){
         composable("login"){ LoginScreen(loginViewModel, navController) }
         composable("list"){ ListScreen(navController) }
-        composable("search"){ SearchScreen() }
+        composable("search"){ SearchScreen(navController = navController) }
         composable("cards"){ CardsScreen(cardsViewModel) }
         composable("details"){ DetailsScreen() }
         composable("settings"){ SettingsScreen(navController) }

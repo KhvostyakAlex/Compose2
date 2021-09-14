@@ -22,21 +22,36 @@ import androidx.compose.ui.text.font.FontSynthesis.Companion.All
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.LiveData
 import androidx.navigation.NavController
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import androidx.navigation.findNavController
+import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import cru.leroymerlin.internal.compose2.ui.screens.cards.CardsViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
 import kotlinx.coroutines.withContext
+import ru.leroymerlin.internal.compose2.Navigation
 import ru.leroymerlin.internal.compose2.dataclass.IntraruUserDataList
+import ru.leroymerlin.internal.compose2.ui.screens.DetailsScreen
+import ru.leroymerlin.internal.compose2.ui.screens.ListScreen
+import ru.leroymerlin.internal.compose2.ui.screens.SearchScreen
+import ru.leroymerlin.internal.compose2.ui.screens.cards.CardsScreen
 import ru.leroymerlin.internal.compose2.ui.screens.cards.EmptyCard
 import ru.leroymerlin.internal.compose2.ui.screens.cards.ExpandableCard
+import ru.leroymerlin.internal.compose2.ui.screens.login.LoginScreen
+import ru.leroymerlin.internal.compose2.ui.screens.login.LoginViewModel
+import ru.leroymerlin.internal.compose2.ui.screens.settings.SettingsScreen
 import ru.leroymerlin.internal.compose2.withIO
 
 
+@ExperimentalPagerApi
+@ExperimentalMaterialApi
 @Composable
-fun FindUsersScreen( findUsersViewModel: CardsViewModel/*, navController:NavController*/){
+fun FindUsersScreen( findUsersViewModel: CardsViewModel, navController:NavController){
     val cards:List<IntraruUserDataList> by findUsersViewModel.cards.observeAsState(emptyList())
     val error:String by findUsersViewModel.error.observeAsState("")
     val activity = LocalContext.current as Activity
@@ -97,15 +112,24 @@ fun FindUsersScreen( findUsersViewModel: CardsViewModel/*, navController:NavCont
 
 
 
-
             if (error.isNotBlank()) {
                 if(error.contains("401", ignoreCase = true)){
                     Log.e("error - ", "401")
-                  /*  navController.navigate("login"){
+
+                    with (sharedPref.edit()) {
+                        //  Log.e("remove sharepref", "- true")
+                        remove("signin?")
+                        remove("token")
+                        remove("authHeader")
+                        commit()
+                    }
+                    navController.navigate("login") {
                         popUpTo("login") {
                             inclusive = true
                         }
-                    }*/
+                    }
+
+
                     // Toast.makeText(context, "Нужно перезайти", Toast.LENGTH_SHORT).show()
                    // GlobalScope.async() { exitApp(activity) }
                 }else if(error.contains("404", ignoreCase = true)){
@@ -158,6 +182,7 @@ fun FindUsersScreen( findUsersViewModel: CardsViewModel/*, navController:NavCont
 
 
 }
+
 
 suspend fun exitApp(activity: Activity) {
     val navController:NavController = NavController(activity)
