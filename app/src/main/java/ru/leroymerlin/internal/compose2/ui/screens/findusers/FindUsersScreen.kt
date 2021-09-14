@@ -150,7 +150,7 @@ fun FindUsersScreen( findUsersViewModel: FindUsersViewModel, navController:NavCo
                    // GlobalScope.async() { exitApp(activity) }
                 }else if(error.contains("404", ignoreCase = true)){
                     Log.e("error", "true 404")
-                    cards
+
                     //  Toast.makeText(context, "Такой Ldap не найден", Toast.LENGTH_SHORT).show()
                     val data = ArrayList<IntraruUserDataList>()
                     val cards =  data.add(IntraruUserDataList(

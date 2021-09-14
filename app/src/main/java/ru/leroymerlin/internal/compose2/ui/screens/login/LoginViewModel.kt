@@ -45,6 +45,7 @@ class LoginViewModel: ViewModel() {
     var error: LiveData<String> =_error
 
     fun authIntraru(login:String, pass:String){
+        Log.e("authIntraru", "authIntraru")
         viewModelScope.launch(Dispatchers.Default) {
             val body = JSONObject()
             body.put("login", "RU1000\\$login")
@@ -69,6 +70,8 @@ class LoginViewModel: ViewModel() {
                         _authData.postValue(testData)
 
                     }, {
+                        Log.e("VM login", "empty testData")
+                        _authData.postValue(testData)
                         // _error.postValue("Er - ${it.localizedMessage}")
                         _error.postValue("Неверный логин или пароль")
                     })

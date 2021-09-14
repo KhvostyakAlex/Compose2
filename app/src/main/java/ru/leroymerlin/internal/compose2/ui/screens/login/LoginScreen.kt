@@ -21,8 +21,14 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusDirection
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.key.Key
+import androidx.compose.ui.input.key.key
+import androidx.compose.ui.input.key.onKeyEvent
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.colorResource
@@ -61,8 +67,11 @@ fun LoginScreen(loginViewModel: LoginViewModel, navController:NavController){
     var password by rememberSaveable { mutableStateOf("") }
     var passwordVisibility by remember { mutableStateOf(false) }
     val signin = sharedPref.getBoolean("signin?", false) //достаем данные из shared prefs
+    val focusManager = LocalFocusManager.current
 
     val keyboardController = LocalSoftwareKeyboardController.current
+  //  var isLogin:Boolean = false
+
   //  val authDat = loginViewModel.authDat.collectAsState()
     Scaffold() {
 
@@ -93,14 +102,28 @@ fun LoginScreen(loginViewModel: LoginViewModel, navController:NavController){
                 focusedIndicatorColor =  colorResource(id = R.color.lmNCKD),                   //Color.Transparent - hide the indicator
                 //   unfocusedIndicatorColor = Color.Cyan
             ),
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number, imeAction = ImeAction.Done),
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number, imeAction = ImeAction.Next),
+           //настраиваем кнопку ДАЛЕЕ, переходим на поле нижу
             keyboardActions = KeyboardActions(
-                onDone = {keyboardController?.hide()}),
+                onNext = {
+                    focusManager.moveFocus(FocusDirection.Down)
+                }
+            ),
             trailingIcon = { if(textStateLogin.value.length ==8){
                                     Icon(imageVector  = Icons.Filled.Check, "")
                                 }
                            }, //при вводе 8 знаков появится иконка
-            modifier = Modifier.padding(8.dp).width(200.dp),
+            modifier = Modifier
+                .padding(8.dp)
+                .width(200.dp)
+                .onKeyEvent {
+                    if (it.key.keyCode == Key.Tab.keyCode){
+                        focusManager.moveFocus(FocusDirection.Down)
+                        true
+                    } else {
+                        false
+                    }
+                },
 
 
         )
@@ -117,9 +140,23 @@ fun LoginScreen(loginViewModel: LoginViewModel, navController:NavController){
                 //   unfocusedIndicatorColor = Color.Cyan
             ),
             visualTransformation = if (passwordVisibility) VisualTransformation.None else PasswordVisualTransformation(),
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password, imeAction = ImeAction.Done),
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password, imeAction = ImeAction.Send),
             keyboardActions = KeyboardActions(
-                onDone = {keyboardController?.hide()}),
+                onSend = {
+                    if(textStateLogin.value.isNotEmpty() && textStateLogin.value.length ==8){
+                        if(password.isNotEmpty()){
+                            val  login = textStateLogin.value.trim()
+                            loginViewModel.authIntraru(login, password)
+                            keyboardController?.hide()
+                          //  password =""
+                        }else{
+                            Toast.makeText( context, "Неправильный логин или пароль", Toast.LENGTH_SHORT).show()
+                        }
+                    }else{
+                        Toast.makeText( context, "Что-то не то с LDAP", Toast.LENGTH_SHORT).show()
+                    }
+                    keyboardController?.hide()}
+            ),
             trailingIcon = {
                 val image = if (passwordVisibility)
                     Icons.Filled.Visibility
@@ -144,11 +181,13 @@ fun LoginScreen(loginViewModel: LoginViewModel, navController:NavController){
                                             if(password.isNotEmpty()){
                                                 val  login = textStateLogin.value.trim()
                                                 loginViewModel.authIntraru(login, password)
+                                               // password =""
                                                // authIntraru( loginViewModel, login, password)
                                                 //hideKeyboard(activity)
                                                 keyboardController?.hide()
+
                                             }else{
-                                                Toast.makeText( activity, "Неправильный логин или пароль", Toast.LENGTH_SHORT).show()
+                                                Toast.makeText( context, "Неправильный логин или пароль", Toast.LENGTH_SHORT).show()
                                             }
                                         }else{
                                             Toast.makeText( context, "Что-то не то с LDAP", Toast.LENGTH_SHORT).show()
@@ -163,6 +202,7 @@ fun LoginScreen(loginViewModel: LoginViewModel, navController:NavController){
         LaunchedEffect(Unit){
             Log.e("LaunchedEffect - ", "true")
             if(signin){
+                loginViewModel.authIntraru("login", "password")
                 navController.navigate("search"){
                     popUpTo("search") {
                         inclusive = true
@@ -175,6 +215,9 @@ fun LoginScreen(loginViewModel: LoginViewModel, navController:NavController){
             onDispose {
                 //authData.remove()
                 Log.e("onDispose - ", "true")
+                loginViewModel.authIntraru("login", "password")
+
+
             }
         }
 
@@ -185,11 +228,26 @@ fun LoginScreen(loginViewModel: LoginViewModel, navController:NavController){
         val authData = ""
     }*/
 
+    Log.e("authData - ", authData.toString())
+    //Log.e("isLogin empty- ", isLogin.toString())
+
 
     if (authData.isNotEmpty()) {
-        //Log.e("Authdtata", authData.toString())
-        AuthData(login = textStateLogin.value, authData = authData[0], navController=navController)
+        //isLogin = true
+        Log.e("if Authdtata", authData.toString())
+       // Log.e("if isLogin", isLogin.toString())
+        SignIn(
+            login = textStateLogin.value,
+            password = password,
+            authData = authData[0],
+            navController = navController
+        )
     }
+
+    if(error.isNotEmpty()){
+        Log.e("if error", error.toString())
+    }
+
 
 
 
@@ -208,41 +266,9 @@ fun LoginScreen(loginViewModel: LoginViewModel, navController:NavController){
 }
 
 
-
-fun authIntraru(loginViewModel: LoginViewModel = LoginViewModel(), login:String, password:String){
-    // val myPreferences = PreferenceManager.getDefaultSharedPreferences(context)
-   //  val sharedPref = activity.getPreferences(Context.MODE_PRIVATE)
-     loginViewModel.authIntraru(login, password)
- }
-
-/*@Composable
-fun onCLickButtonSignin(login:String, password:String,  loginViewModel: LoginViewModel = LoginViewModel(), activity: Activity, navController: NavController){
-    Log.e("onClick SignIn", "Login screen")
-    val authData:List<IntraruAuthUserList> by loginViewModel.authData.observeAsState(emptyList())
-    val lifecycleOwner = LocalLifecycleOwner.current
-
-   /* loginViewModel.authData.observe(lifecycleOwner, { userData ->
-
-    })*/
-
-
-    if(login.isNotEmpty() && login.length ==8){
-        if(password.isNotEmpty()){
-            loginViewModel.authIntraru(login, password)
-            hideKeyboard(activity)
-        }else{
-            Toast.makeText( activity, "Неправильный логин или пароль", Toast.LENGTH_SHORT).show()
-        }
-    }else{
-        Toast.makeText( activity, "Что-то не то с LDAP", Toast.LENGTH_SHORT).show()
-    }
-
-
-
-}*/
-
 @Composable
-fun AuthData(login:String,
+fun SignIn(login:String,
+             password:String,
              authData:IntraruAuthUserList,
              loginViewModel: LoginViewModel = LoginViewModel(),
              navController: NavController
@@ -261,7 +287,11 @@ fun AuthData(login:String,
     }
 
     val authHeader = "Bearer " + t.token
-    loginViewModel.getInfoUser(login, authHeader)
+    if(login.isNotEmpty() && password.isNotEmpty()){
+       // loginViewModel.authIntraru(login, password)
+        loginViewModel.getInfoUser(login, authHeader)
+    }
+
 
     if (userData.isNotEmpty()) {
         val uData = userData[0] as IntraruUserDataList
@@ -289,6 +319,7 @@ fun AuthData(login:String,
 
 
 
+
         navController.navigate("search") {  launchSingleTop = true //переходим только 1 раз
 
          /*   popUpTo("search") {
@@ -296,6 +327,7 @@ fun AuthData(login:String,
             }*/
 
         }
+
 
 /*
         navController.navigate("search"){
