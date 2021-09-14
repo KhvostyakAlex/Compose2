@@ -5,6 +5,7 @@ import androidx.compose.material.*
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
@@ -24,6 +25,7 @@ sealed class TabItem( var icon: Int, var title: String, var screen: ComposableFu
 }
 lateinit var navControl:NavController
 
+@ExperimentalComposeUiApi
 @ExperimentalPagerApi
 @ExperimentalMaterialApi
 @Composable
@@ -42,6 +44,7 @@ fun SearchScreen(navController: NavController) {
     }
 }
 
+@ExperimentalComposeUiApi
 @ExperimentalMaterialApi
 @ExperimentalPagerApi
 object FindUsers : TabItem(R.drawable.ic_search_black, "Поиск по сотруднику",

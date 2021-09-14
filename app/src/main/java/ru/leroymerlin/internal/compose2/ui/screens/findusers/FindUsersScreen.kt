@@ -16,9 +16,11 @@ import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontSynthesis.Companion.All
 import androidx.compose.ui.unit.dp
@@ -51,6 +53,7 @@ import ru.leroymerlin.internal.compose2.ui.screens.settings.SettingsScreen
 import ru.leroymerlin.internal.compose2.withIO
 
 
+@ExperimentalComposeUiApi
 @ExperimentalPagerApi
 @ExperimentalMaterialApi
 @Composable
@@ -59,6 +62,8 @@ fun FindUsersScreen( findUsersViewModel: FindUsersViewModel, navController:NavCo
     val error:String by findUsersViewModel.error.observeAsState("")
     val activity = LocalContext.current as Activity
     val sharedPref = activity.getPreferences(Context.MODE_PRIVATE)
+    val keyboardController = LocalSoftwareKeyboardController.current
+
     Scaffold {
      /*   topBar = {
             TopAppBar{
@@ -108,7 +113,7 @@ fun FindUsersScreen( findUsersViewModel: FindUsersViewModel, navController:NavCo
                     }else{
                         findUsersViewModel.getUserByName(userName =textState.value, authHeader = authHeader)
                     }
-
+                    keyboardController?.hide()
              //  Log.e("isEnabled", isEnabled.value.toString())
                    // isEnabled.value = isEnabled.value==false
 

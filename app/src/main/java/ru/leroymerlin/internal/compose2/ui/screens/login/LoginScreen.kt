@@ -7,6 +7,7 @@ import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -18,12 +19,15 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
@@ -38,6 +42,8 @@ import ru.leroymerlin.internal.compose2.dataclass.IntraruUserDataList
 import ru.leroymerlin.internal.compose2.ui.screens.login.LoginViewModel
 
 
+
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun LoginScreen(loginViewModel: LoginViewModel, navController:NavController){
     val authData:List<IntraruAuthUserList> by loginViewModel.authData.observeAsState(emptyList())
@@ -56,7 +62,7 @@ fun LoginScreen(loginViewModel: LoginViewModel, navController:NavController){
     var passwordVisibility by remember { mutableStateOf(false) }
     val signin = sharedPref.getBoolean("signin?", false) //достаем данные из shared prefs
 
-
+    val keyboardController = LocalSoftwareKeyboardController.current
   //  val authDat = loginViewModel.authDat.collectAsState()
     Scaffold() {
 
@@ -76,30 +82,33 @@ fun LoginScreen(loginViewModel: LoginViewModel, navController:NavController){
         )
         Text("Добро пожаловать!", modifier = Modifier.padding(8.dp))
 
-        TextField(value = textStateLogin.value,
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+        TextField(
+            value = textStateLogin.value,
             onValueChange = { value -> textStateLogin.value = value},
             placeholder = {Text("LDAP")},
+            singleLine = true,
             shape = RoundedCornerShape(8.dp),
             colors = TextFieldDefaults.textFieldColors(
                 backgroundColor = colorResource(id = R.color.colorLightGrey),
                 focusedIndicatorColor =  colorResource(id = R.color.lmNCKD),                   //Color.Transparent - hide the indicator
                 //   unfocusedIndicatorColor = Color.Cyan
             ),
-
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number, imeAction = ImeAction.Done),
+            keyboardActions = KeyboardActions(
+                onDone = {keyboardController?.hide()}),
             trailingIcon = { if(textStateLogin.value.length ==8){
                                     Icon(imageVector  = Icons.Filled.Check, "")
                                 }
                            }, //при вводе 8 знаков появится иконка
-            modifier = Modifier
-                .padding(8.dp)
-                .width(200.dp)
-               // .height(50.dp)
+            modifier = Modifier.padding(8.dp).width(200.dp),
+
+
         )
 
         TextField(
             value = password,
             onValueChange = { password = it },
+            singleLine = true,
             placeholder = { Text("Введи пароль") },
             shape = RoundedCornerShape(8.dp),
             colors = TextFieldDefaults.textFieldColors(
@@ -108,7 +117,9 @@ fun LoginScreen(loginViewModel: LoginViewModel, navController:NavController){
                 //   unfocusedIndicatorColor = Color.Cyan
             ),
             visualTransformation = if (passwordVisibility) VisualTransformation.None else PasswordVisualTransformation(),
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password, imeAction = ImeAction.Done),
+            keyboardActions = KeyboardActions(
+                onDone = {keyboardController?.hide()}),
             trailingIcon = {
                 val image = if (passwordVisibility)
                     Icons.Filled.Visibility
@@ -131,10 +142,11 @@ fun LoginScreen(loginViewModel: LoginViewModel, navController:NavController){
                           //  Log.e("onClick SignIn", "Login screen")
                                         if(textStateLogin.value.isNotEmpty() && textStateLogin.value.length ==8){
                                             if(password.isNotEmpty()){
-                                                val  login = textStateLogin.value
+                                                val  login = textStateLogin.value.trim()
                                                 loginViewModel.authIntraru(login, password)
                                                // authIntraru( loginViewModel, login, password)
-                                                hideKeyboard(activity)
+                                                //hideKeyboard(activity)
+                                                keyboardController?.hide()
                                             }else{
                                                 Toast.makeText( activity, "Неправильный логин или пароль", Toast.LENGTH_SHORT).show()
                                             }
