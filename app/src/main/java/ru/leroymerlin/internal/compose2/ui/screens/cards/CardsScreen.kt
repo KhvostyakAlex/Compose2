@@ -1,6 +1,12 @@
 package ru.leroymerlin.internal.compose2.ui.screens.cards
 
 import android.annotation.SuppressLint
+import android.app.Activity
+import android.content.Context
+import android.content.Intent
+import android.net.Uri
+import android.text.TextUtils
+import android.util.Log
 import androidx.compose.animation.*
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.clickable
@@ -27,10 +33,13 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
+import androidx.core.content.ContextCompat.startActivity
 import cru.leroymerlin.internal.compose2.ui.screens.cards.CardsViewModel
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import ru.leroymerlin.internal.compose2.R
+import ru.leroymerlin.internal.compose2.copyToClipboard
+import ru.leroymerlin.internal.compose2.copyToClipboard2
 import ru.leroymerlin.internal.compose2.dataclass.IntraruUserDataList
 import values.COLLAPSE_ANIMATION_DURATION
 import values.EXPAND_ANIMATION_DURATION
@@ -109,6 +118,7 @@ fun ExpandableCard(
     }, label = "rotationDegreeTransition") {
         if (expanded) 0f else 180f
     }
+    val activity = LocalContext.current as Activity
 
     Card(
         backgroundColor = Color.White,
@@ -193,6 +203,8 @@ fun ExpandableContent(
     visible: Boolean = true,
     card: IntraruUserDataList,
 ) {
+    val activity = LocalContext.current as Activity
+    val context = LocalContext.current
     val enterFadeIn = remember {
         fadeIn(
             animationSpec = TweenSpec(
@@ -278,9 +290,11 @@ fun ExpandableContent(
                         .padding(start = 16.dp, end = 16.dp),
                     horizontalArrangement = Arrangement.Center
                 ) {
-                    //Simple FAB
+                    //buttonPhone
                     FloatingActionButton(
-                        onClick = {//@todo  onclick
+                        onClick = {
+                                 onClickButtonPhone(card, context = context)
+
                         },
                         modifier = Modifier.padding(8.dp),
                         backgroundColor = colorResource(id = R.color.lmNCKD)
@@ -290,7 +304,8 @@ fun ExpandableContent(
 
                     FloatingActionButton(
                         onClick = {
-
+                                Log.e("copyTobuffer - ",card.firstName.toString())
+                            onClickButtonCopy(card, context)
 
                         },
                         modifier = Modifier.padding(8.dp),
@@ -300,7 +315,94 @@ fun ExpandableContent(
                     }
                 }
             }
+        }
+    }
+}
 
+fun onClickButtonPhone(card: IntraruUserDataList, context: Context){
+    var workPhone = card.workPhone
+    var mobilePhone = card.mobilePhone
+    var phoneNum =""
+
+    if(workPhone != "" && workPhone != "null"){
+        Log.e("workPhone - ",card.workPhone.toString())
+
+        workPhone = workPhone.replace("+","")
+        workPhone =  workPhone.replace("-","")
+        workPhone = workPhone.replace(" ","")
+        val isDigits = TextUtils.isDigitsOnly(workPhone) //проверка - является ли числом
+
+        if(isDigits){
+            val character = workPhone[0]//определяем первый знак
+
+            if(character.toString() == "7"){
+                phoneNum = "+$workPhone"
+            }else{
+                phoneNum = workPhone
+            }
+            context.copyToClipboard(phoneNum)//нужно ли копировать в буффер?
+            val intent = Intent(Intent.ACTION_DIAL, Uri.parse("tel:$phoneNum"))//открываем звонилку
+            context.startActivity(intent)
+        }
+
+    }else if(card.mobilePhone != "" && card.mobilePhone != "null"){
+        Log.e("mobilePhone - ", card.mobilePhone)
+        mobilePhone = mobilePhone.replace("+","")
+        mobilePhone =  mobilePhone.replace("-","")
+        mobilePhone = mobilePhone.replace(" ","")
+        val isDigits = TextUtils.isDigitsOnly(mobilePhone) //проверка - является ли числом
+        if(isDigits){
+            val character = mobilePhone[0]//определяем первый знак
+            if(character.toString() == "7"){
+                phoneNum = "+$mobilePhone"
+            }else{
+                phoneNum = mobilePhone
+            }
+            context.copyToClipboard(phoneNum)//нужно ли копировать в буффер?
+            val intent = Intent(Intent.ACTION_DIAL, Uri.parse("tel:$phoneNum"))//открываем звонилку
+            context.startActivity(intent)
+        }
+    }
+}
+
+fun onClickButtonCopy(card: IntraruUserDataList, context: Context){
+    var workPhone = card.workPhone
+    var mobilePhone = card.mobilePhone
+    var phoneNum =""
+
+    if(workPhone != "" && workPhone != "null"){
+        Log.e("workPhone - ",card.workPhone.toString())
+
+        workPhone = workPhone.replace("+","")
+        workPhone =  workPhone.replace("-","")
+        workPhone = workPhone.replace(" ","")
+        val isDigits = TextUtils.isDigitsOnly(workPhone) //проверка - является ли числом
+
+        if(isDigits){
+            val character = workPhone[0]//определяем первый знак
+
+            if(character.toString() == "7"){
+                phoneNum = "+$workPhone"
+            }else{
+                phoneNum = workPhone
+            }
+            context.copyToClipboard(phoneNum)//нужно ли копировать в буффер?
+        }
+
+    }else if(card.mobilePhone != "" && card.mobilePhone != "null"){
+        Log.e("mobilePhone - ", card.mobilePhone)
+        mobilePhone = mobilePhone.replace("+","")
+        mobilePhone =  mobilePhone.replace("-","")
+        mobilePhone = mobilePhone.replace(" ","")
+        val isDigits = TextUtils.isDigitsOnly(mobilePhone) //проверка - является ли числом
+        if(isDigits){
+            val character = mobilePhone[0]//определяем первый знак
+            if(character.toString() == "7"){
+                phoneNum = "+$mobilePhone"
+            }else{
+                phoneNum = mobilePhone
+            }
+            context.copyToClipboard(phoneNum)//нужно ли копировать в буффер?
         }
     }
 }

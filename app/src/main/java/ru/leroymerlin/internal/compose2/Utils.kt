@@ -17,8 +17,11 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.FrameLayout
 import androidx.annotation.AnyRes
 import androidx.appcompat.app.AlertDialog
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.platform.LocalContext
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.content.ContextCompat.getSystemService
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -35,6 +38,13 @@ fun Context.copyToClipboard(text: CharSequence){
 
     myClipboard?.setPrimaryClip(myClip!!)
 }
+fun copyToClipboard2(context: Context, text: CharSequence){
+    val myClipboard = context.getSystemService(CLIPBOARD_SERVICE )as ClipboardManager?
+    val myClip: ClipData? = ClipData.newPlainText("text", text)
+    myClipboard?.setPrimaryClip(myClip!!)
+}
+
+
 
 @SuppressLint("ServiceCast")
 fun hideKeyboard(activity: Activity) {
