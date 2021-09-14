@@ -39,9 +39,9 @@ class AutoCompleteState<T : AutoCompleteEntity>(private val startItems: List<T>)
 
     var filteredItems by mutableStateOf(startItems)
     override var isSearching by mutableStateOf(false)
-    override var boxWidthPercentage by mutableStateOf(.9f)
+    override var boxWidthPercentage by mutableStateOf(1f)
     override var shouldWrapContentHeight by mutableStateOf(false)
-    override var boxMaxHeight: Dp by mutableStateOf(TextFieldDefaults.MinHeight * 3)
+    override var boxMaxHeight: Dp by mutableStateOf(TextFieldDefaults.MinHeight * 5)
     override var boxBorderStroke by mutableStateOf(BorderStroke(2.dp, Color.Black))
     override var boxShape: Shape by mutableStateOf(RoundedCornerShape(8.dp))
 

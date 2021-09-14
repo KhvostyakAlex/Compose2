@@ -1,31 +1,22 @@
 package ru.leroymerlin.internal.compose2.ui.screens.finddepartment
 
+import android.util.Log
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
-import androidx.compose.material.CheckboxDefaults.colors
-import androidx.compose.material.MaterialTheme.colors
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.platform.LocalView
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
+import ru.leroymerlin.internal.compose2.ui.screens.autocompletetext.components.autocomplete.AutoCompleteBox
+import ru.leroymerlin.internal.compose2.ui.screens.autocompletetext.components.autocomplete.utils.AutoCompleteSearchBarTag
+import ru.leroymerlin.internal.compose2.ui.screens.autocompletetext.components.autocomplete.utils.asAutoCompleteEntities
+import ru.leroymerlin.internal.compose2.ui.screens.autocompletetext.components.searchbar.TextSearchBar
 
 import ru.leroymerlin.internal.compose2.ui.screens.cards.CardsViewModel
-import ru.leroymerlin.internal.compose2.R
-import ru.leroymerlin.internal.compose2.ui.screens.AutoCompleteText
-import ru.leroymerlin.internal.compose2.ui.screens.autocompletetext.models.Person
-import ru.leroymerlin.internal.compose2.ui.screens.autocompletetext.sample.AutoCompleteObjectSample
-import ru.leroymerlin.internal.compose2.ui.screens.autocompletetext.sample.AutoCompleteValueSample
-import ru.leroymerlin.internal.compose2.ui.screens.cards.ExpandableCard
+import java.util.*
 
 
 @ExperimentalAnimationApi
@@ -33,47 +24,119 @@ import ru.leroymerlin.internal.compose2.ui.screens.cards.ExpandableCard
 fun FindDepartmentScreen( viewModel: CardsViewModel){
 
     Scaffold {
-            val textState = remember { mutableStateOf("")}
-            val isEnabled = remember { mutableStateOf(false)}
-            val isCompleteLogin = remember { mutableStateOf(0)}
 
         val bottomItems = listOf("list", "search", "push", "cards")
-        val textStateLogin = remember { mutableStateOf("") }
 
+       val arrJobTitleList = listOf(
+            "Все",
+            "менеджер отдела",
+            "продавец-консультант",
+            "руководитель торгового сектора",
+            "администратор цепи поставок магазина",
+            "специалист по администрированию персонала",
+            "менеджер сектора по обслуживанию клиентов",
+            "специалист цепи поставок магазина",
+            "менеджер по охране труда",
+            "кассир-консультант",
+            "менеджер цепи поставок магазина",
+            "специалист технической поддержки",
+            "механик",
+            "менеджер по административным и бухгалтерским вопросам",
+            "специалист по продажам",
+            "инженер-энергетик",
+            "техник-консультант",
+            "Директор магазина",
+            "руководитель сектора по обслуживанию клиентов",
+            "руководитель цепи поставок магазина",
+            "инженер-теплотехник",
+            "контролер управления",
+            "дизайнер"
+        )
 
         Column {
 
-            val persons = listOf(
-                Person(
-                    name = "Paulo Pereira",
-                    age = 23
-                ),
-                Person(
-                    name = "Daenerys Targaryen",
-                    age = 24
-                ),
-                Person(
-                    name = "Jon Snow",
-                    age = 24
-                ),
-                Person(
-                    name = "Sansa Stark",
-                    age = 20
-                ),
-            )
-            val names = persons.map { it.name }
-
             Column(
-                modifier = Modifier.fillMaxSize().padding(16.dp),
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(24.dp)
             ) {
-                AutoCompleteObjectSample(persons = persons)
-                AutoCompleteValueSample(items = names)
+              //  AutoCompleteObjectSample(persons = persons)
+                AutoCompleteValueSample(items = bottomItems, "Магазин", "Магазин Барнаул 1")
+                AutoCompleteValueSample(items = arrJobTitleList, "Должность")
+               // AutoCompleteValueSample(items = names)
+               // Log.e("AutoCompleteValueSample", )
             }
 
 
         }
 
+    }
+}
+
+@ExperimentalAnimationApi
+@Composable
+fun AutoCompleteValueSample(items: List<String>, label:String, defaultValue: String? = null) {
+
+
+
+    val autoCompleteEntities = items.asAutoCompleteEntities(
+        filter = { item, query ->
+            item.toLowerCase(Locale.getDefault())
+                .startsWith(query.toLowerCase(Locale.getDefault()))
+        }
+    )
+
+    AutoCompleteBox(
+        items = autoCompleteEntities,
+        itemContent = { item ->
+            ValueAutoCompleteItem(item.value)
+        }
+    ) {
+        var value by remember { mutableStateOf("") }
+        val view = LocalView.current
+       /* if(defaultValue?.isNotEmpty() == true){
+            value= defaultValue
+        }*/
+        onItemSelected { item ->
+            value = item.value
+            filter(value)
+            view.clearFocus()
+            Log.e("onItemSelected", value)
+        }
+
+        TextSearchBar(
+            modifier = Modifier.testTag(AutoCompleteSearchBarTag),
+            value = value ,
+            label = label,
+            onDoneActionClick = {
+                view.clearFocus()
+            },
+            onClearClick = {
+                value = ""
+                filter(value)
+                view.clearFocus()
+            },
+            onFocusChanged = { focusState ->
+                //isSearching = focusState == FocusState.Active
+                isSearching = focusState.isFocused
+            }
+        ) { query ->
+            value = query
+            filter(value)
+        }
+    }
+}
+
+@Composable
+fun ValueAutoCompleteItem(item: String) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(12.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        Text(text = item, style = MaterialTheme.typography.subtitle2)
     }
 }

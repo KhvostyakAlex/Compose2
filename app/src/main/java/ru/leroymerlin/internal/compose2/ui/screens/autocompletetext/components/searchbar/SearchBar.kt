@@ -1,6 +1,7 @@
 package ru.leroymerlin.internal.compose2.ui.screens.autocompletetext.components.searchbar
 
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Icon
@@ -16,26 +17,31 @@ import androidx.compose.ui.focus.FocusState
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.unit.dp
 
 @Composable
 fun TextSearchBar(
     modifier: Modifier = Modifier,
+    //value: String,
     value: String,
     label: String,
     onDoneActionClick: () -> Unit = {},
+
     onClearClick: () -> Unit = {},
     onFocusChanged: (FocusState) -> Unit = {},
     onValueChanged: (String) -> Unit
 ) {
     OutlinedTextField(
         modifier = modifier
-            .fillMaxWidth(.9f)
+            .fillMaxWidth(1f)
             .onFocusChanged { onFocusChanged(it) },
+
         value = value,
         onValueChange = { query ->
             onValueChanged(query)
         },
         label = { Text(text = label) },
+      //  label = { Text(text = defaultValue) },
         textStyle = MaterialTheme.typography.subtitle1,
         singleLine = true,
         trailingIcon = {
