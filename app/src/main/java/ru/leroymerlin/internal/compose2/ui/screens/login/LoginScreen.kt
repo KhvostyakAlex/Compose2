@@ -12,7 +12,6 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.filled.Done
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.runtime.*
@@ -22,14 +21,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
-import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.key.Key
 import androidx.compose.ui.input.key.key
 import androidx.compose.ui.input.key.onKeyEvent
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
@@ -38,26 +35,16 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Observer
 import androidx.navigation.NavController
 import ru.leroymerlin.internal.compose2.dataclass.IntraruAuthUserList
 import ru.leroymerlin.internal.compose2.*
 import ru.leroymerlin.internal.compose2.R
 import ru.leroymerlin.internal.compose2.dataclass.IntraruUserDataList
-import ru.leroymerlin.internal.compose2.ui.screens.login.LoginViewModel
-
-
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun LoginScreen(loginViewModel: LoginViewModel, navController:NavController){
     val authData:List<IntraruAuthUserList> by loginViewModel.authData.observeAsState(emptyList())
-
-
-
-
-
     //val userData:List<IntraruUserDataList> by loginViewModel.userData.observeAsState(emptyList())
     val error:String by loginViewModel.error.observeAsState("")
     val context = LocalContext.current
@@ -70,9 +57,7 @@ fun LoginScreen(loginViewModel: LoginViewModel, navController:NavController){
     val focusManager = LocalFocusManager.current
 
     val keyboardController = LocalSoftwareKeyboardController.current
-  //  var isLogin:Boolean = false
 
-  //  val authDat = loginViewModel.authDat.collectAsState()
     Scaffold() {
 
     Column(//verticalArrangement = Arrangement.Center,
@@ -117,15 +102,13 @@ fun LoginScreen(loginViewModel: LoginViewModel, navController:NavController){
                 .padding(8.dp)
                 .width(200.dp)
                 .onKeyEvent {
-                    if (it.key.keyCode == Key.Tab.keyCode){
+                    if (it.key.keyCode == Key.Tab.keyCode) {
                         focusManager.moveFocus(FocusDirection.Down)
                         true
                     } else {
                         false
                     }
                 },
-
-
         )
 
         TextField(
@@ -175,23 +158,18 @@ fun LoginScreen(loginViewModel: LoginViewModel, navController:NavController){
         )
 
         Button(onClick = {
-                        // onCLickButtonSignin(login = textStateLogin.value, password = password, activity =activity, navController =navController )
-                          //  Log.e("onClick SignIn", "Login screen")
-                                        if(textStateLogin.value.isNotEmpty() && textStateLogin.value.length ==8){
-                                            if(password.isNotEmpty()){
-                                                val  login = textStateLogin.value.trim()
-                                                loginViewModel.authIntraru(login, password)
-                                               // password =""
-                                               // authIntraru( loginViewModel, login, password)
-                                                //hideKeyboard(activity)
-                                                keyboardController?.hide()
+            if(textStateLogin.value.isNotEmpty() && textStateLogin.value.length ==8){
+                if(password.isNotEmpty()){
+                    val  login = textStateLogin.value.trim()
+                    loginViewModel.authIntraru(login, password)
+                    keyboardController?.hide()
 
-                                            }else{
-                                                Toast.makeText( context, "Неправильный логин или пароль", Toast.LENGTH_SHORT).show()
-                                            }
-                                        }else{
-                                            Toast.makeText( context, "Что-то не то с LDAP", Toast.LENGTH_SHORT).show()
-                                        }
+                }else{
+                    Toast.makeText( context, "Неправильный логин или пароль", Toast.LENGTH_SHORT).show()
+                }
+            }else{
+                Toast.makeText( context, "Что-то не то с LDAP", Toast.LENGTH_SHORT).show()
+            }
                          },
             shape = RoundedCornerShape(8.dp),
             colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.primary),
@@ -200,7 +178,6 @@ fun LoginScreen(loginViewModel: LoginViewModel, navController:NavController){
     }
         //при запуске
         LaunchedEffect(Unit){
-            Log.e("LaunchedEffect - ", "true")
             if(signin){
                 loginViewModel.authIntraru("login", "password")
                 navController.navigate("search"){
@@ -213,14 +190,12 @@ fun LoginScreen(loginViewModel: LoginViewModel, navController:NavController){
     //при покиданиии
         DisposableEffect(Unit ){
             onDispose {
-                //authData.remove()
-                Log.e("onDispose - ", "true")
+                /*костыль, при повторном заходе на страницу Логин, liveData еще жива и
+                 срабатывает скрипт повторного захода в приложение. Нужно реализовать отписку
+                 от liveData когда уходим со страницы Логин*/
                 loginViewModel.authIntraru("login", "password")
-
-
             }
         }
-
 
    /* for(row in authData){
         val r = row as IntraruAuthUserList
@@ -228,43 +203,23 @@ fun LoginScreen(loginViewModel: LoginViewModel, navController:NavController){
         val authData = ""
     }*/
 
-    Log.e("authData - ", authData.toString())
-    //Log.e("isLogin empty- ", isLogin.toString())
-
-
     if (authData.isNotEmpty()) {
-        //isLogin = true
-        Log.e("if Authdtata", authData.toString())
-       // Log.e("if isLogin", isLogin.toString())
-        SignIn(
-            login = textStateLogin.value,
-            password = password,
-            authData = authData[0],
-            navController = navController
-        )
+        if(authData[0].message == "Success"){
+            SignIn(
+                login = textStateLogin.value,
+                password = password,
+                authData = authData[0],
+                navController = navController
+            )
+        }else if(authData[0].message == "Filed" && authData[0].login != "login"){
+            /*костыль, потому что при первом вводе ложного пароля Тост показывается,
+            при повторном вводе кривого пароля authData не обновляется и уже не показываетсяю
+            необходимо реализовать после каждого нажатия Button-> обновлять LiveData */
+            Toast.makeText(context, "Неправильный логин или пароль", Toast.LENGTH_SHORT).show()
+            loginViewModel.authIntraru("login", "password")
+        }
     }
-
-    if(error.isNotEmpty()){
-        Log.e("if error", error.toString())
-    }
-
-
-
-
-
-    //как только появляются данные, то записываем их в ref и переходим в поиск
-    val lastRoute =navController.previousBackStackEntry?.destination?.route
-    val token = sharedPref.getString("token", "") //достаем данные из shared prefs
-   // Log.e("sharePrefs", highScore.toString())
-
-/*
-    if(error.isNotEmpty()) {
-        //  Toast.makeText(context, error, Toast.LENGTH_SHORT).show()
-    }
-
- */
 }
-
 
 @Composable
 fun SignIn(login:String,
@@ -274,7 +229,7 @@ fun SignIn(login:String,
              navController: NavController
 ){
     val userData:List<IntraruUserDataList> by loginViewModel.userData.observeAsState(emptyList())
-    val t = authData
+    val t = authData.IntraruAuthUserData
     val activity = LocalContext.current as Activity
     val sharedPref = activity.getPreferences(Context.MODE_PRIVATE)
     with (sharedPref.edit()) {
@@ -291,7 +246,6 @@ fun SignIn(login:String,
        // loginViewModel.authIntraru(login, password)
         loginViewModel.getInfoUser(login, authHeader)
     }
-
 
     if (userData.isNotEmpty()) {
         val uData = userData[0] as IntraruUserDataList
@@ -314,26 +268,10 @@ fun SignIn(login:String,
             putBoolean("signin?", true)
             apply()
         }
-        //  userData.clear()
-        //  val  userData: List<IntraruUserDataList> = userData
 
-
-
-
-        navController.navigate("search") {  launchSingleTop = true //переходим только 1 раз
-
-         /*   popUpTo("search") {
-                inclusive = true
-            }*/
-
-        }
-
-
-/*
-        navController.navigate("search"){
+        navController.navigate("search") {
             launchSingleTop = true //переходим только 1 раз
-            restoreState = false
-        }*/
+        }
     }
 }
 

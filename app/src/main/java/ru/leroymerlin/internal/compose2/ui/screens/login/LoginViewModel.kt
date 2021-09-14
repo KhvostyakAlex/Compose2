@@ -14,26 +14,13 @@ import kotlinx.coroutines.launch
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody.Companion.toRequestBody
 import org.json.JSONObject
+import ru.leroymerlin.internal.compose2.dataclass.IntraruAuthUserData
 import ru.leroymerlin.internal.compose2.dataclass.IntraruAuthUserList
 import ru.leroymerlin.internal.compose2.dataclass.IntraruUserDataList
 import ru.leroymerlin.internal.compose2.di.AppModule
 
 
 class LoginViewModel: ViewModel() {
-   // private val compositeDisposable: CompositeDisposable = CompositeDisposable()
-/*
-    private val _authDat = MutableStateFlow(listOf<IntraruAuthUserList>())
-    val authDat: StateFlow<List<IntraruAuthUserList>> get() = _authDat*/
-
-    private val _count:MutableLiveData<Int> = MutableLiveData(3)
-    val count:LiveData<Int> = _count
-/*
-    override fun onCleared() {
-        compositeDisposable.dispose()
-        super.onCleared()
-    }*/
-
-
 
     private val _authData: MutableLiveData<MutableList<IntraruAuthUserList>> = MutableLiveData()
     var authData: LiveData<MutableList<IntraruAuthUserList>> = _authData
@@ -52,28 +39,38 @@ class LoginViewModel: ViewModel() {
             body.put("password", pass)
             val testData = ArrayList<IntraruAuthUserList>()
 
-            Log.e("VM login", login.toString())
-              Log.e("VM pass", pass.toString())
-
               AppModule.providePhonebookApi()
                     .getUserInt(body.toString().toRequestBody("body".toMediaTypeOrNull()))
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe({response ->
-                        Log.e("VM response", response.toString())
-                        testData.add(IntraruAuthUserList(
-                            response.userHash,
-                            response.token,
-                            response.refreshToken,
-                            response.expiresIn,
-                            response.expiresOn))
+                       // Log.e("VM response", response.toString())
+                        testData.add( IntraruAuthUserList(
+                            "Success",
+                            login = login,
+                            IntraruAuthUserData(
+                                response.userHash,
+                                response.token,
+                                response.refreshToken,
+                                response.expiresIn,
+                                response.expiresOn)
+                        ))
                         _authData.postValue(testData)
 
                     }, {
-                        Log.e("VM login", "empty testData")
+
+                        testData.add(
+                            IntraruAuthUserList(
+                            "Filed",
+                                login = login,
+                            IntraruAuthUserData(
+                              "","","",0,0)
+                            )
+                        )
+                        Log.e("VM login", "empty testData - $testData")
                         _authData.postValue(testData)
                         // _error.postValue("Er - ${it.localizedMessage}")
-                        _error.postValue("Неверный логин или пароль")
+                       // _error.postValue("Неверный логин или пароль")
                     })
               }
         }

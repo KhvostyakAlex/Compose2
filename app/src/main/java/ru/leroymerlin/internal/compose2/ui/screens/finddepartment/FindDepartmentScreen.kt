@@ -1,5 +1,6 @@
 package ru.leroymerlin.internal.compose2.ui.screens.finddepartment
 
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -17,11 +18,17 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import cru.leroymerlin.internal.compose2.ui.screens.cards.CardsViewModel
+
+import ru.leroymerlin.internal.compose2.ui.screens.cards.CardsViewModel
 import ru.leroymerlin.internal.compose2.R
+import ru.leroymerlin.internal.compose2.ui.screens.AutoCompleteText
+import ru.leroymerlin.internal.compose2.ui.screens.autocompletetext.models.Person
+import ru.leroymerlin.internal.compose2.ui.screens.autocompletetext.sample.AutoCompleteObjectSample
+import ru.leroymerlin.internal.compose2.ui.screens.autocompletetext.sample.AutoCompleteValueSample
 import ru.leroymerlin.internal.compose2.ui.screens.cards.ExpandableCard
 
 
+@ExperimentalAnimationApi
 @Composable
 fun FindDepartmentScreen( viewModel: CardsViewModel){
 
@@ -36,40 +43,33 @@ fun FindDepartmentScreen( viewModel: CardsViewModel){
 
         Column {
 
-            Row (
-               // horizontalArrangement = Arrangement.SpaceAround
-            verticalAlignment = Alignment.CenterVertically
-                    ){
-               // Text("Строка поиска", modifier = Modifier.padding(24.dp))
-                TextField(value = textState.value,
-                    onValueChange = { value -> textState.value = value},
-                    placeholder = {Text("Ввведи Фамилию/LDAP")},
-                    shape = RoundedCornerShape(8.dp),
-                    colors = TextFieldDefaults.textFieldColors(
-                        backgroundColor = colorResource(id = R.color.colorLightGrey),
-                    focusedIndicatorColor =  colorResource(id = R.color.lmNCKD),                   //Color.Transparent - hide the indicator
-                 //   unfocusedIndicatorColor = Color.Cyan
-                    ),
-                   // trailingIcon = { if(textState.value.length ==8){ Text("V")} }, //при вводе 8 знаков появится иконка
-                    modifier = Modifier.padding(8.dp)
-                )
+            val persons = listOf(
+                Person(
+                    name = "Paulo Pereira",
+                    age = 23
+                ),
+                Person(
+                    name = "Daenerys Targaryen",
+                    age = 24
+                ),
+                Person(
+                    name = "Jon Snow",
+                    age = 24
+                ),
+                Person(
+                    name = "Sansa Stark",
+                    age = 20
+                ),
+            )
+            val names = persons.map { it.name }
 
-                Button(onClick = {
-                    isEnabled.value = isEnabled.value==false
-
-                },
-                    colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.primary),
-                    shape = RoundedCornerShape(8.dp),
-                    modifier = Modifier.height(50.dp)) {
-                    Text("Поиск", color = Color.White)
-                }
-
-
-        }
-
-            //если пришли данные, то показываем список
-            if(isEnabled.value){
-
+            Column(
+                modifier = Modifier.fillMaxSize().padding(16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(24.dp)
+            ) {
+                AutoCompleteObjectSample(persons = persons)
+                AutoCompleteValueSample(items = names)
             }
 
 

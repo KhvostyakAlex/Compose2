@@ -19,8 +19,6 @@ import androidx.compose.ui.unit.dp
 import androidx.core.os.bundleOf
 import androidx.navigation.NavController
 
-import androidx.navigation.compose.rememberNavController
-import cru.leroymerlin.internal.compose2.ui.screens.cards.CardsViewModel
 
 data class Word (val value: String)
 

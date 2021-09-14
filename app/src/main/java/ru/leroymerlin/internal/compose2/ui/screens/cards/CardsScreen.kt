@@ -33,8 +33,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
-import androidx.core.content.ContextCompat.startActivity
-import cru.leroymerlin.internal.compose2.ui.screens.cards.CardsViewModel
+
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import ru.leroymerlin.internal.compose2.R

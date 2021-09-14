@@ -32,8 +32,6 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.findNavController
 import com.google.accompanist.pager.ExperimentalPagerApi
-import com.google.android.material.bottomnavigation.BottomNavigationView
-import cru.leroymerlin.internal.compose2.ui.screens.cards.CardsViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async

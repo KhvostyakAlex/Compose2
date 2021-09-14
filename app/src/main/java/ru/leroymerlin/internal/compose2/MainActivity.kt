@@ -9,6 +9,7 @@ import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
@@ -20,6 +21,7 @@ import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
@@ -32,7 +34,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.*
 import com.google.accompanist.pager.*
-import cru.leroymerlin.internal.compose2.ui.screens.cards.CardsViewModel
+import ru.leroymerlin.internal.compose2.ui.screens.cards.CardsViewModel
 import ru.leroymerlin.internal.compose2.dataclass.BottomNavItem
 import ru.leroymerlin.internal.compose2.ui.screens.*
 import ru.leroymerlin.internal.compose2.ui.screens.ListScreen
@@ -45,6 +47,7 @@ import ru.leroymerlin.internal.compose2.ui.screens.settings.SettingsScreen
 import ru.leroymerlin.internal.compose2.ui.theme.Compose2Theme
 
 
+@ExperimentalAnimationApi
 class MainActivity : ComponentActivity() {
     val loginViewModel by viewModels<LoginViewModel>()
     val cardsViewModel by viewModels<CardsViewModel>()
@@ -118,6 +121,8 @@ class MainActivity : ComponentActivity() {
 
 }
 
+@OptIn(ExperimentalComposeUiApi::class)
+@ExperimentalAnimationApi
 @ExperimentalMaterialApi
 @ExperimentalPagerApi
 @Composable

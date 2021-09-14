@@ -10,7 +10,7 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.google.accompanist.pager.*
-import cru.leroymerlin.internal.compose2.ui.screens.cards.CardsViewModel
+
 import kotlinx.coroutines.launch
 import ru.leroymerlin.internal.compose2.R
 import ru.leroymerlin.internal.compose2.ui.screens.findusers.FindUsersScreen

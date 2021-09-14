@@ -11,7 +11,7 @@ interface PhoneBookApi {
 
     @POST("https://intraru3.leroymerlin.ru/services/identity/api/Identity/Login")
     @Headers("Content-Type: application/json")
-    fun getUserInt(@Body body: RequestBody): Single<IntraruAuthUserList>
+    fun getUserInt(@Body body: RequestBody): Single<IntraruAuthResponse>
 
     @GET(" https://intraru3.leroymerlin.ru/services/profiles/api/profiles/{ldap}")
     fun getUser(@Path("ldap") ldap: String,

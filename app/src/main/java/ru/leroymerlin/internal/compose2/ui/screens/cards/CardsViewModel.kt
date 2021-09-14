@@ -1,4 +1,4 @@
-package cru.leroymerlin.internal.compose2.ui.screens.cards
+package ru.leroymerlin.internal.compose2.ui.screens.cards
 
 import android.util.Log
 import androidx.lifecycle.LiveData
@@ -8,10 +8,7 @@ import androidx.lifecycle.viewModelScope
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import ru.leroymerlin.internal.compose2.dataclass.IntraruAuthUserList
 import ru.leroymerlin.internal.compose2.dataclass.IntraruUserByNameList
 import ru.leroymerlin.internal.compose2.dataclass.IntraruUserDataList
 import ru.leroymerlin.internal.compose2.di.AppModule

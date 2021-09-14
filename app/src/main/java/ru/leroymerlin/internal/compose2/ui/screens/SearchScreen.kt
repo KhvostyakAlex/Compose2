@@ -1,5 +1,6 @@
 package ru.leroymerlin.internal.compose2.ui.screens
 
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 
@@ -12,7 +13,7 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.navigation.NavController
 import com.google.accompanist.pager.*
-import cru.leroymerlin.internal.compose2.ui.screens.cards.CardsViewModel
+import ru.leroymerlin.internal.compose2.ui.screens.cards.CardsViewModel
 import kotlinx.coroutines.launch
 import ru.leroymerlin.internal.compose2.R
 import ru.leroymerlin.internal.compose2.ui.screens.finddepartment.FindDepartmentScreen
@@ -25,6 +26,7 @@ sealed class TabItem( var icon: Int, var title: String, var screen: ComposableFu
 }
 lateinit var navControl:NavController
 
+@ExperimentalAnimationApi
 @ExperimentalComposeUiApi
 @ExperimentalPagerApi
 @ExperimentalMaterialApi
@@ -49,6 +51,7 @@ fun SearchScreen(navController: NavController) {
 @ExperimentalPagerApi
 object FindUsers : TabItem(R.drawable.ic_search_black, "Поиск по сотруднику",
     { FindUsersScreen(findUsersViewModel = FindUsersViewModel(), navController = navControl)})
+@ExperimentalAnimationApi
 @ExperimentalMaterialApi
 @ExperimentalPagerApi
 object FindDepartment : TabItem(R.drawable.ic_search_black, "Поиск по подразделению",
