@@ -11,6 +11,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
@@ -18,6 +19,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontSynthesis.Companion.All
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.LiveData
@@ -35,6 +37,7 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
 import kotlinx.coroutines.withContext
 import ru.leroymerlin.internal.compose2.Navigation
+import ru.leroymerlin.internal.compose2.R
 import ru.leroymerlin.internal.compose2.dataclass.IntraruUserDataList
 import ru.leroymerlin.internal.compose2.ui.screens.DetailsScreen
 import ru.leroymerlin.internal.compose2.ui.screens.ListScreen
@@ -51,7 +54,7 @@ import ru.leroymerlin.internal.compose2.withIO
 @ExperimentalPagerApi
 @ExperimentalMaterialApi
 @Composable
-fun FindUsersScreen( findUsersViewModel: CardsViewModel, navController:NavController){
+fun FindUsersScreen( findUsersViewModel: FindUsersViewModel, navController:NavController){
     val cards:List<IntraruUserDataList> by findUsersViewModel.cards.observeAsState(emptyList())
     val error:String by findUsersViewModel.error.observeAsState("")
     val activity = LocalContext.current as Activity
@@ -83,10 +86,16 @@ fun FindUsersScreen( findUsersViewModel: CardsViewModel, navController:NavContro
                 TextField(value = textState.value,
                     onValueChange = { value -> textState.value = value},
                     placeholder = {Text("Ввведи Фамилию/LDAP")},
-                    trailingIcon = { if(textState.value.length ==8){ Text("V")} }, //при вводе 8 знаков появится иконка
+                    shape = RoundedCornerShape(8.dp),
+                    colors = TextFieldDefaults.textFieldColors(
+                        backgroundColor = colorResource(id = R.color.colorLightGrey),
+                        focusedIndicatorColor =  colorResource(id = R.color.lmNCKD),                   //Color.Transparent - hide the indicator
+                        //   unfocusedIndicatorColor = Color.Cyan
+                    ),
+                    //trailingIcon = { if(textState.value.length ==8){ Text("V")} }, //при вводе 8 знаков появится иконка
                     modifier = Modifier
                         .padding(8.dp)
-                        .height(50.dp)
+                       // .height(50.dp)
                 )
 
 
@@ -103,7 +112,9 @@ fun FindUsersScreen( findUsersViewModel: CardsViewModel, navController:NavContro
              //  Log.e("isEnabled", isEnabled.value.toString())
                    // isEnabled.value = isEnabled.value==false
 
-                },colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.primary)) {
+                },colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.primary),
+                    shape = RoundedCornerShape(8.dp),
+                modifier = Modifier.height(50.dp)) {
                     Text("Поиск", color = Color.White)
                 }
 

@@ -6,9 +6,12 @@ import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Done
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.runtime.*
@@ -19,6 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -73,19 +77,36 @@ fun LoginScreen(loginViewModel: LoginViewModel, navController:NavController){
         Text("Добро пожаловать!", modifier = Modifier.padding(8.dp))
 
         TextField(value = textStateLogin.value,
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
             onValueChange = { value -> textStateLogin.value = value},
             placeholder = {Text("LDAP")},
-            trailingIcon = { if(textStateLogin.value.length ==8){ Text("V")} }, //при вводе 8 знаков появится иконка
+            shape = RoundedCornerShape(8.dp),
+            colors = TextFieldDefaults.textFieldColors(
+                backgroundColor = colorResource(id = R.color.colorLightGrey),
+                focusedIndicatorColor =  colorResource(id = R.color.lmNCKD),                   //Color.Transparent - hide the indicator
+                //   unfocusedIndicatorColor = Color.Cyan
+            ),
+
+            trailingIcon = { if(textStateLogin.value.length ==8){
+                                    Icon(imageVector  = Icons.Filled.Check, "")
+                                }
+                           }, //при вводе 8 знаков появится иконка
             modifier = Modifier
                 .padding(8.dp)
                 .width(200.dp)
-                .height(50.dp)
+               // .height(50.dp)
         )
 
         TextField(
             value = password,
             onValueChange = { password = it },
             placeholder = { Text("Введи пароль") },
+            shape = RoundedCornerShape(8.dp),
+            colors = TextFieldDefaults.textFieldColors(
+                backgroundColor = colorResource(id = R.color.colorLightGrey),
+                focusedIndicatorColor =  colorResource(id = R.color.lmNCKD),                   //Color.Transparent - hide the indicator
+                //   unfocusedIndicatorColor = Color.Cyan
+            ),
             visualTransformation = if (passwordVisibility) VisualTransformation.None else PasswordVisualTransformation(),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
             trailingIcon = {
@@ -102,7 +123,7 @@ fun LoginScreen(loginViewModel: LoginViewModel, navController:NavController){
             modifier = Modifier
                 .padding(8.dp)
                 .width(200.dp)
-                .height(50.dp)
+                //.height(50.dp)
         )
 
         Button(onClick = {
@@ -121,6 +142,7 @@ fun LoginScreen(loginViewModel: LoginViewModel, navController:NavController){
                                             Toast.makeText( context, "Что-то не то с LDAP", Toast.LENGTH_SHORT).show()
                                         }
                          },
+            shape = RoundedCornerShape(8.dp),
             colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.primary),
             modifier = Modifier.size(150.dp, 50.dp)) { Text("Войти", color = Color.White) }
     }

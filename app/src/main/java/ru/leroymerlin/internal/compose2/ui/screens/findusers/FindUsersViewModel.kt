@@ -1,39 +1,25 @@
 package ru.leroymerlin.internal.compose2.ui.screens.findusers
 
-
-import android.annotation.SuppressLint
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import okhttp3.MediaType.Companion.toMediaTypeOrNull
-import okhttp3.RequestBody.Companion.toRequestBody
-import org.json.JSONObject
-import ru.leroymerlin.internal.compose2.dataclass.BaseCellModel
-import ru.leroymerlin.internal.compose2.dataclass.IntraruAuthUserList
 import ru.leroymerlin.internal.compose2.dataclass.IntraruUserByNameList
 import ru.leroymerlin.internal.compose2.dataclass.IntraruUserDataList
 import ru.leroymerlin.internal.compose2.di.AppModule
 
 
 class FindUsersViewModel: ViewModel() {
-    private val compositeDisposable: CompositeDisposable = CompositeDisposable()
-/*
-    private val _authDat = MutableStateFlow(listOf<IntraruAuthUserList>())
-    val authDat: StateFlow<List<IntraruAuthUserList>> get() = _authDat*/
+    private val _cards: MutableLiveData<List<IntraruUserDataList>> = MutableLiveData()
+    var cards: LiveData<List<IntraruUserDataList>> = _cards
 
-
-
-
-    override fun onCleared() {
-        compositeDisposable.dispose()
-        super.onCleared()
-    }
+    private val _expandedCardIdsList = MutableLiveData(listOf<Int>())
+    val expandedCardIdsList: LiveData<List<Int>> get() = _expandedCardIdsList
 
     private val _userData: MutableLiveData<List<IntraruUserDataList>> = MutableLiveData()
     var userData: LiveData<List<IntraruUserDataList>> = _userData
@@ -43,56 +29,43 @@ class FindUsersViewModel: ViewModel() {
 
     fun getInfoUser(ldap: String, authHeader:String) {
         // Log.e("LOG mess", "response ldap "+ldap.toString())
-
         viewModelScope.launch(Dispatchers.Default) {
             AppModule.providePhonebookApi().getUser(ldap, authHeader)//здесь вызывается API
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe({ response ->
-                        val status = response?.userStatus?.status
-                        val testData = ArrayList<IntraruUserDataList>()
-                        //добавляем в список всех работающих
-                        if(status!="fired"){
-                            testData.add(IntraruUserDataList(
-                                response?.common!!.account,
-                                response?.common!!.firstName.toString(),
-                                response?.common!!.lastName.toString(),
-                                response?.common!!.orgUnitName.toString(),
-                                response?.common!!.shopNumber.toString(),
-                                response?.common!!.cluster.toString(),
-                                response?.common!!.region.toString(),
-                                response?.common!!.jobTitle.toString(),
-                                response?.common!!.department.toString(),
-                                response?.common!!.subDivision.toString(),
-                                response?.contacts!!.workPhone?.value.toString(),
-                                response?.contacts!!.mobilePhone?.value.toString(),
-                                response?.contacts!!.personalEmail?.value.toString(),
-                                response?.contacts!!.workEmails.toString(),
-                                ))
-                        }
-                        //если ничего не нашлось
-                        if(testData.isEmpty()){
-                            testData.add(IntraruUserDataList(
-                                "null",
-                                "Ничего не найдено",
-                                "",
-                                "null",
-                                "null",
-                                "null",
-                                "null",
-                                "null",
-                                "null",
-                                "null",
-                                "null",
-                                "null",
-                                "null",
-                                "null",
-                                ))
-                        }
-                        _userData.postValue(testData)
-                    }, {
-                        _error.postValue("Er - ${it.localizedMessage}")
-                    })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({ response ->
+                    val status = response?.userStatus?.status
+                    val testData = ArrayList<IntraruUserDataList>()
+                    Log.e("response", response.toString())
+                    //добавляем в список всех работающих
+                    if(status!="fired"){
+                        testData.add(IntraruUserDataList(
+                            response?.common!!.account,
+                            response?.common!!.firstName.toString(),
+                            response?.common!!.lastName.toString(),
+                            response?.common!!.orgUnitName.toString(),
+                            response?.common!!.shopNumber.toString(),
+                            response?.common!!.cluster.toString(),
+                            response?.common!!.region.toString(),
+                            response?.common!!.jobTitle.toString(),
+                            response?.common!!.department.toString(),
+                            response?.common!!.subDivision.toString(),
+                            response?.contacts!!.workPhone?.value.toString(),
+                            response?.contacts!!.mobilePhone?.value.toString(),
+                            response?.contacts!!.personalEmail?.value.toString(),
+                            response?.contacts!!.workEmails.toString(),
+                        ))
+                    }
+                    //если ничего не нашлось
+                    if(testData.isEmpty()){
+                        testData
+                    }
+                    _cards.postValue(testData)
+                }, {
+                    _error.postValue("Er - ${it.localizedMessage}")
+                    val testData = ArrayList<IntraruUserDataList>()
+                    _cards.postValue(testData)
+                })
         }
     }
 
@@ -137,43 +110,24 @@ class FindUsersViewModel: ViewModel() {
                                     contacts!!.mobilePhone?.value.toString(),
                                     contacts!!.personalEmail?.value.toString(),
                                     contacts!!.workEmails.toString(),
-                                    )
+                                )
                             )
                         }
                     }
-                    if (testData.isEmpty()) {
-                        testData.add(
-                            IntraruUserDataList(
-                                "null",
-                                "Ничего не найдено",
-                                "",
-                                "null",
-                                "null",
-                                "null",
-                                "null",
-                                "null",
-                                "null",
-                                "null",
-                                "null",
-                                "null",
-                                "null",
-                                "null",
-
-                                )
-                        )
-                    }
-                    _userData.postValue(testData)
+                    _cards.postValue(testData)
                 }, {
                     _error.postValue("Er - ${it.localizedMessage}")
                     //_error.postValue("Ничего не найдено")
+                    val testData = ArrayList<IntraruUserDataList>()
+                    _cards.postValue(testData)
                 })
 
 
         }
     }
-
-
+    fun onCardArrowClicked(cardId: Int) {
+        _expandedCardIdsList.value = _expandedCardIdsList.value?.toMutableList().also { list ->
+            if (list!!.contains(cardId)) list.remove(cardId) else list?.add(cardId)
+        }
+    }
 }
-
-
-

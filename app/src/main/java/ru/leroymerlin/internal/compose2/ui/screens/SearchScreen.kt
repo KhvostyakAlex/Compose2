@@ -14,7 +14,9 @@ import com.google.accompanist.pager.*
 import cru.leroymerlin.internal.compose2.ui.screens.cards.CardsViewModel
 import kotlinx.coroutines.launch
 import ru.leroymerlin.internal.compose2.R
+import ru.leroymerlin.internal.compose2.ui.screens.finddepartment.FindDepartmentScreen
 import ru.leroymerlin.internal.compose2.ui.screens.findusers.FindUsersScreen
+import ru.leroymerlin.internal.compose2.ui.screens.findusers.FindUsersViewModel
 
 
 typealias ComposableFun = @Composable () -> Unit
@@ -43,7 +45,7 @@ fun SearchScreen(navController: NavController) {
 @ExperimentalMaterialApi
 @ExperimentalPagerApi
 object FindUsers : TabItem(R.drawable.ic_search_black, "Поиск по сотруднику",
-    { FindUsersScreen(findUsersViewModel = CardsViewModel(), navController = navControl)})
+    { FindUsersScreen(findUsersViewModel = FindUsersViewModel(), navController = navControl)})
 @ExperimentalMaterialApi
 @ExperimentalPagerApi
 object FindDepartment : TabItem(R.drawable.ic_search_black, "Поиск по подразделению",

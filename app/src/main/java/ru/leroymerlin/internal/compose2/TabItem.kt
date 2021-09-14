@@ -10,7 +10,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.pager.ExperimentalPagerApi
 import cru.leroymerlin.internal.compose2.ui.screens.cards.CardsViewModel
-import ru.leroymerlin.internal.compose2.ui.screens.FindDepartmentScreen
+
 import ru.leroymerlin.internal.compose2.ui.screens.findusers.FindUsersScreen
 
 /*
