@@ -91,18 +91,12 @@ fun FindDepartmentScreen(findDepartmentViewModel: FindDepartmentViewModel){
                // AutoCompleteValueSample(items = names)
                // Log.e("AutoCompleteValueSample", )
 
-
-
                 LaunchedEffect(Unit){
-                    Log.e("LaunchedEffect in func", "1")
                     findDepartmentViewModel.getUserByDepartment(
                         orgUnitName = orgInitNameUser,
                         jobTitle = "Все",
                         authHeader = authHeader)
-
                 }
-
-
 
                 if(cards.isNotEmpty()){
                     Log.e("cards", cards.toString())
@@ -117,14 +111,6 @@ fun FindDepartmentScreen(findDepartmentViewModel: FindDepartmentViewModel){
                     }
                 }
             }
-
-
-
-
-
-
-
-
     }
 }
 
@@ -164,16 +150,16 @@ findDepartmentViewModel: FindDepartmentViewModel) {
             // Log.e("val - ", "job-"+ filterData["jobTitle"].toString())
 
             var orgUnitName = ""
-             orgUnitName = filterData["mag"].toString()
-            if(orgUnitName == "null"){
-                Log.e("orgUnitName in func", "null")
-                orgUnitName = orgUnitNameUser.toString()
-                //filterData.put("mag", orgUnitNameUser.toString())
-            }
-            var jobTitle = filterData["jobTitle"].toString()
-            Log.e("val - ", "orgUnitName-"+ orgUnitName.toString())
-            Log.e("val - ", "jobTitle-"+ jobTitle.toString())
+            var jobTitle =""
+            orgUnitName = filterData["mag"].toString()
+            jobTitle = filterData["jobTitle"].toString()
 
+            if(orgUnitName == "null"){
+                orgUnitName = orgUnitNameUser.toString()
+            }
+            if(jobTitle == "null"){
+                jobTitle = "Все"
+            }
 
             if (orgUnitName.isNotEmpty()) {
                 if(jobTitle.isEmpty()){
