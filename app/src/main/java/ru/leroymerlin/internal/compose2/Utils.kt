@@ -38,13 +38,6 @@ fun Context.copyToClipboard(text: CharSequence){
 
     myClipboard?.setPrimaryClip(myClip!!)
 }
-fun copyToClipboard2(context: Context, text: CharSequence){
-    val myClipboard = context.getSystemService(CLIPBOARD_SERVICE )as ClipboardManager?
-    val myClip: ClipData? = ClipData.newPlainText("text", text)
-    myClipboard?.setPrimaryClip(myClip!!)
-}
-
-
 
 @SuppressLint("ServiceCast")
 fun hideKeyboard(activity: Activity) {

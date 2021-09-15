@@ -34,16 +34,13 @@ var filterData = mutableMapOf<String, String>()
 @Composable
 fun FindDepartmentScreen(findDepartmentViewModel: FindDepartmentViewModel){
     val depData:List<String> by findDepartmentViewModel.depData.observeAsState(emptyList())
-    val userData:List<IntraruUserDataList> by findDepartmentViewModel.userData.observeAsState(emptyList())
     val cards:List<IntraruUserDataList> by findDepartmentViewModel.cards.observeAsState(emptyList())
     val expandedCardIds = findDepartmentViewModel.expandedCardIdsList.observeAsState()
     val activity = LocalContext.current as Activity
     val sharedPref = activity.getPreferences(Context.MODE_PRIVATE)
-   // val filterData = ArrayList<filter>()
-
-    //var filterData by remember { mutableStateOf("") }
     val authHeader = sharedPref.getString("authHeader", "").toString() //достаем данные из shared prefs
     val orgInitNameUser = sharedPref.getString("orgUnitName", "").toString() //достаем данные из shared prefs
+
     Scaffold {
 
        val arrJobTitleList = listOf(
@@ -71,9 +68,7 @@ fun FindDepartmentScreen(findDepartmentViewModel: FindDepartmentViewModel){
             "контролер управления",
             "дизайнер"
         )
-
-        findDepartmentViewModel.getDepartment(authHeader = authHeader.toString())
-
+        findDepartmentViewModel.getDepartment(authHeader = authHeader)
             Column(
                 modifier = Modifier
                     .fillMaxSize(),
@@ -81,15 +76,12 @@ fun FindDepartmentScreen(findDepartmentViewModel: FindDepartmentViewModel){
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(24.dp)
             ) {
-              //  AutoCompleteObjectSample(persons = persons)
 
                 if(depData.isNotEmpty()){
                     AutoCompleteValueSample(items = depData, "Магазин", orgInitNameUser, orgInitNameUser,"mag", authHeader, findDepartmentViewModel)
                 }
 
                 AutoCompleteValueSample(items = arrJobTitleList, "Должность", "Все", orgInitNameUser,"jobTitle", authHeader, findDepartmentViewModel)
-               // AutoCompleteValueSample(items = names)
-               // Log.e("AutoCompleteValueSample", )
 
                 LaunchedEffect(Unit){
                     findDepartmentViewModel.getUserByDepartment(
@@ -99,7 +91,6 @@ fun FindDepartmentScreen(findDepartmentViewModel: FindDepartmentViewModel){
                 }
 
                 if(cards.isNotEmpty()){
-                    Log.e("cards", cards.toString())
                     LazyColumn {
                         itemsIndexed(cards) { _, card ->
                             ExpandableCard(
@@ -127,8 +118,8 @@ findDepartmentViewModel: FindDepartmentViewModel) {
 
     val autoCompleteEntities = items.asAutoCompleteEntities(
         filter = { item, query ->
-            item.toLowerCase(Locale.getDefault())
-                .startsWith(query.toLowerCase(Locale.getDefault()))
+            item.lowercase(Locale.getDefault())
+                .startsWith(query.lowercase(Locale.getDefault()))
         }
     )
 
@@ -146,11 +137,9 @@ findDepartmentViewModel: FindDepartmentViewModel) {
             filter(value)
             view.clearFocus()
             filterData.put(type, value)
-          //  Log.e("filterData -", filterData.toString())
-            // Log.e("val - ", "job-"+ filterData["jobTitle"].toString())
 
-            var orgUnitName = ""
-            var jobTitle =""
+            var orgUnitName:String
+            var jobTitle: String
             orgUnitName = filterData["mag"].toString()
             jobTitle = filterData["jobTitle"].toString()
 
@@ -220,17 +209,10 @@ fun ValueAutoCompleteItem(item: String) {
 
 fun updateData(type:String, value:String, findDepartmentViewModel:FindDepartmentViewModel, authHeader:String) {
      filterData.put(type,value)
-    Log.e("filterData -", filterData.toString())
    // Log.e("val - ", "job-"+ filterData["jobTitle"].toString())
-
-
-
     if(filterData["mag"]?.isNotEmpty() == true){
 findDepartmentViewModel.getUserByDepartment(orgUnitName= filterData["mag"].toString(),
              jobTitle = filterData["jobTitle"].toString(),
              authHeader = authHeader)
         }
-
-//Log.e("d-", userData.toString())
-
 }

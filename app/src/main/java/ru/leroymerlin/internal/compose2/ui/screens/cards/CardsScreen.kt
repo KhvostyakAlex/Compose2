@@ -18,11 +18,9 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
@@ -33,12 +31,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
-
-
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import ru.leroymerlin.internal.compose2.R
 import ru.leroymerlin.internal.compose2.copyToClipboard
-import ru.leroymerlin.internal.compose2.copyToClipboard2
 import ru.leroymerlin.internal.compose2.dataclass.IntraruUserDataList
 import values.COLLAPSE_ANIMATION_DURATION
 import values.EXPAND_ANIMATION_DURATION
@@ -303,7 +298,7 @@ fun ExpandableContent(
 
                     FloatingActionButton(
                         onClick = {
-                                Log.e("copyTobuffer - ",card.firstName.toString())
+                             //   Log.e("copyTobuffer - ",card.firstName.toString())
                             onClickButtonCopy(card, context)
 
                         },

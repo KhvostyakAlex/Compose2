@@ -146,6 +146,7 @@ class FindUsersViewModel: ViewModel() {
 
                     _depData.postValue(testData)
                 }, {
+                    Log.e("error - ", "er "+ it.localizedMessage.toString())
                     _error.postValue("Er - ${it.localizedMessage}")
                     //_error.postValue("Ничего не найдено")
                 })

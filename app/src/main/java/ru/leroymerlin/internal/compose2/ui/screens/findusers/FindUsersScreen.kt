@@ -58,6 +58,8 @@ fun FindUsersScreen( findUsersViewModel: FindUsersViewModel, navController:NavCo
         val token = sharedPref.getString("token", "") //достаем данные из shared prefs
         val authHeader = "Bearer " + token
 
+        findUsersViewModel.getDepartment(authHeader)
+
         Column {
             Row (
                // horizontalArrangement = Arrangement.SpaceAround

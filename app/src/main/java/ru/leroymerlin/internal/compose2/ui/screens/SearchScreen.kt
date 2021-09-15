@@ -1,14 +1,19 @@
 package ru.leroymerlin.internal.compose2.ui.screens
 
+import android.util.Log
 import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.VisibilityOff
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.navigation.NavController
@@ -48,15 +53,17 @@ fun SearchScreen(navController: NavController) {
     }
 }
 
+
+
 @ExperimentalComposeUiApi
 @ExperimentalMaterialApi
 @ExperimentalPagerApi
-object FindUsers : TabItem(R.drawable.ic_search_black, "Поиск по сотруднику",
+object FindUsers : TabItem(R.drawable.ic_action_user_black, "Поиск по сотруднику",
     { FindUsersScreen(findUsersViewModel = FindUsersViewModel(), navController = navControl)})
 @ExperimentalAnimationApi
 @ExperimentalMaterialApi
 @ExperimentalPagerApi
-object FindDepartment : TabItem(R.drawable.ic_search_black, "Поиск по подразделению",
+object FindDepartment : TabItem(R.drawable.ic_action_store_black, "Поиск по подразделению",
     { FindDepartmentScreen(findDepartmentViewModel = FindDepartmentViewModel()) })
 
 
@@ -73,18 +80,38 @@ fun Tabs(tabs: List<TabItem>, pagerState: PagerState) {
         // Override the indicator, using the provided pagerTabIndicatorOffset modifier
         // backgroundColor = colorResource(id = R.color.lmNCKD),
         backgroundColor = Color.White,
-        contentColor = colorResource(id = R.color.lmNCKD),
+        contentColor = colorResource(id = R.color.black),
         indicator = { tabPositions ->
             TabRowDefaults.Indicator(
-                Modifier.pagerTabIndicatorOffset(pagerState, tabPositions)
+                Modifier
+                    .pagerTabIndicatorOffset(pagerState, tabPositions),
+                color = colorResource(id = R.color.lmNCKD)
+
+
             )
         }) {
         // Add tabs for all of our pages
         tabs.forEachIndexed { index, tab ->
-            // OR Tab()
+            val selectedTabsColor = if (pagerState.currentPage == index) {
+                colorResource(id = R.color.lmNCKD)
+            } else {
+                colorResource(id = R.color.colorGrey)
+            }
+
             LeadingIconTab(
-                icon = { Icon(painter = painterResource(id = tab.icon), contentDescription = "") },
-                text = { Text(tab.title) },
+                icon = {
+
+                    Icon(painter = painterResource(id = tab.icon), contentDescription = "", tint = selectedTabsColor)},
+                text = {
+
+
+                        Text(tab.title,
+                            color= selectedTabsColor
+                        )
+
+
+                       },
+
                 selected = pagerState.currentPage == index,
                 onClick = {
                     scope.launch {
@@ -93,6 +120,7 @@ fun Tabs(tabs: List<TabItem>, pagerState: PagerState) {
                 },
             )
         }
+        Log.e("agerState.currentPage -",pagerState.currentPage.toString())
     }
 }
 
