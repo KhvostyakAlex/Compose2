@@ -78,7 +78,7 @@ class MainActivity : ComponentActivity() {
                     //val bottomItems = listOf("list", "search", "push", "cards")
                     val bottomItems = listOf(
                        // BottomNavItem("Login", "login", Icons.Default.Home),
-                        BottomNavItem("List", "list", Icons.Default.Home),
+                        //BottomNavItem("List", "list", Icons.Default.Home),
                         BottomNavItem("Поиск", "search", Icons.Default.Search),
                         BottomNavItem("Настройки", "settings", Icons.Default.Settings))
                     Scaffold(

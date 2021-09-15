@@ -118,10 +118,10 @@ class FindDepartmentViewModel: ViewModel() {
                         //Log.e("FindDepartment ", "testData - " + testData.toString())
 
                     }
-                    if (testData.isEmpty()) {
+                 /*   if (testData.isEmpty()) {
                         testData.add(
                             IntraruUserDataList(
-                                "null",
+                                0,
                                 "Ничего не найдено",
                                 "",
                                 "null",
@@ -138,11 +138,11 @@ class FindDepartmentViewModel: ViewModel() {
 
                                 )
                         )
-                    }
+                    }*/
 
                     testData.sortBy { (it as IntraruUserDataList).lastName }//сортируем по фамилии
                     //  testData.forEach { println(it) }
-                    _userData.postValue(testData)
+                    _cards.postValue(testData)
 
                     /*Log.e("LOG mess", "response mess "+response.toString())
                         Log.e("LOG mess", "response mess "+response?.account.toString())
@@ -152,8 +152,10 @@ class FindDepartmentViewModel: ViewModel() {
 
 
                 }, {
-                    _error.postValue("Er - ${it.localizedMessage}")
+                    //_error.postValue("Er - ${it.localizedMessage}")
                     // _error.postValue("Ничего не найдено")
+                    val testData = ArrayList<IntraruUserDataList>()
+                    _cards.postValue(testData)
                 })
         }
     }

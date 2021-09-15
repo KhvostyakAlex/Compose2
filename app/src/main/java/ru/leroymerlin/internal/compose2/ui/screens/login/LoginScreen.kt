@@ -252,10 +252,12 @@ fun SignIn(login:String,
         val uData = userData[0] as IntraruUserDataList
         val today = getCalculatedDate("yyyy-M-dd", 0)
         with (sharedPref.edit()) {
-
+//Log.e("Udata - ", uData.toString())
+           // IntraruUserDataList(account=60032246, firstName=Алексей, lastName=Хвостяк, orgUnitName=Магазин Барнаул 1, shopNumber=036, cluster=Барнаул, region=Регион 7, jobTitle=специалист технической поддержки, department=Магазин Барнаул 1, subDivision=центр обслуживания магазинов, workPhone=+7 909 932-94-01, mobilePhone=null, personalEmail=null, workEmail=[{value=Aleksey.Hvostyak@leroymerlin.ru, isConfirmed=true, confrimCodeInfo=null}], expandable=false)
             putString("account", uData.account)
             putString("firstName", uData.firstName)
             putString("lastName", uData.lastName)
+            putString("orgUnitName", uData.orgUnitName)
             putString("shopNumber", uData.shopNumber)
             putString("cluster", uData.cluster)
             putString("region", uData.region)

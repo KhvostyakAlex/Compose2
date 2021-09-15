@@ -5,6 +5,8 @@ import android.content.Context
 import android.util.Log
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
@@ -20,6 +22,7 @@ import ru.leroymerlin.internal.compose2.ui.screens.autocompletetext.components.a
 import ru.leroymerlin.internal.compose2.ui.screens.autocompletetext.components.autocomplete.utils.AutoCompleteSearchBarTag
 import ru.leroymerlin.internal.compose2.ui.screens.autocompletetext.components.autocomplete.utils.asAutoCompleteEntities
 import ru.leroymerlin.internal.compose2.ui.screens.autocompletetext.components.searchbar.TextSearchBar
+import ru.leroymerlin.internal.compose2.ui.screens.cards.ExpandableCard
 
 import java.util.*
 import kotlin.collections.ArrayList
@@ -32,12 +35,15 @@ var filterData = mutableMapOf<String, String>()
 fun FindDepartmentScreen(findDepartmentViewModel: FindDepartmentViewModel){
     val depData:List<String> by findDepartmentViewModel.depData.observeAsState(emptyList())
     val userData:List<IntraruUserDataList> by findDepartmentViewModel.userData.observeAsState(emptyList())
+    val cards:List<IntraruUserDataList> by findDepartmentViewModel.cards.observeAsState(emptyList())
+    val expandedCardIds = findDepartmentViewModel.expandedCardIdsList.observeAsState()
     val activity = LocalContext.current as Activity
     val sharedPref = activity.getPreferences(Context.MODE_PRIVATE)
    // val filterData = ArrayList<filter>()
 
     //var filterData by remember { mutableStateOf("") }
     val authHeader = sharedPref.getString("authHeader", "").toString() //достаем данные из shared prefs
+    val orgInitNameUser = sharedPref.getString("orgUnitName", "").toString() //достаем данные из shared prefs
     Scaffold {
 
        val arrJobTitleList = listOf(
@@ -66,9 +72,7 @@ fun FindDepartmentScreen(findDepartmentViewModel: FindDepartmentViewModel){
             "дизайнер"
         )
 
-
         findDepartmentViewModel.getDepartment(authHeader = authHeader.toString())
-        Log.e("filterData", filterData.toString())
 
         Column {
 
@@ -82,19 +86,43 @@ fun FindDepartmentScreen(findDepartmentViewModel: FindDepartmentViewModel){
               //  AutoCompleteObjectSample(persons = persons)
 
                 if(depData.isNotEmpty()){
-                    AutoCompleteValueSample(items = depData, "Магазин", "Магазин Барнаул 1", "mag", authHeader, findDepartmentViewModel)
-                   // Log.e("depData - ", depData.toString())
+                    AutoCompleteValueSample(items = depData, "Магазин", orgInitNameUser, orgInitNameUser,"mag", authHeader, findDepartmentViewModel)
                 }
 
-                AutoCompleteValueSample(items = arrJobTitleList, "Должность", "Все", "jobTitle", authHeader, findDepartmentViewModel)
+                AutoCompleteValueSample(items = arrJobTitleList, "Должность", "Все", orgInitNameUser,"jobTitle", authHeader, findDepartmentViewModel)
                // AutoCompleteValueSample(items = names)
                // Log.e("AutoCompleteValueSample", )
+
+
+
+                LaunchedEffect(Unit){
+                    Log.e("LaunchedEffect in func", "1")
+                    findDepartmentViewModel.getUserByDepartment(
+                        orgUnitName = orgInitNameUser,
+                        jobTitle = "Все",
+                        authHeader = authHeader)
+
+                }
+
+
+
+                if(cards.isNotEmpty()){
+                    Log.e("cards", cards.toString())
+                    LazyColumn {
+                        itemsIndexed(cards) { _, card ->
+                            ExpandableCard(
+                                card = card,
+                                onCardArrowClick = { findDepartmentViewModel.onCardArrowClicked(card.account.toInt()) },
+                                expanded = expandedCardIds.value!!.contains(card.account.toInt()),
+                            )
+                        }
+                    }
+                }
             }
 
 
-            if(userData.isNotEmpty()){
-                Log.e("UserData", userData.toString())
-            }
+
+
 
 
         }
@@ -108,6 +136,7 @@ fun FindDepartmentScreen(findDepartmentViewModel: FindDepartmentViewModel){
 fun AutoCompleteValueSample(items: List<String>,
                             label:String,
                             defaultValue: String? = null,
+                            orgUnitNameUser: String? = null,
                             type:String,
                             authHeader: String,
 findDepartmentViewModel: FindDepartmentViewModel) {
@@ -136,8 +165,18 @@ findDepartmentViewModel: FindDepartmentViewModel) {
           //  Log.e("filterData -", filterData.toString())
             // Log.e("val - ", "job-"+ filterData["jobTitle"].toString())
 
-            val orgUnitName = filterData["mag"].toString()
+            var orgUnitName = ""
+             orgUnitName = filterData["mag"].toString()
+            if(orgUnitName == "null"){
+                Log.e("orgUnitName in func", "null")
+                orgUnitName = orgUnitNameUser.toString()
+                //filterData.put("mag", orgUnitNameUser.toString())
+            }
             var jobTitle = filterData["jobTitle"].toString()
+            Log.e("val - ", "orgUnitName-"+ orgUnitName.toString())
+            Log.e("val - ", "jobTitle-"+ jobTitle.toString())
+
+
             if (orgUnitName.isNotEmpty()) {
                 if(jobTitle.isEmpty()){
                     jobTitle= "Все"

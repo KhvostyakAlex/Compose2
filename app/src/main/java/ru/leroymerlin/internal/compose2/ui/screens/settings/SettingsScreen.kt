@@ -84,8 +84,8 @@ fun ExitButton(navController: NavController, activity: Activity   ){
     val signin = sharedPref.getBoolean("signin?", false) //достаем данные из shared prefs
     val token = sharedPref.getString("token", "") //достаем данные из shared prefs
     val authHeader = sharedPref.getString("authHeader", "") //достаем данные из shared prefs
-    Log.e("setting signin - ", signin.toString())
-    Log.e("setting - ", "authHeader -"+ authHeader.toString())
+   // Log.e("setting signin - ", signin.toString())
+    //Log.e("setting - ", "authHeader -"+ authHeader.toString())
 
 //Simple FAB
     FloatingActionButton(onClick = {
@@ -117,17 +117,18 @@ fun SettingsView(settingsViewModel: SettingsViewModel, activity: Activity){
    // val settings by settingsViewModel.settings.observeAsState(emptyList())
 
     val sharedPref = activity.getPreferences(Context.MODE_PRIVATE)
-    val firstName = sharedPref.getString("firstName", "") //достаем данные из shared prefs
-    val lastName = sharedPref.getString("lastName", "") //достаем данные из shared prefs
-    val shopNumber = sharedPref.getString("shopNumber", "") //достаем данные из shared prefs
-    val jobTitle = sharedPref.getString("jobTitle", "") //достаем данные из shared prefs
-    val workPhone = sharedPref.getString("workPhone", "") //достаем данные из shared prefs
+    val firstName = sharedPref.getString("firstName", "").toString() //достаем данные из shared prefs
+    val lastName = sharedPref.getString("lastName", "").toString() //достаем данные из shared prefs
+    val orgUnitName = sharedPref.getString("orgUnitName", "").toString() //достаем данные из shared prefs
+    val shopNumber = sharedPref.getString("shopNumber", "").toString() //достаем данные из shared prefs
+    val jobTitle = sharedPref.getString("jobTitle", "").toString() //достаем данные из shared prefs
+    val workPhone = sharedPref.getString("workPhone", "").toString() //достаем данные из shared prefs
 
     val settings =   listOf(
-        SettingsModel("Имя", "${firstName.toString()} ${lastName.toString()}"),
-        SettingsModel("№ магазина", shopNumber.toString()),
-        SettingsModel("Должность", jobTitle.toString()),
-        SettingsModel("Телефон", workPhone.toString()))
+        SettingsModel("Имя", "$firstName $lastName"),
+        SettingsModel("Магазин", "${orgUnitName} (${shopNumber})"),
+        SettingsModel("Должность", jobTitle),
+        SettingsModel("Телефон", workPhone))
 
 
     Column(modifier = Modifier.fillMaxWidth()) {
