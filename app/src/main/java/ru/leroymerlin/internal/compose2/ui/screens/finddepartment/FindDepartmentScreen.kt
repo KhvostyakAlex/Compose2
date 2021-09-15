@@ -74,12 +74,10 @@ fun FindDepartmentScreen(findDepartmentViewModel: FindDepartmentViewModel){
 
         findDepartmentViewModel.getDepartment(authHeader = authHeader.toString())
 
-        Column {
-
             Column(
                 modifier = Modifier
-                    .fillMaxSize()
-                    .padding(16.dp),
+                    .fillMaxSize(),
+
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(24.dp)
             ) {
@@ -125,7 +123,7 @@ fun FindDepartmentScreen(findDepartmentViewModel: FindDepartmentViewModel){
 
 
 
-        }
+
 
     }
 }

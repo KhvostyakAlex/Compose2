@@ -2,6 +2,7 @@ package ru.leroymerlin.internal.compose2.ui.screens.autocompletetext.components.
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Icon
@@ -35,7 +36,7 @@ fun TextSearchBar(
         modifier = modifier
             .fillMaxWidth(1f)
             .onFocusChanged { onFocusChanged(it) },
-
+        shape = RoundedCornerShape(8.dp),
         value = value,
         onValueChange = { query ->
             onValueChanged(query)
