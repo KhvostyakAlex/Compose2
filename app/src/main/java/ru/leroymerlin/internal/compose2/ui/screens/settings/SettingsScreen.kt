@@ -123,7 +123,6 @@ fun SettingsView(settingsViewModel: SettingsViewModel, activity: Activity){
     val jobTitle = sharedPref.getString("jobTitle", "") //достаем данные из shared prefs
     val workPhone = sharedPref.getString("workPhone", "") //достаем данные из shared prefs
 
-
     val settings =   listOf(
         SettingsModel("Имя", "${firstName.toString()} ${lastName.toString()}"),
         SettingsModel("№ магазина", shopNumber.toString()),
@@ -156,6 +155,7 @@ Column() {
 }
     Divider()
 }
+/*
 @OptIn(ExperimentalComposeUiApi::class)
 @ExperimentalAnimationApi
 @ExperimentalMaterialApi
@@ -174,7 +174,7 @@ fun Navigation(navController: NavHostController,
         composable("settings"){ SettingsScreen(navController) }
     }
 
-}
+}*/
 
 
 suspend fun exitApp(navController: NavController) {

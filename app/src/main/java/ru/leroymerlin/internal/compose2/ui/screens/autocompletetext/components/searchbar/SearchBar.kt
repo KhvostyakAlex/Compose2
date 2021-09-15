@@ -43,6 +43,7 @@ fun TextSearchBar(
         label = { Text(text = label) },
       //  label = { Text(text = defaultValue) },
         textStyle = MaterialTheme.typography.subtitle1,
+       // textStyle = MaterialTheme.shapes.small.bottomStart.,
         singleLine = true,
         trailingIcon = {
             IconButton(onClick = { onClearClick() }) {

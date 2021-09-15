@@ -63,7 +63,7 @@ class MainActivity : ComponentActivity() {
         val firstName = sharedPref.getString("firstName", "") //достаем данные из shared prefs
         val signin = sharedPref.getBoolean("signin?", false) //достаем данные из shared prefs
        // Log.e("sharedPrefs - ", firstName.toString())
-        Log.e("signin - ", signin.toString())
+        //Log.e("signin - ", signin.toString())
 
 
 
@@ -77,7 +77,7 @@ class MainActivity : ComponentActivity() {
                     val navController = rememberNavController()
                     //val bottomItems = listOf("list", "search", "push", "cards")
                     val bottomItems = listOf(
-                        BottomNavItem("Login", "login", Icons.Default.Home),
+                       // BottomNavItem("Login", "login", Icons.Default.Home),
                         BottomNavItem("List", "list", Icons.Default.Home),
                         BottomNavItem("Поиск", "search", Icons.Default.Search),
                         BottomNavItem("Настройки", "settings", Icons.Default.Settings))

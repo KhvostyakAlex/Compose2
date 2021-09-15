@@ -84,8 +84,8 @@ fun LoginScreen(loginViewModel: LoginViewModel, navController:NavController){
             shape = RoundedCornerShape(8.dp),
             colors = TextFieldDefaults.textFieldColors(
                 backgroundColor = colorResource(id = R.color.colorLightGrey),
-                focusedIndicatorColor =  colorResource(id = R.color.lmNCKD),                   //Color.Transparent - hide the indicator
-                //   unfocusedIndicatorColor = Color.Cyan
+                focusedIndicatorColor =  Color.Transparent ,                  //Color.Transparent - hide the indicator
+                   unfocusedIndicatorColor = Color.Transparent
             ),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number, imeAction = ImeAction.Next),
            //настраиваем кнопку ДАЛЕЕ, переходим на поле нижу
@@ -119,8 +119,9 @@ fun LoginScreen(loginViewModel: LoginViewModel, navController:NavController){
             shape = RoundedCornerShape(8.dp),
             colors = TextFieldDefaults.textFieldColors(
                 backgroundColor = colorResource(id = R.color.colorLightGrey),
-                focusedIndicatorColor =  colorResource(id = R.color.lmNCKD),                   //Color.Transparent - hide the indicator
-                //   unfocusedIndicatorColor = Color.Cyan
+                //focusedIndicatorColor =  colorResource(id = R.color.lmNCKD),                   //Color.Transparent - hide the indicator
+                focusedIndicatorColor =  Color.Transparent,                   //Color.Transparent - hide the indicator
+                   unfocusedIndicatorColor = Color.Transparent
             ),
             visualTransformation = if (passwordVisibility) VisualTransformation.None else PasswordVisualTransformation(),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password, imeAction = ImeAction.Send),
@@ -211,7 +212,7 @@ fun LoginScreen(loginViewModel: LoginViewModel, navController:NavController){
                 authData = authData[0],
                 navController = navController
             )
-        }else if(authData[0].message == "Filed" && authData[0].login != "login"){
+        }else if(authData[0].message == "Failed" && authData[0].login != "login"){
             /*костыль, потому что при первом вводе ложного пароля Тост показывается,
             при повторном вводе кривого пароля authData не обновляется и уже не показываетсяю
             необходимо реализовать после каждого нажатия Button-> обновлять LiveData */

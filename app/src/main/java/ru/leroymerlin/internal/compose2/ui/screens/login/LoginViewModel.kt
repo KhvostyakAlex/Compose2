@@ -32,7 +32,7 @@ class LoginViewModel: ViewModel() {
     var error: LiveData<String> =_error
 
     fun authIntraru(login:String, pass:String){
-        Log.e("authIntraru", "authIntraru")
+       // Log.e("authIntraru", "authIntraru")
         viewModelScope.launch(Dispatchers.Default) {
             val body = JSONObject()
             body.put("login", "RU1000\\$login")
@@ -61,7 +61,7 @@ class LoginViewModel: ViewModel() {
 
                         testData.add(
                             IntraruAuthUserList(
-                            "Filed",
+                            "Failed",
                                 login = login,
                             IntraruAuthUserData(
                               "","","",0,0)

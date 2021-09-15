@@ -9,6 +9,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import ru.leroymerlin.internal.compose2.dataclass.DepartmentList
 import ru.leroymerlin.internal.compose2.dataclass.IntraruUserByNameList
 import ru.leroymerlin.internal.compose2.dataclass.IntraruUserDataList
 import ru.leroymerlin.internal.compose2.di.AppModule
@@ -26,6 +27,9 @@ class FindUsersViewModel: ViewModel() {
 
     private val _error = MutableLiveData<String>("")
     var error: LiveData<String> =_error
+
+    private val _depData = MutableLiveData<List<String>>(emptyList())
+    var depData:LiveData<List<String>> = _depData
 
     fun getInfoUser(ldap: String, authHeader:String) {
         // Log.e("LOG mess", "response ldap "+ldap.toString())
@@ -125,6 +129,29 @@ class FindUsersViewModel: ViewModel() {
 
         }
     }
+
+    fun getDepartment( authHeader:String) {
+        viewModelScope.launch(Dispatchers.Default) {
+            AppModule.providePhonebookApi().getDepartment(authHeader)//здесь вызывается API
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({ response ->
+                    val testData = ArrayList<String>()
+                    val data = (response as DepartmentList).hits
+                    //  Log.e("FindDepartment ", "dep - "+data.toString())
+                    for (row in data) {
+                        val orgUnitName = row.orgUnitCard.name
+                        testData.add(orgUnitName)
+                    }
+
+                    _depData.postValue(testData)
+                }, {
+                    _error.postValue("Er - ${it.localizedMessage}")
+                    //_error.postValue("Ничего не найдено")
+                })
+        }
+    }
+
     fun onCardArrowClicked(cardId: Int) {
         _expandedCardIdsList.value = _expandedCardIdsList.value?.toMutableList().also { list ->
             if (list!!.contains(cardId)) list.remove(cardId) else list?.add(cardId)

@@ -13,10 +13,10 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.navigation.NavController
 import com.google.accompanist.pager.*
-import ru.leroymerlin.internal.compose2.ui.screens.cards.CardsViewModel
 import kotlinx.coroutines.launch
 import ru.leroymerlin.internal.compose2.R
 import ru.leroymerlin.internal.compose2.ui.screens.finddepartment.FindDepartmentScreen
+import ru.leroymerlin.internal.compose2.ui.screens.finddepartment.FindDepartmentViewModel
 import ru.leroymerlin.internal.compose2.ui.screens.findusers.FindUsersScreen
 import ru.leroymerlin.internal.compose2.ui.screens.findusers.FindUsersViewModel
 
@@ -39,6 +39,8 @@ fun SearchScreen(navController: NavController) {
     Scaffold(
        // topBar = { TopBar() },
     ) {
+
+
         Column {
             Tabs(tabs = tabs, pagerState = pagerState)
             TabsContent(tabs = tabs, pagerState = pagerState)
@@ -55,7 +57,7 @@ object FindUsers : TabItem(R.drawable.ic_search_black, "Поиск по сотр
 @ExperimentalMaterialApi
 @ExperimentalPagerApi
 object FindDepartment : TabItem(R.drawable.ic_search_black, "Поиск по подразделению",
-    { FindDepartmentScreen(viewModel = CardsViewModel()) })
+    { FindDepartmentScreen(findDepartmentViewModel = FindDepartmentViewModel()) })
 
 
 
