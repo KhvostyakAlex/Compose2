@@ -85,14 +85,14 @@ class MainActivity : ComponentActivity() {
 
                         bottomBar = {
                             val backStackEntry = navController.currentBackStackEntryAsState()
-                           //вернуть!!!! if(backStackEntry.value?.destination?.route!= "login"){
+                            if(backStackEntry.value?.destination?.route!= "login"){
                                 //Log.e("route - ", navController.currentDestination?.route.toString())
                                 BottomNavigationBar(items = bottomItems,
                                     navController = navController ,
                                     onItemClick ={
                                         navController.navigate(it.route)
                                     } )
-                         //   }
+                            }
 
                         }
 

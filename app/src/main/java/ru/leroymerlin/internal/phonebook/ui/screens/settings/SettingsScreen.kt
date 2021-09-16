@@ -73,9 +73,11 @@ fun ExitButton(navController: NavController, activity: Activity   ){
           //  Log.e("remove sharepref", "- true")
             remove("signin?")
             remove("token")
+            remove("refreshToken")
             remove("authHeader")
             commit()
         }
+        Log.e("token in setting", "tok - "+token.toString())
         navController.navigate("login") {
             popUpTo("login") {
                 inclusive = true

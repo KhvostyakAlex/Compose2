@@ -19,6 +19,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.database.FirebaseDatabase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -27,7 +28,7 @@ import java.io.FileOutputStream
 import java.io.InputStream
 import java.text.SimpleDateFormat
 import java.util.*
-
+//val currentTime = System.currentTimeMillis()/1000
 fun Context.copyToClipboard(text: CharSequence){
     val myClipboard = getSystemService(CLIPBOARD_SERVICE) as ClipboardManager?
     val myClip: ClipData? = ClipData.newPlainText("text", text)
@@ -248,6 +249,16 @@ fun saveFile(body: ResponseBody?, pathWhereYouWantToSaveFile: String):String{
         input?.close()
     }
     return ""
+}
+
+fun addToFB(node:String, account:String, value:String? ="ok"){
+    val database = FirebaseDatabase.getInstance()
+    val myRef = database.getReference(node)
+        .child("account")
+        .child(account)
+        .child(getCalculatedDate("yyyy-MM-dd", 0).toString())
+        .child(getCalculatedDate("HH:mm:ss", 0).toString())
+    myRef.setValue(value)
 }
 
 
