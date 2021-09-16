@@ -13,9 +13,20 @@ interface PhoneBookApi {
     @Headers("Content-Type: application/json")
     fun getUserInt(@Body body: RequestBody): Single<IntraruAuthResponse>
 
+    @POST("https://intraru3.leroymerlin.ru/services/identity/api/Identity/RefreshToken")
+    @Headers("Content-Type: application/json")
+    fun refreshToken(@Body refreshToken: RequestBody): Single<IntraruAuthResponse>
+
+
+
     @GET(" https://intraru3.leroymerlin.ru/services/profiles/api/profiles/{ldap}")
     fun getUser(@Path("ldap") ldap: String,
                 @Header("Authorization") authHeader: String):Single<IntraruUserList?>
+
+    @GET("https://intraru3.leroymerlin.ru/services/search/api/integrations/callcenter/profiles?searchString=")
+    fun getUserNew(@Query("ldap") ldap: String,
+                @Header("Authorization") authHeader: String):Single<IntraruUserList?>
+
 
     @GET(" https://intraru3.leroymerlin.ru/services/search/api/Search/profiles?count=50&filters=")
     fun getUserByName(@Query("searchString") userName: String,

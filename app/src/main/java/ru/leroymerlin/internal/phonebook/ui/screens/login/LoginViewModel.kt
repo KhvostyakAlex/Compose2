@@ -66,7 +66,7 @@ class LoginViewModel: ViewModel() {
                               "","","",0,0)
                             )
                         )
-                        Log.e("VM login", "empty testData - $testData")
+                       // Log.e("VM login", "empty testData - $testData")
                         _authData.postValue(testData)
                         // _error.postValue("Er - ${it.localizedMessage}")
                        // _error.postValue("Неверный логин или пароль")

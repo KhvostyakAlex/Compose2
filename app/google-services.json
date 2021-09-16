@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "675726047336",
+    "firebase_url": "https://lm-phonebook-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "lm-phonebook",
+    "storage_bucket": "lm-phonebook.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:675726047336:android:226d54cdbae404a8e823dd",
+        "android_client_info": {
+          "package_name": "ru.leroymerlin.internal.phonebook"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "675726047336-ejakinm1ssabu94gbpapulf37ud3ke7q.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCuQhxBgzE8rn3YhvqeUoFUpy5Qyuii_R0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "675726047336-ejakinm1ssabu94gbpapulf37ud3ke7q.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

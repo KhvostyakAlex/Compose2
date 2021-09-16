@@ -9,9 +9,10 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import ru.leroymerlin.internal.phonebook.dataclass.DepartmentList
-import ru.leroymerlin.internal.phonebook.dataclass.IntraruUserByNameList
-import ru.leroymerlin.internal.phonebook.dataclass.IntraruUserDataList
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.RequestBody.Companion.toRequestBody
+import org.json.JSONObject
+import ru.leroymerlin.internal.phonebook.dataclass.*
 import ru.leroymerlin.internal.phonebook.di.AppModule
 
 
@@ -31,9 +32,13 @@ class FindUsersViewModel: ViewModel() {
     private val _depData = MutableLiveData<List<String>>(emptyList())
     var depData:LiveData<List<String>> = _depData
 
+    private val _tokenData: MutableLiveData<MutableList<IntraruAuthUserData>> = MutableLiveData()
+    var tokenData: LiveData<MutableList<IntraruAuthUserData>> = _tokenData
+
     fun getInfoUser(ldap: String, authHeader:String) {
         // Log.e("LOG mess", "response ldap "+ldap.toString())
         viewModelScope.launch(Dispatchers.Default) {
+           // AppModule.providePhonebookApi().getUser(ldap, authHeader)//здесь вызывается API
             AppModule.providePhonebookApi().getUser(ldap, authHeader)//здесь вызывается API
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -149,6 +154,37 @@ class FindUsersViewModel: ViewModel() {
                     Log.e("error - ", "er "+ it.localizedMessage.toString())
                     _error.postValue("Er - ${it.localizedMessage}")
                     //_error.postValue("Ничего не найдено")
+                })
+        }
+    }
+
+    fun refreshToken(refreshToken:String){
+        // Log.e("authIntraru", "authIntraru")
+        viewModelScope.launch(Dispatchers.Default) {
+            val body = JSONObject()
+            body.put("refreshToken", refreshToken)
+            val testData = ArrayList<IntraruAuthUserData>()
+
+            AppModule.providePhonebookApi()
+                .refreshToken(body.toString().toRequestBody("body".toMediaTypeOrNull()))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({response ->
+                    Log.e("refreshToken", "Success")
+                    testData.add( IntraruAuthUserData(
+
+                            response.userHash,
+                            response.token,
+                            response.refreshToken,
+                            response.expiresIn,
+                            response.expiresOn)
+
+                    )
+                    _tokenData.postValue(testData)
+
+                }, {
+
+
                 })
         }
     }

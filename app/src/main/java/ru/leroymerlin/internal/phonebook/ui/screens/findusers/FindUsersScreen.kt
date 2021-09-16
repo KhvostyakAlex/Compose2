@@ -23,12 +23,19 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.google.accompanist.pager.ExperimentalPagerApi
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
 import ru.leroymerlin.internal.phonebook.R
 import ru.leroymerlin.internal.phonebook.dataclass.IntraruUserDataList
 import ru.leroymerlin.internal.phonebook.ui.screens.cards.EmptyCard
 import ru.leroymerlin.internal.phonebook.ui.screens.cards.ExpandableCard
 import ru.leroymerlin.internal.phonebook.withIO
+import java.sql.Timestamp
+import com.google.firebase.database.DatabaseReference
+
+import com.google.firebase.database.FirebaseDatabase
+import ru.leroymerlin.internal.phonebook.dataclass.IntraruAuthUserData
+import ru.leroymerlin.internal.phonebook.dataclass.IntraruAuthUserList
 
 
 @ExperimentalComposeUiApi
@@ -37,10 +44,29 @@ import ru.leroymerlin.internal.phonebook.withIO
 @Composable
 fun FindUsersScreen( findUsersViewModel: FindUsersViewModel, navController:NavController){
     //val cards:List<IntraruUserDataList> by findUsersViewModel.cards.observeAsState(emptyList())
+    val tokenData:List<IntraruAuthUserData> by findUsersViewModel.tokenData.observeAsState(emptyList())
+    val depData:List<String> by findUsersViewModel.depData.observeAsState(emptyList())
     val error:String by findUsersViewModel.error.observeAsState("")
     val activity = LocalContext.current as Activity
     //val sharedPref = activity.getPreferences(Context.MODE_PRIVATE)
     val keyboardController = LocalSoftwareKeyboardController.current
+
+
+    // Write a message to the database
+    // Write a message to the database
+    //val database = FirebaseDatabase.getInstance()
+    //val myRef = database.getReference("FindUser").child("account")
+    //myRef.setValue("Hello, signin!")
+    var dataForFirebase = mutableMapOf<String, String>()
+    val database = FirebaseDatabase.getInstance()
+    val myRef = database.getReference("signin").child("account")
+    dataForFirebase.put("account", "60032246")
+    dataForFirebase.put("date", "2021-09-16")
+    myRef.updateChildren(dataForFirebase as Map<String, Any>)
+
+
+
+
 
     Scaffold {
      /*   topBar = {
@@ -55,10 +81,36 @@ fun FindUsersScreen( findUsersViewModel: FindUsersViewModel, navController:NavCo
         val cards:List<IntraruUserDataList> by findUsersViewModel.cards.observeAsState(emptyList())
         val expandedCardIds = findUsersViewModel.expandedCardIdsList.observeAsState()
         val sharedPref = activity.getPreferences(Context.MODE_PRIVATE)
-        val token = sharedPref.getString("token", "") //достаем данные из shared prefs
+        val token = sharedPref.getString("token", "").toString() //достаем данные из shared prefs
+        val refreshToken = sharedPref.getString("refreshToken", "").toString() //достаем данные из shared prefs
+        val expiresIn = sharedPref.getInt("expiresIn", 0) //достаем данные из shared prefs
+        val expiresOn = sharedPref.getInt("expiresOn", 0) //достаем данные из shared prefs
         val authHeader = "Bearer " + token
 
-        findUsersViewModel.getDepartment(authHeader)
+
+
+        //val currenTime = Timestamp(System.currentTimeMillis())//1631763871069
+        val currenTime = System.currentTimeMillis()/1000
+        Log.e("currentTime", currenTime.toString())
+        Log.e("expiresIn ", expiresIn.toString())
+        Log.e("expiresOn", expiresOn.toString())
+       // Log.e("refr - ", refreshToken.toString())
+
+       /* findUsersViewModel.refreshToken(refreshToken)
+        if(tokenData.isNotEmpty()){
+            Log.e("tokenData - ", tokenData.toString())
+            val t = tokenData[0]
+
+            with (sharedPref.edit()) {
+                putString("token", t.token)
+                putString("refreshToken", t.refreshToken)
+                putInt("expiresIn", t.expiresIn)
+                putInt("expiresOn", t.expiresOn)
+                putString("authHeader", "Bearer " + t.token)
+                apply()
+            }
+        }*/
+
 
         Column {
             Row (
@@ -88,7 +140,7 @@ fun FindUsersScreen( findUsersViewModel: FindUsersViewModel, navController:NavCo
                     keyboardController?.hide()
                 },colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.primary),
                     shape = RoundedCornerShape(8.dp),
-                modifier = Modifier.height(50.dp)) {
+                modifier = Modifier.height(54.dp)) {
                     Text("Поиск", color = Color.White)
                 }
         }
@@ -96,7 +148,22 @@ fun FindUsersScreen( findUsersViewModel: FindUsersViewModel, navController:NavCo
             if (error.isNotBlank()) {
                 //Ошибка 401 когда заканчивается сессия и нужно перезайти
                 if(error.contains("401", ignoreCase = true)){
-                    with (sharedPref.edit()) {
+                    Log.e("!!!!!!!!!!error", "true 401")
+                    findUsersViewModel.refreshToken(refreshToken)
+                    if(tokenData.isNotEmpty()){
+                        Log.e("tokenData - ", tokenData.toString())
+                        val t = tokenData[0]
+
+                        with (sharedPref.edit()) {
+                            putString("token", t.token)
+                            putString("refreshToken", t.refreshToken)
+                            putInt("expiresIn", t.expiresIn)
+                            putInt("expiresOn", t.expiresOn)
+                            putString("authHeader", "Bearer " + t.token)
+                            apply()
+                        }
+                    }
+                /*вернуть   with (sharedPref.edit()) {
                         remove("signin?")
                         remove("token")
                         remove("authHeader")
@@ -106,7 +173,8 @@ fun FindUsersScreen( findUsersViewModel: FindUsersViewModel, navController:NavCo
                         popUpTo("login") {
                             inclusive = true
                         }
-                    }
+                    }*/
+
                 }else if(error.contains("404", ignoreCase = true)){
                     Log.e("error", "true 404")
 

@@ -36,6 +36,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.google.firebase.database.FirebaseDatabase
 import ru.leroymerlin.internal.phonebook.dataclass.IntraruAuthUserList
 import ru.leroymerlin.internal.phonebook.*
 import ru.leroymerlin.internal.phonebook.R
@@ -233,9 +234,10 @@ fun SignIn(login:String,
     val t = authData.IntraruAuthUserData
     val activity = LocalContext.current as Activity
     val sharedPref = activity.getPreferences(Context.MODE_PRIVATE)
-    Log.e("authData - ", t.toString())
+    //Log.e("authData - ", t.toString())
     //authData -: IntraruAuthUserData(userHash=9f6aa352d516d11fd9cd49e03d858437e5d4766455183675499d82189ad1a113, token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiNjAwMzIyNDYiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9naXZlbm5hbWUiOiLQkNC70LXQutGB0LXQuSDQpdCy0L7RgdGC0Y_QuiIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL2VtYWlsYWRkcmVzcyI6IjYwMDMyMjQ2QGxlcm95bWVybGluLnJ1IiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvdXBuIjoiNjAwMzIyNDYiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOlsiTE0tU0MtU00tSVRNYWciLCJBTEwtTE1SVSIsIkxNUlVfQWxsIiwiTE0tU1AtSW5mcmEtRG9jcy1TZXJ2aWNlcy1WaWV3IiwiTE0tU2hhcmUtTE1fTWVkaWEtUmVhZE9ubHkiLCJEb21haW4gVXNlcnMiLCJMTS1SRFMtVFMwMC1TaG9ydEN1dCIsIkRpdmlzaW9uLTg4MCIsIkRlcGFydG1lbnQtNzE1IiwiTE0tRHluYXRyYWNlLXVzZXJzIiwiSVRfRGl2aXNpb243X1NlYyIsIk9mZmljZTM2NV9GMSIsIlNob3AtMDM2LWFsbFBlcnNvbmFsIiwiQUxMLUxNUlUtRW1wIiwiTE0tVm9JUC1DaXNjb0NVQ00iLCJJVF9EaXZpc2lvbjFfU2VjIiwiSVRfRGl2aXNpb243IiwiSW50ZXJuZXRXV1dVc2VycyIsIkxNUlUgTW9iaWxpdHkgVXNlcnMiLCJBbGxfTGRhcCIsIlNob3AtMDM2LWFsbCIsIkFMTC1NYWctVGl0bGUtNTMtU3BlY1BvSVQiXSwibW9kdWxlIjoiQWxsIiwibmJmIjoxNjMxNzIwMDM2LCJleHAiOjE2MzE3MjM2MzYsImlzcyI6Imh0dHA6Ly9hZGZzLmxlcm95bWVybGluLnJ1L2FkZnMvc2VydmljZXMvdHJ1c3QiLCJhdWQiOiJ1cm46a3ViZXJwcm9kOmFkZnMifQ.HH6xAx12zzA0o1q26U3xLpfkWYLcbeZLYXmJeR_i8Zg, refreshToken=170922a0569d6f69629b8a753b5e8c516798d8746c227af9d2dd1715b95f4cb8, expiresIn=1631720036, expiresOn=1631748836)
-
+    var dataForFirebase = mutableMapOf<String, String>()
+//Log.e("refreshToken", t.refreshToken)
     with (sharedPref.edit()) {
         putString("token", t.token)
         putString("refreshToken", t.refreshToken)
@@ -274,6 +276,11 @@ fun SignIn(login:String,
             putBoolean("signin?", true)
             apply()
         }
+
+
+       // myRef.setValue(today)
+
+
 
         navController.navigate("search") {
             launchSingleTop = true //переходим только 1 раз
