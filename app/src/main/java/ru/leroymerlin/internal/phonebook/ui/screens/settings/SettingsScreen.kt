@@ -2,7 +2,6 @@ package ru.leroymerlin.internal.phonebook.ui.screens.settings
 
 import android.app.Activity
 import android.content.Context
-import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -20,6 +19,7 @@ import androidx.navigation.NavController
 import com.google.accompanist.pager.ExperimentalPagerApi
 import ru.leroymerlin.internal.phonebook.BuildConfig
 import ru.leroymerlin.internal.phonebook.R
+import ru.leroymerlin.internal.phonebook.addToFB
 
 
 @ExperimentalPagerApi
@@ -27,11 +27,9 @@ import ru.leroymerlin.internal.phonebook.R
 @Composable
 fun SettingsScreen( navController:NavController) {
     val activity = LocalContext.current as Activity
-    val sharedPref = activity.getPreferences(Context.MODE_PRIVATE)
     val versionName: String = BuildConfig.VERSION_NAME
 
-    //Log.e("navController.currentDestination.route-", navController.currentDestination?.route.toString())
-    Scaffold() {
+    Scaffold{
         Column(//verticalArrangement = Arrangement.Center,
            modifier= Modifier.fillMaxWidth()
         ) {
@@ -39,7 +37,6 @@ fun SettingsScreen( navController:NavController) {
             horizontalArrangement = Arrangement.End){
             ExitButton(navController = navController, activity=activity)
         }
-            getSettings(activity = activity, model = SettingsViewModel())
             Divider()
             SettingsView(settingsViewModel = SettingsViewModel(), activity = activity)
             Row(modifier= Modifier.fillMaxHeight().padding(start = 12.dp, bottom = 60.dp).weight(1f),
@@ -50,53 +47,36 @@ fun SettingsScreen( navController:NavController) {
     }
 }
 
-fun getSettings(activity:Activity, model: SettingsViewModel) {
-    val sharedPref = activity.getPreferences(Context.MODE_PRIVATE)
-    val token = sharedPref.getString("token", "") //достаем данные из shared prefs
-    // Log.e("sharePrefs", token.toString())
-
-}
-
 @Composable
 fun ExitButton(navController: NavController, activity: Activity   ){
-    val onClick = { }
     val sharedPref = activity.getPreferences(Context.MODE_PRIVATE)
-    val signin = sharedPref.getBoolean("signin?", false) //достаем данные из shared prefs
-    val token = sharedPref.getString("token", "") //достаем данные из shared prefs
-    val authHeader = sharedPref.getString("authHeader", "") //достаем данные из shared prefs
-   // Log.e("setting signin - ", signin.toString())
-    //Log.e("setting - ", "authHeader -"+ authHeader.toString())
+    val account = sharedPref.getString("account", "").toString() //достаем данные из shared prefs
 
-//Simple FAB
     FloatingActionButton(onClick = {
         with (sharedPref.edit()) {
           //  Log.e("remove sharepref", "- true")
             remove("signin?")
             remove("token")
-            remove("refreshToken")
-            remove("authHeader")
+           // remove("refreshToken")
+           // remove("authHeader")
             commit()
         }
-        Log.e("token in setting", "tok - "+token.toString())
+        //добавляем в аналитику
+        addToFB("ExitButton", account)
         navController.navigate("login") {
             popUpTo("login") {
                 inclusive = true
             }
         }
-
-        //GlobalScope.async() { exitApp(navController) }
-                //  navController.navigate("login")
-
                                    },
         modifier= Modifier.padding(8.dp),
-    backgroundColor = colorResource(id = R.color.lmNCKD)) {
+        backgroundColor = colorResource(id = R.color.lmNCKD)) {
         Icon(Icons.Filled.ExitToApp,"")
     }
 }
 
 @Composable
 fun SettingsView(settingsViewModel: SettingsViewModel, activity: Activity){
-   // val settings by settingsViewModel.settings.observeAsState(emptyList())
 
     val sharedPref = activity.getPreferences(Context.MODE_PRIVATE)
     val firstName = sharedPref.getString("firstName", "").toString() //достаем данные из shared prefs
@@ -108,10 +88,9 @@ fun SettingsView(settingsViewModel: SettingsViewModel, activity: Activity){
 
     val settings =   listOf(
         SettingsModel("Имя", "$firstName $lastName"),
-        SettingsModel("Магазин", "${orgUnitName} (${shopNumber})"),
+        SettingsModel("Магазин", "$orgUnitName (${shopNumber})"),
         SettingsModel("Должность", jobTitle),
         SettingsModel("Телефон", workPhone))
-
 
     Column(modifier = Modifier.fillMaxWidth()) {
         settings.map{ SettingsCell(model = it)}
@@ -120,7 +99,7 @@ fun SettingsView(settingsViewModel: SettingsViewModel, activity: Activity){
 
 @Composable
 fun SettingsCell(model: SettingsModel){
-Column() {
+Column{
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -137,52 +116,4 @@ Column() {
    
 }
     Divider()
-}
-/*
-@OptIn(ExperimentalComposeUiApi::class)
-@ExperimentalAnimationApi
-@ExperimentalMaterialApi
-@ExperimentalPagerApi
-@Composable
-fun Navigation(navController: NavHostController,
-               loginViewModel: LoginViewModel,
-               cardsViewModel: CardsViewModel
-){
-    NavHost(navController = navController, startDestination = "search"){
-        composable("login"){ LoginScreen(loginViewModel, navController) }
-        composable("list"){ ListScreen(navController) }
-        composable("search"){ SearchScreen(navController = navController) }
-        composable("cards"){ CardsScreen(cardsViewModel) }
-        composable("details"){ DetailsScreen() }
-        composable("settings"){ SettingsScreen(navController) }
-    }
-
-}*/
-
-
-suspend fun exitApp(navController: NavController) {
-    Log.e("exitApp-", "true")
-   // Log.e("navController.currentDestination.route-", navController.currentDestination?.route.toString())
-   // val navController: NavController = NavController(activity)
-    // val myPreferences = PreferenceManager.getDefaultSharedPreferences(context)
-    //val activity = LocalContext.current as Activity
-    //val sharedPref = activity.getPreferences(Context.MODE_PRIVATE)
-    //val myEditor = sharedPref.edit()
-
-    navController.navigate("login"){
-       // launchSingleTop = true //переходим только 1 раз
-
-    //runs on worker thread and returns data
-   /* withContext(Dispatchers.Main){
-        withIO {
-            //выполняется в фоне
-            myEditor.remove("signin?").apply()
-            myEditor.remove("token?").apply()
-            myEditor.remove("authHeader?").commit()
-        }
-        navController.navigate("login"){
-            launchSingleTop = true //переходим только 1 раз
-        }*/
-
-    }
 }

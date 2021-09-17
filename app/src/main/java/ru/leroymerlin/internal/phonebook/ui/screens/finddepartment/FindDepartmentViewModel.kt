@@ -9,10 +9,10 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import ru.leroymerlin.internal.phonebook.dataclass.BaseCellModel
-import ru.leroymerlin.internal.phonebook.dataclass.DepartmentList
-import ru.leroymerlin.internal.phonebook.dataclass.IntraruUserByNameList
-import ru.leroymerlin.internal.phonebook.dataclass.IntraruUserDataList
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.RequestBody.Companion.toRequestBody
+import org.json.JSONObject
+import ru.leroymerlin.internal.phonebook.dataclass.*
 import ru.leroymerlin.internal.phonebook.di.AppModule
 
 
@@ -39,6 +39,9 @@ class FindDepartmentViewModel: ViewModel() {
 
     private val _error = MutableLiveData<String>("")
     var error: LiveData<String> =_error
+
+    private val _tokenData: MutableLiveData<MutableList<IntraruAuthUserData>> = MutableLiveData()
+    var tokenData: LiveData<MutableList<IntraruAuthUserData>> = _tokenData
 
 
 
@@ -270,5 +273,38 @@ class FindDepartmentViewModel: ViewModel() {
                 if (list!!.contains(cardId)) list.remove(cardId) else list?.add(cardId)
             }
         }
+
+    fun refreshToken(refreshToken:String){
+        // Log.e("authIntraru", "authIntraru")
+        viewModelScope.launch(Dispatchers.Default) {
+            val body = JSONObject()
+            body.put("refreshToken", refreshToken)
+            val testData = ArrayList<IntraruAuthUserData>()
+
+            AppModule.providePhonebookApi()
+                .refreshToken(body.toString().toRequestBody("body".toMediaTypeOrNull()))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({response ->
+                    Log.e("refreshToken", "Success")
+                    testData.add( IntraruAuthUserData(
+
+                        response.userHash,
+                        response.token,
+                        response.refreshToken,
+                        response.expiresIn,
+                        response.expiresOn)
+
+                    )
+                    _tokenData.postValue(testData)
+
+                }, {
+
+
+                })
+        }
     }
+    }
+
+
 

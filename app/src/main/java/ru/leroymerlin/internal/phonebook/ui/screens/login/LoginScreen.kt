@@ -46,8 +46,6 @@ import ru.leroymerlin.internal.phonebook.dataclass.IntraruUserDataList
 @Composable
 fun LoginScreen(loginViewModel: LoginViewModel, navController:NavController){
     val authData:List<IntraruAuthUserList> by loginViewModel.authData.observeAsState(emptyList())
-    //val userData:List<IntraruUserDataList> by loginViewModel.userData.observeAsState(emptyList())
-    val error:String by loginViewModel.error.observeAsState("")
     val context = LocalContext.current
     val activity = LocalContext.current as Activity
     val sharedPref = activity.getPreferences(Context.MODE_PRIVATE)
@@ -59,7 +57,7 @@ fun LoginScreen(loginViewModel: LoginViewModel, navController:NavController){
 
     val keyboardController = LocalSoftwareKeyboardController.current
 
-    Scaffold() {
+    Scaffold {
 
     Column(//verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -235,8 +233,6 @@ fun SignIn(login:String,
     val activity = LocalContext.current as Activity
     val sharedPref = activity.getPreferences(Context.MODE_PRIVATE)
 
-    var dataForFirebase = mutableMapOf<String, String>()
-
     with (sharedPref.edit()) {
         putString("token", t.token)
         putString("refreshToken", t.refreshToken)
@@ -253,11 +249,9 @@ fun SignIn(login:String,
     }
 
     if (userData.isNotEmpty()) {
-        val uData = userData[0] as IntraruUserDataList
+        val uData = userData[0]
         val today = getCalculatedDate("yyyy-M-dd", 0)
         with (sharedPref.edit()) {
-//Log.e("Udata - ", uData.toString())
-           // IntraruUserDataList(account=60032246, firstName=Алексей, lastName=Хвостяк, orgUnitName=Магазин Барнаул 1, shopNumber=036, cluster=Барнаул, region=Регион 7, jobTitle=специалист технической поддержки, department=Магазин Барнаул 1, subDivision=центр обслуживания магазинов, workPhone=+7 909 932-94-01, mobilePhone=null, personalEmail=null, workEmail=[{value=Aleksey.Hvostyak@leroymerlin.ru, isConfirmed=true, confrimCodeInfo=null}], expandable=false)
             putString("account", uData.account)
             putString("firstName", uData.firstName)
             putString("lastName", uData.lastName)

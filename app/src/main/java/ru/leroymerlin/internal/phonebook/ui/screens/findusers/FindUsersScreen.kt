@@ -2,7 +2,6 @@ package ru.leroymerlin.internal.phonebook.ui.screens.findusers
 
 import android.app.Activity
 import android.content.Context
-import android.content.SharedPreferences
 import android.text.TextUtils
 import android.util.Log
 import android.widget.Toast
@@ -23,22 +22,13 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.google.accompanist.pager.ExperimentalPagerApi
-import com.google.firebase.database.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.withContext
 import ru.leroymerlin.internal.phonebook.R
 import ru.leroymerlin.internal.phonebook.dataclass.IntraruUserDataList
 import ru.leroymerlin.internal.phonebook.ui.screens.cards.EmptyCard
 import ru.leroymerlin.internal.phonebook.ui.screens.cards.ExpandableCard
-import ru.leroymerlin.internal.phonebook.withIO
-import java.sql.Timestamp
-
-import kotlinx.coroutines.flow.merge
 import ru.leroymerlin.internal.phonebook.addToFB
 import ru.leroymerlin.internal.phonebook.dataclass.IntraruAuthUserData
-import ru.leroymerlin.internal.phonebook.dataclass.IntraruAuthUserList
-import ru.leroymerlin.internal.phonebook.getCalculatedDate
+
 
 
 @ExperimentalComposeUiApi
@@ -56,55 +46,15 @@ fun FindUsersScreen( findUsersViewModel: FindUsersViewModel, navController:NavCo
     val token = sharedPref.getString("token", "").toString() //достаем данные из shared prefs
     val refreshToken = sharedPref.getString("refreshToken", "").toString() //достаем данные из shared prefs
     val account = sharedPref.getString("account", "").toString() //достаем данные из shared prefs
-    val expiresIn = sharedPref.getInt("expiresIn", 0) //достаем данные из shared prefs
-    val expiresOn = sharedPref.getInt("expiresOn", 0) //достаем данные из shared prefs
     val authHeader = "Bearer " + token
 
-    //Firebase
-    val today = getCalculatedDate("yyyy-M-dd hh:mm", 0).toString()
-    //val myRef = database.getReference("FindUser").child("account")
-    //myRef.setValue("Hello, signin!")
-
-
-
-
-
-
-
-
-
-
-            Scaffold {
-                /*   topBar = {
-                       TopAppBar{
-                           Text(text = "text")
-                       }
-                   }*/
-
-                // Log.e("refr - ", refreshToken.toString())
-
-                /* findUsersViewModel.refreshToken(refreshToken)
-                 if(tokenData.isNotEmpty()){
-                     Log.e("tokenData - ", tokenData.toString())
-                     val t = tokenData[0]
-
-                     with (sharedPref.edit()) {
-                         putString("token", t.token)
-                         putString("refreshToken", t.refreshToken)
-                         putInt("expiresIn", t.expiresIn)
-                         putInt("expiresOn", t.expiresOn)
-                         putString("authHeader", "Bearer " + t.token)
-                         apply()
-                     }
-                 }*/
-
-
-                Column {
-                    Row (
-                        // horizontalArrangement = Arrangement.SpaceAround
-                        verticalAlignment = Alignment.CenterVertically
-                    ){
-                        TextField(value = textState.value,
+    Scaffold {
+        Column {
+            Row (
+                // horizontalArrangement = Arrangement.SpaceAround
+                verticalAlignment = Alignment.CenterVertically
+            ){
+                    TextField(value = textState.value,
                             onValueChange = { value -> textState.value = value},
                             placeholder = {Text("Ввведи Фамилию/LDAP")},
                             shape = RoundedCornerShape(8.dp),
@@ -154,16 +104,14 @@ fun FindUsersScreen( findUsersViewModel: FindUsersViewModel, navController:NavCo
                     if (error.isNotBlank()) {
                         //Ошибка 401 когда заканчивается сессия и нужно перезайти
                         if(error.contains("401", ignoreCase = true)){
-                            refreshToken(activity, findUsersViewModel, refreshToken,navController)
-                        }else if(error.contains("404", ignoreCase = true)){
-                            //Log.e("error", "true 404")
+                          //  refreshToken(activity, findUsersViewModel, refreshToken,navController)
                         }
                     }
-                }
-            }
         }
+    }
+}
 
-            @Composable
+          /*  @Composable
             fun refreshToken(activity: Activity,
                              findUsersViewModel: FindUsersViewModel,
                              refreshToken:String,
@@ -190,5 +138,5 @@ fun FindUsersScreen( findUsersViewModel: FindUsersViewModel, navController:NavCo
                         }
                     }
                 }
-            }
+            }*/
 

@@ -15,98 +15,11 @@ import ru.leroymerlin.internal.phonebook.di.AppModule
 
 class CardsViewModel : ViewModel() {
 
-  //  private val _cards = MutableStateFlow(listOf<IntraruUserDataList>())
-  //  val cards: StateFlow<List<IntraruUserDataList>> get() = _cards
-
     private val _cards: MutableLiveData<List<IntraruUserDataList>> = MutableLiveData()
     var cards: LiveData<List<IntraruUserDataList>> = _cards
 
-
-  //  private val _expandedCardIdsList = MutableStateFlow(listOf<Int>())
-   // val expandedCardIdsList: StateFlow<List<Int>> get() = _expandedCardIdsList
-
     private val _expandedCardIdsList = MutableLiveData(listOf<Int>())
     val expandedCardIdsList: LiveData<List<Int>> get() = _expandedCardIdsList
-
-
-
-   // private val _cards = MutableLiveData<List<ExpandableCardModel>>(emptyList())
-   // var cards: LiveData<List<ExpandableCardModel>> = _cards
-
-   /* init {
-        getFakeData()
-    }*/
-
- /*   private  fun getFakeData() {
-     /*   viewModelScope.launch(Dispatchers.Default) {
-            val testList = arrayListOf<ExpandableCardModel>()
-            repeat(3) { testList += ExpandableCardModel(id = it, title = "Карточка $it") }
-            _cards.emit(testList)
-        }*/
-        viewModelScope.launch(Dispatchers.Default) {
-            val testData = ArrayList<IntraruUserDataList>()
-
-            testData.add(
-                IntraruUserDataList(
-                account = "60032246",
-                firstName = "Алексей",
-                lastName = "Хвостяк",
-                orgUnitName = "Магазин Барнаул 1",
-                shopNumber = "036",
-                cluster =  "String",
-                region =  "7",
-                jobTitle =  "Специалист технической поддержки",
-                department =  "department",
-                subDivision =  "subDivision",
-                workPhone =  "7999999998",
-                mobilePhone =  "7999999999",
-                personalEmail =  "personalEmail",
-                workEmail = "Aleksey.Hvostyak@leroymerlin.ru",
-            )
-            )
-            testData.add(IntraruUserDataList(
-                account = "60032247",
-                firstName = "Петр",
-                lastName = "Иванов",
-                orgUnitName = "Магазин Барнаул 2",
-                shopNumber = "String",
-                cluster =  "String",
-                region =  "String",
-                jobTitle =  "String",
-                department =  "String",
-                subDivision =  "String",
-                workPhone =  "String",
-                mobilePhone =  "String",
-                personalEmail =  "String",
-                workEmail = "String",
-            ))
-            testData.add(IntraruUserDataList(
-                account = "60032248",
-                firstName = "Иван",
-                lastName = "Петров",
-                orgUnitName = "Магазин Барнаул 2",
-                shopNumber = "String",
-                cluster =  "String",
-                region =  "String",
-                jobTitle =  "String",
-                department =  "String",
-                subDivision =  "String",
-                workPhone =  "String",
-                mobilePhone =  "String",
-                personalEmail =  "String",
-                workEmail = "String",
-            ))
-            _cards.postValue(testData)
-
-        }
-
-
-
-
-    }
-    */
-
-
     private val _userData: MutableLiveData<List<IntraruUserDataList>> = MutableLiveData()
     var userData: LiveData<List<IntraruUserDataList>> = _userData
 
@@ -123,7 +36,6 @@ class CardsViewModel : ViewModel() {
                 .subscribe({ response ->
                     val status = response?.userStatus?.status
                     val testData = ArrayList<IntraruUserDataList>()
-Log.e("response", response.toString())
                     //добавляем в список всех работающих
                     if(status!="fired"){
                         testData.add(IntraruUserDataList(

@@ -46,37 +46,25 @@ import ru.leroymerlin.internal.phonebook.ui.theme.PhonebookTheme
 class MainActivity : ComponentActivity() {
     val loginViewModel by viewModels<LoginViewModel>()
     val cardsViewModel by viewModels<CardsViewModel>()
+    val searchViewModel by viewModels<SearchViewModel>()
     @ExperimentalPagerApi
     @ExperimentalMaterialApi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        //Toast.makeText( baseContext, "onCreate", Toast.LENGTH_SHORT).show()
-
-
 
         val sharedPref = this.getPreferences(Context.MODE_PRIVATE)
-        val firstName = sharedPref.getString("firstName", "") //достаем данные из shared prefs
         val signin = sharedPref.getBoolean("signin?", false) //достаем данные из shared prefs
-       // Log.e("sharedPrefs - ", firstName.toString())
-        //Log.e("signin - ", signin.toString())
-
-
-
 
         setContent {
             PhonebookTheme (darkTheme = false){
                 // A surface container using the 'background' color from the theme
                 Surface(color = MaterialTheme.colors.background) {
-                   // Greeting("World!!!", "Android")
-
                     val navController = rememberNavController()
-                    //val bottomItems = listOf("list", "search", "push", "cards")
                     val bottomItems = listOf(
-                       // BottomNavItem("Login", "login", Icons.Default.Home),
-                        //BottomNavItem("List", "list", Icons.Default.Home),
                         BottomNavItem("Поиск", "search", Icons.Default.Search),
                         BottomNavItem("Настройки", "settings", Icons.Default.Settings))
                     Scaffold(
+
                         topBar={ TopAppBar(
                             title = { Text(text = stringResource(R.string.app_name), fontSize = 18.sp) },
                             backgroundColor = colorResource(id = R.color.lmNCKD),
@@ -85,35 +73,33 @@ class MainActivity : ComponentActivity() {
 
                         bottomBar = {
                             val backStackEntry = navController.currentBackStackEntryAsState()
-                            if(backStackEntry.value?.destination?.route!= "login"){
+                          // вернуть if(backStackEntry.value?.destination?.route!= "login"){
                                 //Log.e("route - ", navController.currentDestination?.route.toString())
                                 BottomNavigationBar(items = bottomItems,
                                     navController = navController ,
                                     onItemClick ={
                                         navController.navigate(it.route)
                                     } )
-                            }
-
+                         //   }
                         }
 
                     ) {
 
-                        Navigation(navController = navController, loginViewModel = loginViewModel, cardsViewModel = cardsViewModel )
+                        Navigation(navController = navController,
+                            loginViewModel = loginViewModel,
+                            cardsViewModel = cardsViewModel ,
+                            searchViewModel = searchViewModel)
 
                         if(signin==false){
                             navController.navigate("login")
                         }else{
                             navController.navigate("search")
                         }
-                        //Greeting("World!!!", "Android")
-                        //NavHost( navController = navController, startDestination = "list",)
                     }
                 }
             }
         }
     }
-
-
 }
 
 @OptIn(ExperimentalComposeUiApi::class)
@@ -123,11 +109,12 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun Navigation(navController: NavHostController,
                loginViewModel: LoginViewModel,
-               cardsViewModel: CardsViewModel){
+               cardsViewModel: CardsViewModel,
+                searchViewModel:SearchViewModel){
     NavHost(navController = navController, startDestination = "login"){
         composable("login"){ LoginScreen(loginViewModel, navController)}
         composable("list"){ ListScreen(navController)}
-        composable("search"){ SearchScreen(navController)}
+        composable("search"){ SearchScreen(searchViewModel, navController)}
         composable("cards"){ CardsScreen(cardsViewModel) }
         composable("details"){ DetailsScreen()}
         composable("settings"){ SettingsScreen(navController) }

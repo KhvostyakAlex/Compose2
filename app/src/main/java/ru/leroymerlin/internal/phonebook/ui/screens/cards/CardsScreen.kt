@@ -1,12 +1,10 @@
 package ru.leroymerlin.internal.phonebook.ui.screens.cards
 
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.text.TextUtils
-import android.util.Log
 import androidx.compose.animation.*
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.clickable
@@ -44,9 +42,7 @@ import values.FADE_OUT_ANIMATION_DURATION
 @ExperimentalCoroutinesApi
 @Composable
 fun CardsScreen(viewModel: CardsViewModel) {
-   // val cards = viewModel.cards.collectAsState()
     val cards:List<IntraruUserDataList> by viewModel.cards.observeAsState(emptyList())
-   // val expandedCardIds = viewModel.expandedCardIdsList.collectAsState()
     val expandedCardIds = viewModel.expandedCardIdsList.observeAsState()
     Scaffold(
         backgroundColor = Color(
@@ -82,16 +78,13 @@ fun EmptyCard(title: String){
                 vertical = 4.dp
             )
     ) {
-        Column ( // horizontalAlignment = Alignment.CenterHorizontally
-        ){
-
-                Row() {
+        Column {
+                Row {
                     Text(title, modifier = Modifier.padding(start = 8.dp, top = 8.dp,bottom = 12.dp))
                 }
         }
     }
 }
-
 
 @SuppressLint("UnusedTransitionTargetStateParameter")
 @Composable
@@ -112,7 +105,6 @@ fun ExpandableCard(
     }, label = "rotationDegreeTransition") {
         if (expanded) 0f else 180f
     }
-    val activity = LocalContext.current as Activity
 
     Card(
         backgroundColor = Color.White,
@@ -126,23 +118,16 @@ fun ExpandableCard(
                 vertical = 4.dp
             )
     ) {
-        Column ( // horizontalAlignment = Alignment.CenterHorizontally
-                ){
-            Box (modifier = Modifier
-                .clickable(onClick = onCardArrowClick)
-            ){
+        Column {
+            Box (modifier = Modifier.clickable(onClick = onCardArrowClick)){
                 Row() {
-                    Column(Modifier
-                        .weight(1f)
-                    ) {
+                    Column(Modifier.weight(1f)) {
                         CardTitle(title = "${card.firstName} ${card.lastName}")
                     }
-                    Column(Modifier
-                        .weight(1f)
-                    ) {
-                        CardOrgUnitName(title = "${card.orgUnitName}")
+                    Column(Modifier.weight(1f)) {
+                        CardOrgUnitName(title = card.orgUnitName)
                     }
-                    Column() {
+                    Column {
                         CardArrow(degrees = arrowRotationDegree, onClick = onCardArrowClick)
                     }
                 }
@@ -157,7 +142,7 @@ fun CardArrow(
     degrees: Float,
     onClick: () -> Unit
 ) {
-    Column() {
+    Column {
         IconButton(
             onClick = onClick,
                     content = {
@@ -173,7 +158,7 @@ fun CardArrow(
 }
 
 @Composable
-fun CardTitle(title: String/*, onClick: () -> Unit*/) {
+fun CardTitle(title: String) {
        Text(
            text = title,
            modifier = Modifier.padding(8.dp),
@@ -188,7 +173,6 @@ fun CardOrgUnitName(title: String/*, onClick: () -> Unit*/) {
         textAlign = TextAlign.Start,
         fontSize = 12.sp
     )
-
 }
 
 @OptIn(ExperimentalAnimationApi::class)
@@ -197,7 +181,6 @@ fun ExpandableContent(
     visible: Boolean = true,
     card: IntraruUserDataList,
 ) {
-    val activity = LocalContext.current as Activity
     val context = LocalContext.current
     val enterFadeIn = remember {
         fadeIn(
@@ -231,8 +214,6 @@ fun ExpandableContent(
                 .padding(start = 16.dp, end = 8.dp, bottom = 8.dp)
 
         ) {
-            // Spacer(modifier = Modifier.heightIn(2.dp))
-
             Text(
                 text = "LDAP - ${card.account}",
                 textAlign = TextAlign.Start,
@@ -297,16 +278,11 @@ fun ExpandableContent(
                     }
 
                     FloatingActionButton(
-                        onClick = {
-                             //   Log.e("copyTobuffer - ",card.firstName.toString())
-                            onClickButtonCopy(card, context)
-
-                        },
+                        onClick = { onClickButtonCopy(card, context) },
                         modifier = Modifier.padding(8.dp),
                         backgroundColor = colorResource(id = R.color.colorCopy)
                     ) {
                         Icon(Icons.Filled.ContentCopy, "", modifier = Modifier)
-
                     }
                 }
             }
@@ -317,11 +293,9 @@ fun ExpandableContent(
 fun onClickButtonPhone(card: IntraruUserDataList, context: Context){
     var workPhone = card.workPhone
     var mobilePhone = card.mobilePhone
-    var phoneNum =""
+    var phoneNum: String
 
     if(workPhone != "" && workPhone != "null"){
-        Log.e("workPhone - ",card.workPhone.toString())
-
         workPhone = workPhone.replace("+","")
         workPhone =  workPhone.replace("-","")
         workPhone = workPhone.replace(" ","")
@@ -330,10 +304,10 @@ fun onClickButtonPhone(card: IntraruUserDataList, context: Context){
         if(isDigits){
             val character = workPhone[0]//определяем первый знак
 
-            if(character.toString() == "7"){
-                phoneNum = "+$workPhone"
+            phoneNum = if(character.toString() == "7"){
+                "+$workPhone"
             }else{
-                phoneNum = workPhone
+                workPhone
             }
             context.copyToClipboard(phoneNum)//нужно ли копировать в буффер?
             val intent = Intent(Intent.ACTION_DIAL, Uri.parse("tel:$phoneNum"))//открываем звонилку
@@ -341,17 +315,16 @@ fun onClickButtonPhone(card: IntraruUserDataList, context: Context){
         }
 
     }else if(card.mobilePhone != "" && card.mobilePhone != "null"){
-        Log.e("mobilePhone - ", card.mobilePhone)
         mobilePhone = mobilePhone.replace("+","")
         mobilePhone =  mobilePhone.replace("-","")
         mobilePhone = mobilePhone.replace(" ","")
         val isDigits = TextUtils.isDigitsOnly(mobilePhone) //проверка - является ли числом
         if(isDigits){
             val character = mobilePhone[0]//определяем первый знак
-            if(character.toString() == "7"){
-                phoneNum = "+$mobilePhone"
+            phoneNum = if(character.toString() == "7"){
+                "+$mobilePhone"
             }else{
-                phoneNum = mobilePhone
+                mobilePhone
             }
             context.copyToClipboard(phoneNum)//нужно ли копировать в буффер?
             val intent = Intent(Intent.ACTION_DIAL, Uri.parse("tel:$phoneNum"))//открываем звонилку
@@ -363,11 +336,9 @@ fun onClickButtonPhone(card: IntraruUserDataList, context: Context){
 fun onClickButtonCopy(card: IntraruUserDataList, context: Context){
     var workPhone = card.workPhone
     var mobilePhone = card.mobilePhone
-    var phoneNum =""
+    var phoneNum:String
 
     if(workPhone != "" && workPhone != "null"){
-        Log.e("workPhone - ",card.workPhone.toString())
-
         workPhone = workPhone.replace("+","")
         workPhone =  workPhone.replace("-","")
         workPhone = workPhone.replace(" ","")
@@ -376,26 +347,25 @@ fun onClickButtonCopy(card: IntraruUserDataList, context: Context){
         if(isDigits){
             val character = workPhone[0]//определяем первый знак
 
-            if(character.toString() == "7"){
-                phoneNum = "+$workPhone"
+            phoneNum = if(character.toString() == "7"){
+                "+$workPhone"
             }else{
-                phoneNum = workPhone
+                workPhone
             }
             context.copyToClipboard(phoneNum)//нужно ли копировать в буффер?
         }
 
     }else if(card.mobilePhone != "" && card.mobilePhone != "null"){
-        Log.e("mobilePhone - ", card.mobilePhone)
         mobilePhone = mobilePhone.replace("+","")
         mobilePhone =  mobilePhone.replace("-","")
         mobilePhone = mobilePhone.replace(" ","")
         val isDigits = TextUtils.isDigitsOnly(mobilePhone) //проверка - является ли числом
         if(isDigits){
             val character = mobilePhone[0]//определяем первый знак
-            if(character.toString() == "7"){
-                phoneNum = "+$mobilePhone"
+            phoneNum = if(character.toString() == "7"){
+                "+$mobilePhone"
             }else{
-                phoneNum = mobilePhone
+                mobilePhone
             }
             context.copyToClipboard(phoneNum)//нужно ли копировать в буффер?
         }
