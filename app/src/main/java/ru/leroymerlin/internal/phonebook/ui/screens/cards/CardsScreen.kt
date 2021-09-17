@@ -272,6 +272,7 @@ fun ExpandableContent(
 
                         },
                         modifier = Modifier.padding(8.dp),
+                        contentColor=Color.White,
                         backgroundColor = colorResource(id = R.color.lmNCKD)
                     ) {
                         Icon(Icons.Filled.Phone, "", modifier = Modifier)
@@ -280,6 +281,7 @@ fun ExpandableContent(
                     FloatingActionButton(
                         onClick = { onClickButtonCopy(card, context) },
                         modifier = Modifier.padding(8.dp),
+                        contentColor=Color.White,
                         backgroundColor = colorResource(id = R.color.colorCopy)
                     ) {
                         Icon(Icons.Filled.ContentCopy, "", modifier = Modifier)

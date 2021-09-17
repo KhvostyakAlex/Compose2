@@ -29,8 +29,6 @@ import ru.leroymerlin.internal.phonebook.ui.screens.cards.ExpandableCard
 import ru.leroymerlin.internal.phonebook.addToFB
 import ru.leroymerlin.internal.phonebook.dataclass.IntraruAuthUserData
 
-
-
 @ExperimentalComposeUiApi
 @ExperimentalPagerApi
 @ExperimentalMaterialApi
@@ -44,7 +42,6 @@ fun FindUsersScreen( findUsersViewModel: FindUsersViewModel, navController:NavCo
     val cards:List<IntraruUserDataList> by findUsersViewModel.cards.observeAsState(emptyList())
     val expandedCardIds = findUsersViewModel.expandedCardIdsList.observeAsState()
     val token = sharedPref.getString("token", "").toString() //достаем данные из shared prefs
-    val refreshToken = sharedPref.getString("refreshToken", "").toString() //достаем данные из shared prefs
     val account = sharedPref.getString("account", "").toString() //достаем данные из shared prefs
     val authHeader = "Bearer " + token
 
@@ -80,7 +77,7 @@ fun FindUsersScreen( findUsersViewModel: FindUsersViewModel, navController:NavCo
 
                         },colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.primary),
                             shape = RoundedCornerShape(8.dp),
-                            modifier = Modifier.height(54.dp)) {
+                            modifier = Modifier.height(56.dp)) {
                             Text("Поиск", color = Color.White)
                         }
                     }

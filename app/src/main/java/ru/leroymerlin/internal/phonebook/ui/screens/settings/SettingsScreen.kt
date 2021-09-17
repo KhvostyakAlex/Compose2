@@ -48,7 +48,7 @@ fun SettingsScreen( navController:NavController) {
 }
 
 @Composable
-fun ExitButton(navController: NavController, activity: Activity   ){
+fun ExitButton(navController: NavController, activity: Activity){
     val sharedPref = activity.getPreferences(Context.MODE_PRIVATE)
     val account = sharedPref.getString("account", "").toString() //достаем данные из shared prefs
 
@@ -57,8 +57,8 @@ fun ExitButton(navController: NavController, activity: Activity   ){
           //  Log.e("remove sharepref", "- true")
             remove("signin?")
             remove("token")
-           // remove("refreshToken")
-           // remove("authHeader")
+            remove("refreshToken")
+            remove("authHeader")
             commit()
         }
         //добавляем в аналитику
@@ -113,7 +113,6 @@ Column{
             .weight(0.7f)
             .padding(8.dp), style = TextStyle(color= Color.Black))
     }
-   
 }
     Divider()
 }
