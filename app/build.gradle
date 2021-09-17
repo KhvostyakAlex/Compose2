@@ -7,6 +7,15 @@ plugins {
 
 android {
     compileSdk 30
+    signingConfigs {
+        config {
+            //storeFile file('C:\\lmsign.jks')
+            storeFile file('/Users/alexkhvostyak/AndroidStudioProjects/lmsign.jks')
+            storePassword 'Barnaul2018'
+            keyAlias 'key0'
+            keyPassword 'Barnaul2018'
+        }
+    }
 
     defaultConfig {
         applicationId "ru.leroymerlin.internal.phonebook"

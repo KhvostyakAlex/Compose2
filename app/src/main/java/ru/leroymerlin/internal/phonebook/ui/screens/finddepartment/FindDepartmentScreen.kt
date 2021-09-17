@@ -18,6 +18,7 @@ import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import ru.leroymerlin.internal.phonebook.addToFB
 import ru.leroymerlin.internal.phonebook.dataclass.IntraruAuthUserData
 import ru.leroymerlin.internal.phonebook.dataclass.IntraruUserDataList
 import ru.leroymerlin.internal.phonebook.ui.screens.autocompletetext.components.autocomplete.AutoCompleteBox
@@ -33,6 +34,7 @@ import java.util.*
 data class filter(val key:String, val value:String)
 var filterData = mutableMapOf<String, String>()
 
+
 @ExperimentalAnimationApi
 @Composable
 fun FindDepartmentScreen(findDepartmentViewModel: FindDepartmentViewModel, navController:NavController){
@@ -44,6 +46,7 @@ fun FindDepartmentScreen(findDepartmentViewModel: FindDepartmentViewModel, navCo
     val authHeader = sharedPref.getString("authHeader", "").toString() //достаем данные из shared prefs
     val orgInitNameUser = sharedPref.getString("orgUnitName", "").toString() //достаем данные из shared prefs
     val refreshToken = sharedPref.getString("refreshToken", "").toString() //достаем данные из shared prefs
+    val account = sharedPref.getString("account", "").toString() //достаем данные из shared prefs
 
     Scaffold {
 
@@ -58,16 +61,16 @@ fun FindDepartmentScreen(findDepartmentViewModel: FindDepartmentViewModel, navCo
             ) {
 
                 if(depData.isNotEmpty()){
-                    AutoCompleteValueSample(items = depData, "Магазин", orgInitNameUser, orgInitNameUser,"mag", authHeader, findDepartmentViewModel)
+                    AutoCompleteValueSample(items = depData, "Магазин", orgInitNameUser, orgInitNameUser,"mag", authHeader, findDepartmentViewModel, account)
                 }else{
                    // Log.e("depData","-empty")
                     //когда закончилось время токена и depData отсутствует
-                    AutoCompleteValueSample(items = listOf(""), "Магазин", "", "","mag", authHeader, findDepartmentViewModel)
+                    AutoCompleteValueSample(items = listOf(""), "Магазин", "", "","mag", authHeader, findDepartmentViewModel, account)
 
 
                 }
 
-                AutoCompleteValueSample(items = arrJobTitleList, "Должность", "Все", orgInitNameUser,"jobTitle", authHeader, findDepartmentViewModel)
+                AutoCompleteValueSample(items = arrJobTitleList, "Должность", "Все", orgInitNameUser,"jobTitle", authHeader, findDepartmentViewModel, account)
 
                 LaunchedEffect(Unit){
                     findDepartmentViewModel.getUserByDepartment(
@@ -100,7 +103,8 @@ fun AutoCompleteValueSample(items: List<String>,
                             orgUnitNameUser: String? = null,
                             type:String,
                             authHeader: String,
-                            findDepartmentViewModel: FindDepartmentViewModel) {
+                            findDepartmentViewModel: FindDepartmentViewModel,
+                            account:String) {
 
     val autoCompleteEntities = items.asAutoCompleteEntities(
         filter = { item, query ->
@@ -145,6 +149,8 @@ fun AutoCompleteValueSample(items: List<String>,
                     jobTitle = jobTitle,
                     authHeader = authHeader
                 )
+                //добавляем в аналитику
+                addToFB("FindDepatrment", account, orgUnitName+"_"+jobTitle)
             }
         }
 
@@ -200,7 +206,7 @@ fun refreshToken(activity: Activity,
     val sharedPref = activity.getPreferences(Context.MODE_PRIVATE)
     findDepartmentViewModel.refreshToken(refreshToken)
     if(tokenData.isNotEmpty()){
-        Log.e("tokenData - ", tokenData.toString())
+        //Log.e("tokenData - ", tokenData.toString())
         val t = tokenData[0]
 
         with (sharedPref.edit()) {
