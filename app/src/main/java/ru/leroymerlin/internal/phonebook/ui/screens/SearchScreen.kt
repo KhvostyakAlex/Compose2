@@ -93,6 +93,8 @@ fun SearchScreen(searchViewModel: SearchViewModel, navController: NavController)
                      }
 
                       */
+            }else{
+                    searchViewModel.refreshToken(refreshToken)
             }
         }
         }

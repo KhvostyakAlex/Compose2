@@ -77,7 +77,7 @@ fun FindUsersScreen( findUsersViewModel: FindUsersViewModel, navController:NavCo
 
                         },colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.primary),
                             shape = RoundedCornerShape(8.dp),
-                            modifier = Modifier.height(56.dp)) {
+                            modifier = Modifier.fillMaxWidth().padding(end=8.dp).height(56.dp)) {
                             Text("Поиск", color = Color.White)
                         }
                     }
