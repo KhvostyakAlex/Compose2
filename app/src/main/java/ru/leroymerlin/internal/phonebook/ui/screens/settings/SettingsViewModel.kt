@@ -21,6 +21,8 @@ private val _settings: MutableLiveData<List<SettingsModel>> = MutableLiveData(
         SettingsModel("№ магазина", "036"),
         SettingsModel("Должность", "СТП"),
         SettingsModel("Телефон", "+79099999999")
+       // SettingsModel("expiresIn", "+79099999999")
+       // SettingsModel("expiresOn", "+79099999999")
     )
 )
 val settings: LiveData<List<SettingsModel>> = _settings

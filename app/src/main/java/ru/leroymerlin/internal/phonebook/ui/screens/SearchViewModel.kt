@@ -88,7 +88,7 @@ class SearchViewModel: ViewModel() {
                         val orgUnitName = row.orgUnitCard.name
                         testData.add(orgUnitName)
                     }
-
+                    _depData.postValue(testData)
 
                 }, {
                    // _error.postValue("Er - ${it.localizedMessage}")

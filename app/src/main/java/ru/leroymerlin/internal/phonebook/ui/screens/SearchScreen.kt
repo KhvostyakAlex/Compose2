@@ -60,19 +60,29 @@ fun SearchScreen(searchViewModel: SearchViewModel, navController: NavController)
     ) {
         searchViewModel.getDepartment(authHeader = authHeader)
 
-
+/*
         if(depData.isNotEmpty()){
             Log.e("searchScren depData", "depdta - ")
         }else {
-            Log.e("searchScren depData", "empty - ")
+            Log.e("searchScren depData", "empty!")
             //refreshToken(activity, searchViewModel, refreshToken,navController)
             searchViewModel.refreshToken(refreshToken)
+        }
 
-            if (tokenData.isNotEmpty()) {
-                Log.e("tokenData - ", tokenData[0].message.toString())
-                if(tokenData[0].message =="Success"){
+ */
+
+
+        if(depData.isEmpty()){
+            Log.e("searchScren depData", "empty!")
+            searchViewModel.refreshToken(refreshToken)
+        }
+
+
+        if (tokenData.isNotEmpty()) {
+            Log.e("tokenData - ", tokenData[0].message.toString())
+            if(tokenData[0].message =="Success"){
                 val t = tokenData[0].IntraruAuthUserData
-
+Log.e("refreshToken", t.refreshToken)
                 with(sharedPref.edit()) {
                     putString("token", t.token)
                     putString("refreshToken", t.refreshToken)
@@ -81,23 +91,24 @@ fun SearchScreen(searchViewModel: SearchViewModel, navController: NavController)
                     putString("authHeader", "Bearer " + t.token)
                     apply()
                 }
-                    /* Toast.makeText(
-                         activity,
-                         "Перезаходим в приложение, попробуй еще раз.",
-                         Toast.LENGTH_SHORT
-                     ).show()
-                     navController.navigate("search") {
-                         popUpTo("search") {
-                             inclusive = true
-                         }
+                /* Toast.makeText(
+                     activity,
+                     "Перезаходим в приложение, попробуй еще раз.",
+                     Toast.LENGTH_SHORT
+                 ).show()
+                 navController.navigate("search") {
+                     popUpTo("search") {
+                         inclusive = true
                      }
+                 }
 
-                      */
+                  */
             }else{
-                    searchViewModel.refreshToken(refreshToken)
+                searchViewModel.refreshToken(refreshToken)
             }
         }
-        }
+
+
 
 
         Column {
@@ -127,13 +138,13 @@ fun refreshToken(activity: Activity,
             apply()
         }
         Toast.makeText(activity, "Перезаходим в приложение, попробуй еще раз.", Toast.LENGTH_SHORT).show()
-        /*navController.navigate("search") {
+        navController.navigate("search") {
             popUpTo("search") {
                 inclusive = true
             }
         }
 
-         */
+
     }
 }
 

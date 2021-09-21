@@ -35,6 +35,7 @@ fun SettingsScreen( navController:NavController) {
         ) {
         Row(modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.End){
+            ExitButton2(navController = navController, activity=activity)
             ExitButton(navController = navController, activity=activity)
         }
             Divider()
@@ -85,12 +86,20 @@ fun SettingsView(settingsViewModel: SettingsViewModel, activity: Activity){
     val shopNumber = sharedPref.getString("shopNumber", "").toString() //достаем данные из shared prefs
     val jobTitle = sharedPref.getString("jobTitle", "").toString() //достаем данные из shared prefs
     val workPhone = sharedPref.getString("workPhone", "").toString() //достаем данные из shared prefs
+    val expiresIn = sharedPref.getInt("expiresIn", 0) //достаем данные из shared prefs
+    val expiresOn = sharedPref.getInt("expiresOn", 0) //достаем данные из shared prefs
+    val refreshToken = sharedPref.getString("refreshToken", "").toString() //достаем данные из shared prefs
+
+
 
     val settings =   listOf(
         SettingsModel("Имя", "$firstName $lastName"),
         SettingsModel("Магазин", "$orgUnitName (${shopNumber})"),
         SettingsModel("Должность", jobTitle),
-        SettingsModel("Телефон", workPhone))
+        SettingsModel("Телефон", workPhone),
+        SettingsModel("expiresIn", expiresIn.toString()),
+        SettingsModel("expiresOn", expiresOn.toString()),
+        SettingsModel("refreshToken", refreshToken.toString()))
 
     Column(modifier = Modifier.fillMaxWidth()) {
         settings.map{ SettingsCell(model = it)}
@@ -115,4 +124,25 @@ Column{
     }
 }
     Divider()
+}
+@Composable
+fun ExitButton2(navController: NavController, activity: Activity){
+    val sharedPref = activity.getPreferences(Context.MODE_PRIVATE)
+    val account = sharedPref.getString("account", "").toString() //достаем данные из shared prefs
+
+    FloatingActionButton(onClick = {
+        with (sharedPref.edit()) {
+            //  Log.e("remove sharepref", "- true")
+           // remove("signin?")
+            remove("token")
+          //  remove("refreshToken")
+            remove("authHeader")
+            commit()
+        }
+    },
+        modifier= Modifier.padding(8.dp),
+        contentColor=Color.White,
+        backgroundColor = colorResource(id = R.color.colorCopy)) {
+        Icon(Icons.Filled.Sync,"")
+    }
 }

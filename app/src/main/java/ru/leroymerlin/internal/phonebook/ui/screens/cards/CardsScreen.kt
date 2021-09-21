@@ -122,7 +122,7 @@ fun ExpandableCard(
             Box (modifier = Modifier.clickable(onClick = onCardArrowClick)){
                 Row() {
                     Column(Modifier.weight(1f)) {
-                        CardTitle(title = "${card.firstName} ${card.lastName}")
+                        CardTitle(title = "${card.lastName} ${card.firstName}")
                     }
                     Column(Modifier.weight(1f)) {
                         CardOrgUnitName(title = card.orgUnitName)
