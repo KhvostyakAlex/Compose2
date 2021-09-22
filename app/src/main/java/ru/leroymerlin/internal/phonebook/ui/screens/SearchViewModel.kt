@@ -1,10 +1,10 @@
 package ru.leroymerlin.internal.phonebook.ui.screens
 
+import android.app.Activity
+import android.app.Application
+import android.content.Context
 import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import kotlinx.coroutines.Dispatchers
@@ -29,8 +29,8 @@ class SearchViewModel: ViewModel() {
     private val _error = MutableLiveData<String>("")
     var error: LiveData<String> =_error
 
-    private val _depData = MutableLiveData<List<String>>(emptyList())
-    var depData:LiveData<List<String>> = _depData
+    private val _connect = MutableLiveData<List<String>>(emptyList())
+    var connect:LiveData<List<String>> = _connect
 
     private val _tokenData: MutableLiveData<MutableList<IntraruAuthUserList>> = MutableLiveData()
     var tokenData: LiveData<MutableList<IntraruAuthUserList>> = _tokenData
@@ -58,10 +58,12 @@ class SearchViewModel: ViewModel() {
                             response.expiresOn)
 
                     ))
+
+                   // val sharedPref = activity.getPreferences(Context.MODE_PRIVATE)
                     _tokenData.postValue(testData)
 
                 }, {
-                    testData.add( IntraruAuthUserList(
+                  /*  testData.add( IntraruAuthUserList(
                         "Failed","",
                         IntraruAuthUserData(
                             "",
@@ -71,11 +73,13 @@ class SearchViewModel: ViewModel() {
                             0)
                     ))
                     _tokenData.postValue(testData)
+
+                   */
                 })
         }
     }
 
-    fun getDepartment( authHeader:String) {
+    fun getConnect( authHeader:String) {
         viewModelScope.launch(Dispatchers.Default) {
             AppModule.providePhonebookApi().getDepartment(authHeader)//здесь вызывается API
                 .subscribeOn(Schedulers.io())
@@ -88,13 +92,13 @@ class SearchViewModel: ViewModel() {
                         val orgUnitName = row.orgUnitCard.name
                         testData.add(orgUnitName)
                     }
-                    _depData.postValue(testData)
+                    _connect.postValue(testData)
 
                 }, {
                    // _error.postValue("Er - ${it.localizedMessage}")
                     //_error.postValue("Ничего не найдено")
                     val testData = ArrayList<String>()
-                    _depData.postValue(testData)
+                    _connect.postValue(testData)
                 })
         }
     }

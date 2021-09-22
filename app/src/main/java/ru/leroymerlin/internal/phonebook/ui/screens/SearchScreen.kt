@@ -41,7 +41,7 @@ lateinit var navControl:NavController
 @ExperimentalMaterialApi
 @Composable
 fun SearchScreen(searchViewModel: SearchViewModel, navController: NavController) {
-    val depData:List<String> by searchViewModel.depData.observeAsState(emptyList())
+    val connect:List<String> by searchViewModel.connect.observeAsState(emptyList())
     val tokenData:List<IntraruAuthUserList> by searchViewModel.tokenData.observeAsState(emptyList())
     navControl = navController
 
@@ -58,7 +58,8 @@ fun SearchScreen(searchViewModel: SearchViewModel, navController: NavController)
     Scaffold(
        // topBar = { TopBar() },
     ) {
-        searchViewModel.getDepartment(authHeader = authHeader)
+        //запрашиваем департмент, чтобы проверить связь
+        searchViewModel.getConnect(authHeader = authHeader)
 
 /*
         if(depData.isNotEmpty()){
@@ -72,17 +73,17 @@ fun SearchScreen(searchViewModel: SearchViewModel, navController: NavController)
  */
 
 
-        if(depData.isEmpty()){
-            Log.e("searchScren depData", "empty!")
+        if(connect.isEmpty()){
+            Log.e("searchScreen connect", "empty!")
             searchViewModel.refreshToken(refreshToken)
         }
 
 
         if (tokenData.isNotEmpty()) {
-            Log.e("tokenData - ", tokenData[0].message.toString())
+            Log.e("tokenData - ", tokenData[0].message)
             if(tokenData[0].message =="Success"){
                 val t = tokenData[0].IntraruAuthUserData
-Log.e("refreshToken", t.refreshToken)
+        Log.e("refreshToken", t.refreshToken)
                 with(sharedPref.edit()) {
                     putString("token", t.token)
                     putString("refreshToken", t.refreshToken)
@@ -91,6 +92,9 @@ Log.e("refreshToken", t.refreshToken)
                     putString("authHeader", "Bearer " + t.token)
                     apply()
                 }
+
+
+
                 /* Toast.makeText(
                      activity,
                      "Перезаходим в приложение, попробуй еще раз.",
@@ -104,7 +108,7 @@ Log.e("refreshToken", t.refreshToken)
 
                   */
             }else{
-                searchViewModel.refreshToken(refreshToken)
+               // searchViewModel.refreshToken(refreshToken)
             }
         }
 
@@ -117,7 +121,7 @@ Log.e("refreshToken", t.refreshToken)
         }
     }
 }
-@Composable
+/*@Composable
 fun refreshToken(activity: Activity,
                  searchViewModel: SearchViewModel,
                  refreshToken:String,
@@ -147,7 +151,7 @@ fun refreshToken(activity: Activity,
 
     }
 }
-
+*/
 
 @ExperimentalComposeUiApi
 @ExperimentalMaterialApi
