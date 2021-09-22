@@ -61,7 +61,6 @@ fun SearchScreen(searchViewModel: SearchViewModel, navController: NavController)
        // topBar = { TopBar() },
     ) {
 
-
         //при запуске проверяем злогинен ли пользователь?
         LaunchedEffect(Unit){
             if(!signin){
@@ -70,13 +69,8 @@ fun SearchScreen(searchViewModel: SearchViewModel, navController: NavController)
                 navController.navigate("login"){
                     popUpTo =0
                 }
-
             }
         }
-
-
-
-
 
         //запрашиваем департмент, чтобы проверить связь
         searchViewModel.getConnect(authHeader = authHeader)
@@ -92,12 +86,10 @@ fun SearchScreen(searchViewModel: SearchViewModel, navController: NavController)
 
  */
 
-
         if(connect.isEmpty()){
             Log.e("searchScreen connect", "empty!")
             searchViewModel.refreshToken(refreshToken)
         }
-
 
         if (tokenData.isNotEmpty()) {
             Log.e("tokenData - ", tokenData[0].message)
@@ -127,9 +119,6 @@ fun SearchScreen(searchViewModel: SearchViewModel, navController: NavController)
                  }
 
                   */
-            }else{
-                Log.e("tokenData-", "empty")
-                //searchViewModel.refreshToken(refreshToken)
             }
         }else{
             Log.e("tokenData-", "empty")

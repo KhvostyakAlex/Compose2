@@ -78,7 +78,9 @@ class MainActivity : ComponentActivity() {
                                 BottomNavigationBar(items = bottomItems,
                                     navController = navController ,
                                     onItemClick ={
-                                        navController.navigate(it.route)
+                                        navController.navigate(it.route){
+                                        popUpTo =0 //не записываем переходы в стек
+                                        }
                                     } )
                             }
                         }
