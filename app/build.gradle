@@ -19,7 +19,7 @@ android {
 
     defaultConfig {
         configurations.all {
-            resolutionStrategy { force 'androidx.core:core-ktx:1.6.0' }
+            resolutionStrategy { force "androidx.navigation:navigation-compose:2.4.0-alpha06" }
         }
         applicationId "ru.leroymerlin.internal.phonebook"
         minSdk 25

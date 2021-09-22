@@ -36,7 +36,7 @@ class SearchViewModel: ViewModel() {
     var tokenData: LiveData<MutableList<IntraruAuthUserList>> = _tokenData
 
     fun refreshToken(refreshToken:String){
-        // Log.e("authIntraru", "authIntraru")
+         Log.e("API refreshToken ", "refrToken - "+refreshToken)
         viewModelScope.launch(Dispatchers.Default) {
             val body = JSONObject()
             body.put("refreshToken", refreshToken)

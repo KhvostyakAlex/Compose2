@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.rememberCoroutineScope
@@ -20,6 +21,7 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.navigation.NavController
 import com.google.accompanist.pager.*
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import ru.leroymerlin.internal.phonebook.R
 import ru.leroymerlin.internal.phonebook.dataclass.IntraruAuthUserData
@@ -51,13 +53,31 @@ fun SearchScreen(searchViewModel: SearchViewModel, navController: NavController)
     val orgInitNameUser = sharedPref.getString("orgUnitName", "").toString() //достаем данные из shared prefs
     val refreshToken = sharedPref.getString("refreshToken", "").toString() //достаем данные из shared prefs
     val token = sharedPref.getString("token", "").toString() //достаем данные из shared prefs
-
+    val signin = sharedPref.getBoolean("signin?", false)
     val tabs = listOf(FindUsers,
         FindDepartment)
     val pagerState = rememberPagerState(pageCount = tabs.size)
     Scaffold(
        // topBar = { TopBar() },
     ) {
+
+
+        //при запуске проверяем злогинен ли пользователь?
+        LaunchedEffect(Unit){
+            if(!signin){
+                navController.popBackStack()
+                //  loginViewModel.authIntraru("login", "password")
+                navController.navigate("login"){
+                    popUpTo =0
+                }
+
+            }
+        }
+
+
+
+
+
         //запрашиваем департмент, чтобы проверить связь
         searchViewModel.getConnect(authHeader = authHeader)
 
@@ -108,8 +128,18 @@ fun SearchScreen(searchViewModel: SearchViewModel, navController: NavController)
 
                   */
             }else{
-               // searchViewModel.refreshToken(refreshToken)
+                Log.e("tokenData-", "empty")
+                //searchViewModel.refreshToken(refreshToken)
             }
+        }else{
+            Log.e("tokenData-", "empty")
+           /* navController.navigate("login") {
+                popUpTo("login") {
+                    inclusive = true
+                }
+            }
+
+            */
         }
 
 

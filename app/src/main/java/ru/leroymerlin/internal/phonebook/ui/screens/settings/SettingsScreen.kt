@@ -64,6 +64,7 @@ fun ExitButton(navController: NavController, activity: Activity){
         }
         //добавляем в аналитику
         addToFB("ExitButton", account)
+        navController.popBackStack()
         navController.navigate("login") {
             popUpTo("login") {
                 inclusive = true

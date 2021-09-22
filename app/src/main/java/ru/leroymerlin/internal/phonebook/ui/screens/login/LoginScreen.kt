@@ -37,6 +37,7 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.google.firebase.database.FirebaseDatabase
+import kotlinx.coroutines.delay
 import ru.leroymerlin.internal.phonebook.dataclass.IntraruAuthUserList
 import ru.leroymerlin.internal.phonebook.*
 import ru.leroymerlin.internal.phonebook.R
@@ -176,10 +177,11 @@ fun LoginScreen(loginViewModel: LoginViewModel, navController:NavController){
             modifier = Modifier.size(150.dp, 50.dp)) { Text("Войти", color = Color.White) }
     }
     }
+      /*
         //при запуске
         LaunchedEffect(Unit){
             if(signin){
-                loginViewModel.authIntraru("login", "password")
+              //  loginViewModel.authIntraru("login", "password")
                 navController.navigate("search"){
                     popUpTo("search") {
                         inclusive = true
@@ -187,6 +189,10 @@ fun LoginScreen(loginViewModel: LoginViewModel, navController:NavController){
                 }
             }
         }
+
+       */
+
+
     //при покиданиии
         DisposableEffect(Unit ){
             onDispose {
@@ -232,6 +238,7 @@ fun SignIn(login:String,
     val t = authData.IntraruAuthUserData
     val activity = LocalContext.current as Activity
     val sharedPref = activity.getPreferences(Context.MODE_PRIVATE)
+    val signin = sharedPref.getBoolean("signin?", false)
 
     with (sharedPref.edit()) {
         putString("token", t.token)
@@ -247,8 +254,8 @@ fun SignIn(login:String,
        // loginViewModel.authIntraru(login, password)
         loginViewModel.getInfoUser(login, authHeader)
     }
-
-    if (userData.isNotEmpty()) {
+Log.e("sign", signin.toString())
+    if (userData.isNotEmpty() && !signin) {
         val uData = userData[0]
         val today = getCalculatedDate("yyyy-M-dd", 0)
         with (sharedPref.edit()) {
@@ -271,10 +278,12 @@ fun SignIn(login:String,
         }
 
         addToFB("SigIn", uData.account, "ok")
-
+       //
         navController.navigate("search") {
-            launchSingleTop = true //переходим только 1 раз
+            popUpTo=0
+
         }
+       // navController.popBackStack()
     }
 }
 

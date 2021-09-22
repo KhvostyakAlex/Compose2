@@ -111,7 +111,7 @@ fun Navigation(navController: NavHostController,
                loginViewModel: LoginViewModel,
                cardsViewModel: CardsViewModel,
                 searchViewModel:SearchViewModel){
-    NavHost(navController = navController, startDestination = "login"){
+    NavHost(navController = navController, startDestination = "search"){
         composable("login"){ LoginScreen(loginViewModel, navController)}
         composable("list"){ ListScreen(navController)}
         composable("search"){ SearchScreen(searchViewModel, navController)}
