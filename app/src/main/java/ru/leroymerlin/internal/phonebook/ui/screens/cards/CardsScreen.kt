@@ -217,13 +217,15 @@ fun ExpandableContent(
             Text(
                 text = "LDAP - ${card.account}",
                 textAlign = TextAlign.Start,
-                fontSize = 12.sp
+                fontSize = 12.sp,
+                modifier = Modifier.padding(bottom = 2.dp)
             )
             if (card.workPhone != "" && card.workPhone != "null") {
                 Text(
                     text = "№Тел ${card.workPhone}",
                     textAlign = TextAlign.Start,
-                    fontSize = 12.sp
+                    fontSize = 12.sp,
+                    modifier = Modifier.padding(top=2.dp, bottom = 2.dp)
                 )
             }
 
@@ -231,7 +233,8 @@ fun ExpandableContent(
                 Text(
                     text = "№Тел ${card.mobilePhone}",
                     textAlign = TextAlign.Start,
-                    fontSize = 12.sp
+                    fontSize = 12.sp,
+                    modifier = Modifier.padding(top=2.dp, bottom = 2.dp)
                 )
             }
             if (card.workEmail != "null" && card.workEmail.length > 2) {
@@ -242,19 +245,22 @@ fun ExpandableContent(
                 Text(
                     text = "Email - $workEmail",
                     textAlign = TextAlign.Start,
-                    fontSize = 12.sp
+                    fontSize = 12.sp,
+                    modifier = Modifier.padding(top=2.dp, bottom = 2.dp)
                 )
             }
 
             Text(
                 text = "Должность - ${card.jobTitle}",
                 textAlign = TextAlign.Start,
-                fontSize = 12.sp
+                fontSize = 12.sp,
+                modifier = Modifier.padding(top=2.dp, bottom = 2.dp)
             )
             Text(
                 text = card.orgUnitName,
                 textAlign = TextAlign.Start,
-                fontSize = 12.sp
+                fontSize = 12.sp,
+                modifier = Modifier.padding(top=2.dp, bottom = 2.dp)
             )
 
             if (card.workPhone != "" && card.workPhone != "null" ||
