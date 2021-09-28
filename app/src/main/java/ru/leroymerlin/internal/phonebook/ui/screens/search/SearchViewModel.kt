@@ -1,8 +1,5 @@
-package ru.leroymerlin.internal.phonebook.ui.screens
+package ru.leroymerlin.internal.phonebook.ui.screens.search
 
-import android.app.Activity
-import android.app.Application
-import android.content.Context
 import android.util.Log
 import androidx.lifecycle.*
 import io.reactivex.android.schedulers.AndroidSchedulers

@@ -117,6 +117,10 @@ dependencies {
     implementation "com.google.accompanist:accompanist-pager:0.17.0" // Pager
     implementation "com.google.accompanist:accompanist-pager-indicators:0.17.0" // Pager Indicators
 
+    implementation "com.google.accompanist:accompanist-systemuicontroller:0.18.0"
+
+
+
     // Import the Firebase BoM
     implementation platform('com.google.firebase:firebase-bom:28.4.0')
     implementation 'com.google.firebase:firebase-analytics-ktx'

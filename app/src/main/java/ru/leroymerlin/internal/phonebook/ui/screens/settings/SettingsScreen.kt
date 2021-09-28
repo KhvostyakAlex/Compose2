@@ -25,7 +25,10 @@ import ru.leroymerlin.internal.phonebook.addToFB
 @ExperimentalPagerApi
 @ExperimentalMaterialApi
 @Composable
-fun SettingsScreen( navController:NavController) {
+fun SettingsScreen(
+    navController:NavController,
+    isDarkMode:Boolean
+) {
     val activity = LocalContext.current as Activity
     val versionName: String = BuildConfig.VERSION_NAME
 

@@ -1,9 +1,8 @@
-package ru.leroymerlin.internal.phonebook.ui.screens
+package ru.leroymerlin.internal.phonebook.ui.screens.search
 
 import android.app.Activity
 import android.content.Context
 import android.util.Log
-import android.widget.Toast
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
@@ -21,15 +20,14 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.navigation.NavController
 import com.google.accompanist.pager.*
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import ru.leroymerlin.internal.phonebook.R
-import ru.leroymerlin.internal.phonebook.dataclass.IntraruAuthUserData
 import ru.leroymerlin.internal.phonebook.dataclass.IntraruAuthUserList
 import ru.leroymerlin.internal.phonebook.ui.screens.finddepartment.FindDepartmentScreen
 import ru.leroymerlin.internal.phonebook.ui.screens.finddepartment.FindDepartmentViewModel
 import ru.leroymerlin.internal.phonebook.ui.screens.findusers.FindUsersScreen
 import ru.leroymerlin.internal.phonebook.ui.screens.findusers.FindUsersViewModel
+import ru.leroymerlin.internal.phonebook.ui.screens.search.SearchViewModel
 
 
 typealias ComposableFun = @Composable () -> Unit
@@ -87,7 +85,8 @@ fun SearchScreen(searchViewModel: SearchViewModel, navController: NavController)
  */
 
         if(connect.isEmpty()){
-            Log.e("searchScreen connect", "empty!")
+            val comment = "отсутствует соединение, запрашиваю access token через refreshToken"
+            Log.e("searchScreen", comment)
             searchViewModel.refreshToken(refreshToken)
         }
 
@@ -121,7 +120,8 @@ fun SearchScreen(searchViewModel: SearchViewModel, navController: NavController)
                   */
             }
         }else{
-            Log.e("tokenData-", "empty")
+            Log.e("searchScreen-", "tokenData- empty")
+
            /* navController.navigate("login") {
                 popUpTo("login") {
                     inclusive = true

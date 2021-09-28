@@ -2,13 +2,12 @@ package ru.leroymerlin.internal.phonebook.ui.screens.login
 
 
 import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.launch
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody.Companion.toRequestBody
@@ -29,6 +28,9 @@ class LoginViewModel: ViewModel() {
 
     private val _error = MutableLiveData<String>("")
     var error: LiveData<String> =_error
+
+    //private val _tickFlow = MutableSharedFlow<List<IntraruAuthUserList>>(replay = 0)
+   // val tickFlow: SharedFlow<List<IntraruAuthUserList>> = _tickFlow
 
     fun authIntraru(login:String, pass:String){
        // Log.e("authIntraru", "authIntraru")
@@ -55,6 +57,7 @@ class LoginViewModel: ViewModel() {
                                 response.expiresOn)
                         ))
                         _authData.postValue(testData)
+                        //_tickFlow.tryEmit(testData)
 
                     }, {
 

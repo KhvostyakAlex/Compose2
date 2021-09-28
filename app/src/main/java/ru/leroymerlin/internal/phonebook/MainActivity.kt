@@ -6,6 +6,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
@@ -15,6 +16,9 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -29,6 +33,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.*
 import com.google.accompanist.pager.*
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import ru.leroymerlin.internal.phonebook.ui.screens.cards.CardsViewModel
 import ru.leroymerlin.internal.phonebook.dataclass.BottomNavItem
 import ru.leroymerlin.internal.phonebook.ui.screens.*
@@ -36,6 +41,8 @@ import ru.leroymerlin.internal.phonebook.ui.screens.ListScreen
 import ru.leroymerlin.internal.phonebook.ui.screens.cards.CardsScreen
 import ru.leroymerlin.internal.phonebook.ui.screens.login.LoginScreen
 import ru.leroymerlin.internal.phonebook.ui.screens.login.LoginViewModel
+import ru.leroymerlin.internal.phonebook.ui.screens.search.SearchScreen
+import ru.leroymerlin.internal.phonebook.ui.screens.search.SearchViewModel
 import ru.leroymerlin.internal.phonebook.ui.screens.settings.SettingsScreen
 
 
@@ -52,17 +59,53 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val sharedPref = this.getPreferences(Context.MODE_PRIVATE)
-        val signin = sharedPref.getBoolean("signin?", false) //достаем данные из shared prefs
+
 
         setContent {
-            PhonebookTheme (darkTheme = false){
+            val sharedPref = this.getPreferences(Context.MODE_PRIVATE)
+            val signin = sharedPref.getBoolean("signin?", false) //достаем данные из shared prefs
+            val bottomItems = listOf(
+            BottomNavItem("Поиск", "search", Icons.Default.Search),
+            BottomNavItem("Настройки", "settings", Icons.Default.Settings))
+
+            val isDarkModeValue = isSystemInDarkTheme()
+            val currentStyle = remember { mutableStateOf(JetHabbitsStyle.Purple)}
+            val currentFontSize = remember { mutableStateOf(JetHabbitsSize.Medium)}
+            val currentPaddingSize = remember { mutableStateOf(JetHabbitsSize.Medium)}
+            val currentCornersStyle = remember { mutableStateOf(JetHabbitsCorners.Rounded)}
+            val isDarkMode = remember { mutableStateOf(isDarkModeValue)}
+
+
+
+            PhonebookTheme (
+                //darkTheme = false
+                style = currentStyle.value,
+                darkTheme = isDarkMode.value,
+                textSize = currentFontSize.value,
+                corners = currentCornersStyle.value,
+                paddingSize = currentPaddingSize.value
+            ){
+                val systemUiController = rememberSystemUiController()
+                val navController = rememberNavController()
                 // A surface container using the 'background' color from the theme
+
+                //задаем цвет статус бара
+                SideEffect {
+                    systemUiController.setSystemBarsColor(
+                       // color = Color.Gray
+                    color = if(isDarkMode.value) baseDarkPallete.primaryBackground else baseLightPallete.primaryBackground,
+                    darkIcons = !isDarkMode.value
+                    )
+                }
+
                 Surface(color = MaterialTheme.colors.background) {
-                    val navController = rememberNavController()
-                    val bottomItems = listOf(
-                        BottomNavItem("Поиск", "search", Icons.Default.Search),
-                        BottomNavItem("Настройки", "settings", Icons.Default.Settings))
+
+
+
+
+
+
+
                     Scaffold(
 
                         topBar={ TopAppBar(
@@ -112,14 +155,20 @@ class MainActivity : ComponentActivity() {
 fun Navigation(navController: NavHostController,
                loginViewModel: LoginViewModel,
                cardsViewModel: CardsViewModel,
-                searchViewModel:SearchViewModel){
+                searchViewModel: SearchViewModel
+){
     NavHost(navController = navController, startDestination = "search"){
         composable("login"){ LoginScreen(loginViewModel, navController)}
         composable("list"){ ListScreen(navController)}
         composable("search"){ SearchScreen(searchViewModel, navController)}
         composable("cards"){ CardsScreen(cardsViewModel) }
         composable("details"){ DetailsScreen()}
-        composable("settings"){ SettingsScreen(navController) }
+        composable("settings"){ SettingsScreen(
+            navController = navController,
+            isDarkMode = isDarkMode.value,
+            current
+
+        ) }
     }
 
 }

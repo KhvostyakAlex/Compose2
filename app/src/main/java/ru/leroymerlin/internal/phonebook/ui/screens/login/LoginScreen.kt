@@ -235,6 +235,7 @@ fun SignIn(login:String,
              navController: NavController
 ){
     val userData:List<IntraruUserDataList> by loginViewModel.userData.observeAsState(emptyList())
+
     val t = authData.IntraruAuthUserData
     val activity = LocalContext.current as Activity
     val sharedPref = activity.getPreferences(Context.MODE_PRIVATE)
