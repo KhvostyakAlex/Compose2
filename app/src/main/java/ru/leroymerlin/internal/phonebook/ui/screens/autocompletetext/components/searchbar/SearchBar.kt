@@ -4,17 +4,15 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.OutlinedTextField
-import androidx.compose.material.Text
+import androidx.compose.material.*
+import androidx.compose.material.TextFieldDefaults.textFieldColors
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusState
 import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
@@ -38,14 +36,24 @@ fun TextSearchBar(
             .onFocusChanged { onFocusChanged(it) },
         shape = RoundedCornerShape(8.dp),
         value = value,
+        colors = TextFieldDefaults.textFieldColors(
+            textColor = JetHabitTheme.colors.primaryText,
+            cursorColor= JetHabitTheme.colors.thirdText,
+            focusedIndicatorColor = JetHabitTheme.colors.thirdText,
+            trailingIconColor = JetHabitTheme.colors.primaryText,
+            disabledTrailingIconColor= JetHabitTheme.colors.controlColor,
+            focusedLabelColor = JetHabitTheme.colors.thirdText
+        ),
         onValueChange = { query ->
             onValueChanged(query)
         },
-        label = { Text(text = label) },
-      //  label = { Text(text = defaultValue) },
-        //textStyle = MaterialTheme.typography.subtitle1,
+        label = { Text(
+            text = label,
+            color = JetHabitTheme.colors.primaryText,
+            style=JetHabitTheme.typography.caption)
+                },
         textStyle = JetHabitTheme.typography.body,
-       // textStyle = MaterialTheme.shapes.small.bottomStart.,
+
         singleLine = true,
         trailingIcon = {
             IconButton(onClick = { onClearClick() }) {
@@ -58,4 +66,10 @@ fun TextSearchBar(
             keyboardType = KeyboardType.Text
         )
     )
+
+    textFieldColors(
+        textColor = JetHabitTheme.colors.primaryText,
+    )
+
+
 }

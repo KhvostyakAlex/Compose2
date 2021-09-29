@@ -228,7 +228,10 @@ fun ValueAutoCompleteItem(item: String) {
             .padding(12.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        Text(text = item, style = MaterialTheme.typography.subtitle2)
+        Text(
+            text = item,
+            color = JetHabitTheme.colors.primaryText,
+            style = JetHabitTheme.typography.caption)
     }
 }
 

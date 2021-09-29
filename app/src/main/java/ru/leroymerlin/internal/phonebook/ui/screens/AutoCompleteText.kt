@@ -9,8 +9,9 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.window.PopupProperties
+import ru.leroymerlin.internal.phonebook.ui.themes.JetHabitTheme
 
-    @Composable
+@Composable
     fun AutoCompleteText(
         value: String,
         onValueChange: (String) -> Unit,
@@ -30,6 +31,7 @@ import androidx.compose.ui.window.PopupProperties
                 expanded = suggestions.isNotEmpty(),
                 onDismissRequest = {  },
                 modifier = Modifier.fillMaxWidth(),
+
                 // This line here will accomplish what you want
                 properties = PopupProperties(focusable = false)
             ) {
@@ -37,7 +39,8 @@ import androidx.compose.ui.window.PopupProperties
                     DropdownMenuItem(onClick = {
                         onOptionSelected(label)
                     }) {
-                        Text(text = label)
+                        Text(text = label,
+                        color=JetHabitTheme.colors.primaryText)
                     }
                 }
             }

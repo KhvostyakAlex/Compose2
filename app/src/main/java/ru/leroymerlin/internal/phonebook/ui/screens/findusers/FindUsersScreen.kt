@@ -67,7 +67,8 @@ modifier:Modifier) {
                     onValueChange = { value -> textState.value = value },
                     placeholder = { Text(
                         "Ввведи Фамилию/LDAP",
-                        color =JetHabitTheme.colors.primaryText
+                        color = JetHabitTheme.colors.primaryText,
+                        style =  JetHabitTheme.typography.caption
                     ) },
 
                     shape = RoundedCornerShape(8.dp),

@@ -29,7 +29,7 @@ fun <T : AutoCompleteEntity> AutoCompleteBox(
     Column(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
-    modifier = Modifier.padding(start = 8.dp, end = 8.dp)
+        modifier = Modifier.padding(start = 8.dp, end = 8.dp)
     ) {
         autoCompleteState.content()
         AnimatedVisibility(visible = autoCompleteState.isSearching) {
@@ -38,7 +38,9 @@ fun <T : AutoCompleteEntity> AutoCompleteBox(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 items(autoCompleteState.filteredItems) { item ->
-                    Box(modifier = Modifier.clickable { autoCompleteState.selectItem(item) }) {
+                    Box(
+                        modifier = Modifier.clickable { autoCompleteState.selectItem(item) }
+                    ) {
                         itemContent(item)
                     }
                 }
@@ -62,4 +64,5 @@ private fun Modifier.autoComplete(
             border = autoCompleteItemScope.boxBorderStroke,
             shape = autoCompleteItemScope.boxShape
         )
+
 }
