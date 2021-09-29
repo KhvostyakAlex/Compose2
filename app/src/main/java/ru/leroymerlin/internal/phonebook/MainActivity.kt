@@ -249,7 +249,7 @@ fun BottomNavigationBar(
                         if(selected){
                             Text(text = item.name,
                             textAlign = TextAlign.Center,
-                            fontSize = 10.sp)
+                            fontSize = 12.sp)
                         }
                     }
               }

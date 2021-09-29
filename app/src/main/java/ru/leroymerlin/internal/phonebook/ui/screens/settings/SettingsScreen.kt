@@ -16,6 +16,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -78,6 +79,7 @@ fun SettingsScreen(
                 backgroundColor = JetHabitTheme.colors.primaryBackground,
                 elevation = 8.dp
             ) {
+
                 Text(
                     modifier = Modifier
                         .weight(1f)
@@ -86,6 +88,12 @@ fun SettingsScreen(
                     color = JetHabitTheme.colors.primaryText,
                     style = JetHabitTheme.typography.toolbar
                 )
+            }
+
+            Row(modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.End){
+                ExitButton2(navController = navController, activity=activity)
+                ExitButton(navController = navController, activity=activity)
             }
 
             Row(
@@ -181,6 +189,22 @@ fun SettingsScreen(
                     }
                 }
             )
+
+
+            SettingsView(settingsViewModel = SettingsViewModel(), activity = activity)
+            Row(modifier= Modifier.fillMaxHeight().padding(start = 12.dp, bottom = 60.dp).weight(1f),
+                verticalAlignment = Alignment.Bottom) {
+                Text("Версия программы $versionName", fontSize = 10.sp )
+            }
+
+
+            Row(modifier= Modifier.fillMaxHeight().padding(start = 12.dp, bottom = 60.dp).weight(1f),
+                verticalAlignment = Alignment.Bottom) {
+                Text(
+                    "Версия программы $versionName",
+                    fontSize = 10.sp,
+                color=JetHabitTheme.colors.secondaryText)
+            }
 
            /* Row(
                 modifier = Modifier
@@ -287,8 +311,6 @@ fun SettingsView(settingsViewModel: SettingsViewModel, activity: Activity){
         SettingsModel("Магазин", "$orgUnitName (${shopNumber})"),
         SettingsModel("Должность", jobTitle),
         SettingsModel("Телефон", workPhone),
-        SettingsModel("expiresIn", expiresIn.toString()),
-        SettingsModel("expiresOn", expiresOn.toString()),
         SettingsModel("refreshToken", refreshToken.toString()))
 
     Column(modifier = Modifier.fillMaxWidth()) {
@@ -307,13 +329,36 @@ Column{
         verticalAlignment = Alignment.CenterVertically
 
     ){
-        Text(model.title, modifier = Modifier.weight(0.3f), style = TextStyle(color= Color.Black))
+       /* Text(model.title, modifier = Modifier.weight(0.3f), style = TextStyle(color= Color.Black))
         Text(model.value, modifier = Modifier
             .weight(0.7f)
-            .padding(8.dp), style = TextStyle(color= Color.Black))
+            .padding(8.dp), style = TextStyle(color= Color.Black))*/
+        Text(
+            modifier = Modifier
+                .weight(0.3f)
+                .padding(end = JetHabitTheme.shapes.padding),
+            text = model.title,
+            style = JetHabitTheme.typography.body,
+            color = JetHabitTheme.colors.primaryText
+        )
+
+        Text(
+            modifier = Modifier
+                .weight(0.7f),
+            text = model.value,
+            style = JetHabitTheme.typography.body,
+            color = JetHabitTheme.colors.secondaryText,
+            textAlign = TextAlign.End
+        )
     }
 }
-    Divider()
+    Divider(
+        modifier = Modifier.padding(start = JetHabitTheme.shapes.padding),
+        thickness = 0.5.dp,
+        color = JetHabitTheme.colors.secondaryText.copy(
+            alpha = 0.3f
+        )
+    )
 }
 @Composable
 fun ExitButton2(navController: NavController, activity: Activity){

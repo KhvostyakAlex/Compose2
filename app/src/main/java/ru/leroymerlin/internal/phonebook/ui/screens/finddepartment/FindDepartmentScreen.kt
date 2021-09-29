@@ -53,7 +53,9 @@ fun FindDepartmentScreen(findDepartmentViewModel: FindDepartmentViewModel, navCo
     ) {
 
 
-        Scaffold {
+        Scaffold (
+            backgroundColor = JetHabitTheme.colors.secondaryBackground
+                ){
 
 
             findDepartmentViewModel.getDepartment(authHeader = authHeader)

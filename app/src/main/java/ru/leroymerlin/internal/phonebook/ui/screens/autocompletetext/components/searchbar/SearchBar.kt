@@ -18,6 +18,7 @@ import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import ru.leroymerlin.internal.phonebook.ui.themes.JetHabitTheme
 
 @Composable
 fun TextSearchBar(
@@ -42,7 +43,8 @@ fun TextSearchBar(
         },
         label = { Text(text = label) },
       //  label = { Text(text = defaultValue) },
-        textStyle = MaterialTheme.typography.subtitle1,
+        //textStyle = MaterialTheme.typography.subtitle1,
+        textStyle = JetHabitTheme.typography.body,
        // textStyle = MaterialTheme.shapes.small.bottomStart.,
         singleLine = true,
         trailingIcon = {
