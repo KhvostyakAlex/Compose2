@@ -68,35 +68,20 @@ class MainActivity : ComponentActivity() {
             BottomNavItem("Поиск", "search", Icons.Default.Search),
             BottomNavItem("Настройки", "settings", Icons.Default.Settings))
 
-            val isDarkModeValue = isSystemInDarkTheme()
-            val currentStyle = remember { mutableStateOf(JetHabbitsStyle.Purple)}
-            val currentFontSize = remember { mutableStateOf(JetHabbitsSize.Medium)}
-            val currentPaddingSize = remember { mutableStateOf(JetHabbitsSize.Medium)}
-            val currentCornersStyle = remember { mutableStateOf(JetHabbitsCorners.Rounded)}
-            val isDarkMode = remember { mutableStateOf(isDarkModeValue)}
+
 
 
 
             PhonebookTheme (
-                //darkTheme = false
-                style = currentStyle.value,
-                darkTheme = isDarkMode.value,
-                textSize = currentFontSize.value,
-                corners = currentCornersStyle.value,
-                paddingSize = currentPaddingSize.value
+                darkTheme = false
+
             ){
                 val systemUiController = rememberSystemUiController()
                 val navController = rememberNavController()
                 // A surface container using the 'background' color from the theme
 
                 //задаем цвет статус бара
-                SideEffect {
-                    systemUiController.setSystemBarsColor(
-                       // color = Color.Gray
-                    color = if(isDarkMode.value) baseDarkPallete.primaryBackground else baseLightPallete.primaryBackground,
-                    darkIcons = !isDarkMode.value
-                    )
-                }
+
 
                 Surface(color = MaterialTheme.colors.background) {
 
@@ -165,8 +150,7 @@ fun Navigation(navController: NavHostController,
         composable("details"){ DetailsScreen()}
         composable("settings"){ SettingsScreen(
             navController = navController,
-            isDarkMode = isDarkMode.value,
-            current
+
 
         ) }
     }
