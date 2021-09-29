@@ -33,6 +33,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import ru.leroymerlin.internal.phonebook.R
 import ru.leroymerlin.internal.phonebook.copyToClipboard
 import ru.leroymerlin.internal.phonebook.dataclass.IntraruUserDataList
+import ru.leroymerlin.internal.phonebook.ui.themes.JetHabitTheme
 import values.COLLAPSE_ANIMATION_DURATION
 import values.EXPAND_ANIMATION_DURATION
 import values.FADE_IN_ANIMATION_DURATION
@@ -45,12 +46,9 @@ fun CardsScreen(viewModel: CardsViewModel) {
     val cards:List<IntraruUserDataList> by viewModel.cards.observeAsState(emptyList())
     val expandedCardIds = viewModel.expandedCardIdsList.observeAsState()
     Scaffold(
-        backgroundColor = Color(
-            ContextCompat.getColor(
-                LocalContext.current,
-                R.color.colorDayNightWhite
-            )
-        )
+        backgroundColor = JetHabitTheme.colors.secondaryBackground
+
+
     ) {
         LazyColumn {
             itemsIndexed(cards) { _, card ->
@@ -67,8 +65,10 @@ fun CardsScreen(viewModel: CardsViewModel) {
 @Composable
 fun EmptyCard(title: String){
     Card(
-        backgroundColor = Color.White,
-        contentColor = Color(ContextCompat.getColor(LocalContext.current, R.color.black)),
+       // backgroundColor = JetHabitTheme.colors.secondaryBackground,
+        //contentColor = Color(ContextCompat.getColor(LocalContext.current, R.color.black)),
+        backgroundColor = JetHabitTheme.colors.primaryBackground,
+        contentColor = JetHabitTheme.colors.primaryText,
         elevation = 4.dp,
         shape = RoundedCornerShape(8.dp),
         modifier = Modifier
@@ -107,8 +107,10 @@ fun ExpandableCard(
     }
 
     Card(
-        backgroundColor = Color.White,
-        contentColor = Color(ContextCompat.getColor(LocalContext.current, R.color.black)),
+        //backgroundColor = Color.White,
+        backgroundColor = JetHabitTheme.colors.primaryBackground,
+        //contentColor = Color(ContextCompat.getColor(LocalContext.current, R.color.black)),
+        contentColor = JetHabitTheme.colors.primaryText,
         elevation = 4.dp,
         shape = RoundedCornerShape(8.dp),
         modifier = Modifier
@@ -163,6 +165,7 @@ fun CardTitle(title: String) {
            text = title,
            modifier = Modifier.padding(8.dp),
            textAlign = TextAlign.Start,
+           style = JetHabitTheme.typography.toolbar
            )
 }
 @Composable
@@ -171,7 +174,8 @@ fun CardOrgUnitName(title: String/*, onClick: () -> Unit*/) {
         text = title,
         modifier = Modifier.padding(8.dp),
         textAlign = TextAlign.Start,
-        fontSize = 12.sp
+        fontSize = 12.sp,
+        style = JetHabitTheme.typography.caption
     )
 }
 
@@ -218,14 +222,16 @@ fun ExpandableContent(
                 text = "LDAP - ${card.account}",
                 textAlign = TextAlign.Start,
                 fontSize = 12.sp,
-                modifier = Modifier.padding(bottom = 2.dp)
+                modifier = Modifier.padding(bottom = 2.dp),
+                style = JetHabitTheme.typography.body
             )
             if (card.workPhone != "" && card.workPhone != "null") {
                 Text(
                     text = "№Тел ${card.workPhone}",
                     textAlign = TextAlign.Start,
                     fontSize = 12.sp,
-                    modifier = Modifier.padding(top=2.dp, bottom = 2.dp)
+                    modifier = Modifier.padding(top=2.dp, bottom = 2.dp),
+                    style = JetHabitTheme.typography.body
                 )
             }
 
@@ -234,7 +240,8 @@ fun ExpandableContent(
                     text = "№Тел ${card.mobilePhone}",
                     textAlign = TextAlign.Start,
                     fontSize = 12.sp,
-                    modifier = Modifier.padding(top=2.dp, bottom = 2.dp)
+                    modifier = Modifier.padding(top=2.dp, bottom = 2.dp),
+                    style = JetHabitTheme.typography.body
                 )
             }
             if (card.workEmail != "null" && card.workEmail.length > 2) {
@@ -246,7 +253,8 @@ fun ExpandableContent(
                     text = "Email - $workEmail",
                     textAlign = TextAlign.Start,
                     fontSize = 12.sp,
-                    modifier = Modifier.padding(top=2.dp, bottom = 2.dp)
+                    modifier = Modifier.padding(top=2.dp, bottom = 2.dp),
+                    style = JetHabitTheme.typography.body
                 )
             }
 
@@ -254,13 +262,15 @@ fun ExpandableContent(
                 text = "Должность - ${card.jobTitle}",
                 textAlign = TextAlign.Start,
                 fontSize = 12.sp,
-                modifier = Modifier.padding(top=2.dp, bottom = 2.dp)
+                modifier = Modifier.padding(top=2.dp, bottom = 2.dp),
+                style = JetHabitTheme.typography.body
             )
             Text(
                 text = card.orgUnitName,
                 textAlign = TextAlign.Start,
                 fontSize = 12.sp,
-                modifier = Modifier.padding(top=2.dp, bottom = 2.dp)
+                modifier = Modifier.padding(top=2.dp, bottom = 2.dp),
+                style = JetHabitTheme.typography.body
             )
 
             if (card.workPhone != "" && card.workPhone != "null" ||

@@ -42,7 +42,7 @@ fun MenuItem(
 
     Box(
         modifier = Modifier
-            .background(JetHabitTheme.colors.primaryBackground)
+            .background(JetHabitTheme.colors.secondaryBackground)
             .fillMaxWidth()
     ) {
         Row(
@@ -51,7 +51,7 @@ fun MenuItem(
                     isDropdownOpen.value = true
                 }
                 .padding(JetHabitTheme.shapes.padding)
-                .background(JetHabitTheme.colors.primaryBackground),
+                .background(JetHabitTheme.colors.secondaryBackground),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(

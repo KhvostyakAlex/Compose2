@@ -27,6 +27,7 @@ import ru.leroymerlin.internal.phonebook.ui.screens.autocompletetext.components.
 import ru.leroymerlin.internal.phonebook.ui.screens.autocompletetext.components.searchbar.TextSearchBar
 import ru.leroymerlin.internal.phonebook.ui.screens.cards.ExpandableCard
 import ru.leroymerlin.internal.phonebook.ui.screens.findusers.FindUsersViewModel
+import ru.leroymerlin.internal.phonebook.ui.themes.JetHabitTheme
 import values.arrJobTitleList
 
 import java.util.*
@@ -47,11 +48,15 @@ fun FindDepartmentScreen(findDepartmentViewModel: FindDepartmentViewModel, navCo
     val orgInitNameUser = sharedPref.getString("orgUnitName", "").toString() //достаем данные из shared prefs
     val refreshToken = sharedPref.getString("refreshToken", "").toString() //достаем данные из shared prefs
     val account = sharedPref.getString("account", "").toString() //достаем данные из shared prefs
+    Surface(
+        color = JetHabitTheme.colors.primaryBackground
+    ) {
 
-    Scaffold {
+
+        Scaffold {
 
 
-        findDepartmentViewModel.getDepartment(authHeader = authHeader)
+            findDepartmentViewModel.getDepartment(authHeader = authHeader)
             Column(
                 modifier = Modifier
                     .fillMaxSize(),
@@ -60,26 +65,54 @@ fun FindDepartmentScreen(findDepartmentViewModel: FindDepartmentViewModel, navCo
                 verticalArrangement = Arrangement.spacedBy(24.dp)
             ) {
 
-                if(depData.isNotEmpty()){
-                    AutoCompleteValueSample(items = depData, "Магазин", orgInitNameUser, orgInitNameUser,"mag", authHeader, findDepartmentViewModel, account)
-                }else{
-                   // Log.e("depData","-empty")
+                if (depData.isNotEmpty()) {
+                    AutoCompleteValueSample(
+                        items = depData,
+                        "Магазин",
+                        orgInitNameUser,
+                        orgInitNameUser,
+                        "mag",
+                        authHeader,
+                        findDepartmentViewModel,
+                        account
+                    )
+                } else {
+                    // Log.e("depData","-empty")
                     //когда закончилось время токена и depData отсутствует
-                    AutoCompleteValueSample(items = listOf(""), "Магазин", "", "","mag", authHeader, findDepartmentViewModel, account)
+                    AutoCompleteValueSample(
+                        items = listOf(""),
+                        "Магазин",
+                        "",
+                        "",
+                        "mag",
+                        authHeader,
+                        findDepartmentViewModel,
+                        account
+                    )
 
 
                 }
 
-                AutoCompleteValueSample(items = arrJobTitleList, "Должность", "Все", orgInitNameUser,"jobTitle", authHeader, findDepartmentViewModel, account)
+                AutoCompleteValueSample(
+                    items = arrJobTitleList,
+                    "Должность",
+                    "Все",
+                    orgInitNameUser,
+                    "jobTitle",
+                    authHeader,
+                    findDepartmentViewModel,
+                    account
+                )
 
-                LaunchedEffect(Unit){
+                LaunchedEffect(Unit) {
                     findDepartmentViewModel.getUserByDepartment(
                         orgUnitName = orgInitNameUser,
                         jobTitle = "Все",
-                        authHeader = authHeader)
+                        authHeader = authHeader
+                    )
                 }
 
-                if(cards.isNotEmpty()){
+                if (cards.isNotEmpty()) {
                     LazyColumn {
                         itemsIndexed(cards) { _, card ->
                             ExpandableCard(
@@ -91,7 +124,8 @@ fun FindDepartmentScreen(findDepartmentViewModel: FindDepartmentViewModel, navCo
                     }
                 }
             }
-    }
+        }
+}
 }
 
 

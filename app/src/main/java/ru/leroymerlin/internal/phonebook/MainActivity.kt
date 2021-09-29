@@ -2,6 +2,7 @@ package ru.leroymerlin.internal.phonebook
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
@@ -22,6 +23,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.focusModifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
@@ -47,6 +49,7 @@ import ru.leroymerlin.internal.phonebook.ui.screens.settings.SettingsScreen
 
 
 import ru.leroymerlin.internal.phonebook.ui.theme.PhonebookTheme
+import ru.leroymerlin.internal.phonebook.ui.themes.*
 
 
 @ExperimentalAnimationApi
@@ -54,6 +57,7 @@ class MainActivity : ComponentActivity() {
     val loginViewModel by viewModels<LoginViewModel>()
     val cardsViewModel by viewModels<CardsViewModel>()
     val searchViewModel by viewModels<SearchViewModel>()
+    @ExperimentalComposeUiApi
     @ExperimentalPagerApi
     @ExperimentalMaterialApi
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -67,13 +71,22 @@ class MainActivity : ComponentActivity() {
             val bottomItems = listOf(
             BottomNavItem("Поиск", "search", Icons.Default.Search),
             BottomNavItem("Настройки", "settings", Icons.Default.Settings))
+            val isDarkModeValue = false // isSystemInDarkTheme()
+            val currentStyle = remember { mutableStateOf(JetHabitStyle.Purple) }
+            val currentFontSize = remember { mutableStateOf(JetHabitSize.Medium) }
+            val currentPaddingSize = remember { mutableStateOf(JetHabitSize.Medium) }
+            val currentCornersStyle = remember { mutableStateOf(JetHabitCorners.Rounded) }
+            val isDarkMode = remember { mutableStateOf(isDarkModeValue) }
 
 
 
 
-
-            PhonebookTheme (
-                darkTheme = false
+            MainTheme (
+                style = currentStyle.value,
+                darkTheme = isDarkMode.value,
+                textSize = currentFontSize.value,
+                corners = currentCornersStyle.value,
+                paddingSize = currentPaddingSize.value
 
             ){
                 val systemUiController = rememberSystemUiController()
@@ -81,23 +94,23 @@ class MainActivity : ComponentActivity() {
                 // A surface container using the 'background' color from the theme
 
                 //задаем цвет статус бара
+                SideEffect {
+                    systemUiController.setSystemBarsColor(
+                        color = if (isDarkMode.value) baseDarkPalette.primaryBackground else baseLightPalette.primaryBackground,
+                        darkIcons = !isDarkMode.value
+                    )
+                }
 
-
-                Surface(color = MaterialTheme.colors.background) {
-
-
-
-
-
-
-
+                Surface(
+                    color = JetHabitTheme.colors.primaryBackground,
+                ) {
                     Scaffold(
 
-                        topBar={ TopAppBar(
+                      /*  topBar={ TopAppBar(
                             title = { Text(text = stringResource(R.string.app_name), fontSize = 18.sp) },
                             backgroundColor = colorResource(id = R.color.lmNCKD),
                             contentColor = Color.White
-                        )},
+                        )},*/
 
                         bottomBar = {
                             val backStackEntry = navController.currentBackStackEntryAsState()
@@ -105,6 +118,7 @@ class MainActivity : ComponentActivity() {
                                 //Log.e("route - ", navController.currentDestination?.route.toString())
                                 BottomNavigationBar(items = bottomItems,
                                     navController = navController ,
+                                    isDarkMode = isDarkMode.value,
                                     onItemClick ={
                                         navController.navigate(it.route){
                                         popUpTo =0 //не записываем переходы в стек
@@ -114,11 +128,46 @@ class MainActivity : ComponentActivity() {
                         }
 
                     ) {
-
+                        //old navigation
+/*
                         Navigation(navController = navController,
                             loginViewModel = loginViewModel,
                             cardsViewModel = cardsViewModel ,
                             searchViewModel = searchViewModel)
+*/
+                        NavHost(navController = navController, startDestination = "search"){
+                            composable("login"){ LoginScreen(loginViewModel, navController)}
+                            composable("list"){ ListScreen(navController)}
+                            composable("search"){ SearchScreen(searchViewModel, navController, modifier = Modifier)}
+                            composable("cards"){ CardsScreen(cardsViewModel) }
+                            composable("details"){ DetailsScreen()}
+                            composable("settings"){ SettingsScreen(
+                                navController = navController,
+                                isDarkMode = isDarkMode.value,
+                                currentTextSize = currentFontSize.value,
+                                currentPaddingSize = currentPaddingSize.value,
+                                currentCornersStyle = currentCornersStyle.value,
+                                onDarkModeChanged = {
+                                    isDarkMode.value = it
+                                },
+                                onNewStyle = {
+                                    currentStyle.value = it
+                                },
+                                onTextSizeChanged = {
+                                    currentFontSize.value = it
+                                },
+                                onCornersStyleChanged = {
+                                    currentCornersStyle.value = it
+                                },
+                                onPaddingSizeChanged = {
+                                    currentPaddingSize.value = it
+                                }
+
+
+                                ) }
+                        }
+
+
 
                         if(signin==false){
                             navController.navigate("login")
@@ -131,7 +180,7 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
-
+/*
 @OptIn(ExperimentalComposeUiApi::class)
 @ExperimentalAnimationApi
 @ExperimentalMaterialApi
@@ -152,10 +201,12 @@ fun Navigation(navController: NavHostController,
             navController = navController,
 
 
+
         ) }
     }
 
 }
+*/
 
 @ExperimentalMaterialApi
 @Composable
@@ -163,21 +214,25 @@ fun BottomNavigationBar(
     items: List<BottomNavItem>,
     navController: NavController,
     modifier: Modifier = Modifier,
+    isDarkMode:Boolean,
     onItemClick:(BottomNavItem) -> Unit
 
 ){
+   // Log.e("bottomNav", "isdark -"+isDarkMode.toString())
+   // Log.e("bottomNav", "color -"+JetHabitTheme.colors.primaryBackground.toString())
+
     val backStackEntry = navController.currentBackStackEntryAsState()
     BottomNavigation(
         modifier = modifier,
-        backgroundColor = Color.White,
+        backgroundColor = if (isDarkMode) baseDarkPalette.primaryBackground else baseLightPalette.primaryBackground,
         elevation = 5.dp
     ){
       items.forEach{ item ->
           val selected = item.route == backStackEntry.value?.destination?.route
           BottomNavigationItem(selected = item.route == navController.currentDestination?.route,
               onClick = { onItemClick(item) },
-              selectedContentColor = colorResource(id = R.color.lmNCKD),
-              unselectedContentColor = Color.Gray,
+              selectedContentColor = JetHabitTheme.colors.thirdText,
+              unselectedContentColor = JetHabitTheme.colors.controlColor,
               icon = {
                     Column(horizontalAlignment = CenterHorizontally){
                         if(item.badgeCount >0){

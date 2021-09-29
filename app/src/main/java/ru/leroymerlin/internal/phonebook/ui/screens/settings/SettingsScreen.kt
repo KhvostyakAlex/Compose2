@@ -2,6 +2,8 @@ package ru.leroymerlin.internal.phonebook.ui.screens.settings
 
 import android.app.Activity
 import android.content.Context
+import android.util.Log
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -12,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -20,18 +23,30 @@ import com.google.accompanist.pager.ExperimentalPagerApi
 import ru.leroymerlin.internal.phonebook.BuildConfig
 import ru.leroymerlin.internal.phonebook.R
 import ru.leroymerlin.internal.phonebook.addToFB
+import ru.leroymerlin.internal.phonebook.ui.themes.*
 
 
 @ExperimentalPagerApi
 @ExperimentalMaterialApi
 @Composable
 fun SettingsScreen(
-    navController:NavController
+    navController:NavController,
+    modifier: Modifier = Modifier,
+    isDarkMode: Boolean,
+    currentTextSize: JetHabitSize,
+    currentPaddingSize: JetHabitSize,
+    currentCornersStyle: JetHabitCorners,
+    onDarkModeChanged: (Boolean) -> Unit,
+    onNewStyle: (JetHabitStyle) -> Unit,
+    onTextSizeChanged: (JetHabitSize) -> Unit,
+    onPaddingSizeChanged: (JetHabitSize) -> Unit,
+    onCornersStyleChanged: (JetHabitCorners) -> Unit,
 
-) {
+    ) {
     val activity = LocalContext.current as Activity
     val versionName: String = BuildConfig.VERSION_NAME
-
+    //Log.e("SettingScreen", isDarkMode.toString())
+/*
     Scaffold{
         Column(//verticalArrangement = Arrangement.Center,
            modifier= Modifier.fillMaxWidth()
@@ -49,6 +64,177 @@ fun SettingsScreen(
             }
         }
     }
+    */
+
+
+    Surface(
+        modifier = modifier,
+        color = JetHabitTheme.colors.secondaryBackground,
+    ) {
+        Column(
+            Modifier.fillMaxSize()
+        ) {
+            TopAppBar(
+                backgroundColor = JetHabitTheme.colors.primaryBackground,
+                elevation = 8.dp
+            ) {
+                Text(
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(start = JetHabitTheme.shapes.padding),
+                    text = stringResource(id = R.string.title_settings),
+                    color = JetHabitTheme.colors.primaryText,
+                    style = JetHabitTheme.typography.toolbar
+                )
+            }
+
+            Row(
+                modifier = Modifier.padding(JetHabitTheme.shapes.padding)
+            ) {
+                Text(
+                    modifier = Modifier.weight(1f),
+                    text = stringResource(id = R.string.action_dark_theme_enable),
+                    color = JetHabitTheme.colors.primaryText,
+                    style = JetHabitTheme.typography.body
+                )
+                Checkbox(
+                    checked = isDarkMode, onCheckedChange = {
+                        onDarkModeChanged.invoke(it)
+                    },
+                    colors = CheckboxDefaults.colors(
+                        checkedColor = JetHabitTheme.colors.thirdText,
+                        uncheckedColor = JetHabitTheme.colors.secondaryText
+                    )
+                )
+            }
+
+            Divider(
+                modifier = Modifier.padding(start = JetHabitTheme.shapes.padding),
+                thickness = 0.5.dp,
+                color = JetHabitTheme.colors.secondaryText.copy(
+                    alpha = 0.3f
+                )
+            )
+
+            MenuItem(
+                model = MenuItemModel(
+                    title = stringResource(id = R.string.title_font_size),
+                    currentIndex = when (currentTextSize) {
+                        JetHabitSize.Small -> 0
+                        JetHabitSize.Medium -> 1
+                        JetHabitSize.Big -> 2
+                    },
+                    values = listOf(
+                        stringResource(id = R.string.title_font_size_small),
+                        stringResource(id = R.string.title_font_size_medium),
+                        stringResource(id = R.string.title_font_size_big)
+                    )
+                ),
+                onItemSelected = {
+                    when (it) {
+                        0 -> onTextSizeChanged.invoke(JetHabitSize.Small)
+                        1 -> onTextSizeChanged.invoke(JetHabitSize.Medium)
+                        2 -> onTextSizeChanged.invoke(JetHabitSize.Big)
+                    }
+                }
+            )
+
+            MenuItem(
+                model = MenuItemModel(
+                    title = stringResource(id = R.string.title_padding_size),
+                    currentIndex = when (currentPaddingSize) {
+                        JetHabitSize.Small -> 0
+                        JetHabitSize.Medium -> 1
+                        JetHabitSize.Big -> 2
+                    },
+                    values = listOf(
+                        stringResource(id = R.string.title_padding_small),
+                        stringResource(id = R.string.title_padding_medium),
+                        stringResource(id = R.string.title_padding_big)
+                    )
+                ),
+                onItemSelected = {
+                    when (it) {
+                        0 -> onPaddingSizeChanged.invoke(JetHabitSize.Small)
+                        1 -> onPaddingSizeChanged.invoke(JetHabitSize.Medium)
+                        2 -> onPaddingSizeChanged.invoke(JetHabitSize.Big)
+                    }
+                }
+            )
+
+            MenuItem(
+                model = MenuItemModel(
+                    title = stringResource(id = R.string.title_corners_style),
+                    currentIndex = when (currentCornersStyle) {
+                        JetHabitCorners.Rounded -> 0
+                        JetHabitCorners.Flat -> 1
+                    },
+                    values = listOf(
+                        stringResource(id = R.string.title_corners_style_rounded),
+                        stringResource(id = R.string.title_corners_style_flat)
+                    )
+                ),
+                onItemSelected = {
+                    when (it) {
+                        0 -> onCornersStyleChanged.invoke(JetHabitCorners.Rounded)
+                        1 -> onCornersStyleChanged.invoke(JetHabitCorners.Flat)
+                    }
+                }
+            )
+
+           /* Row(
+                modifier = Modifier
+                    .padding(JetHabitTheme.shapes.padding)
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceEvenly
+            ) {
+                ColorCard(color = if (isDarkMode) purpleDarkPalette.tintColor else purpleLightPalette.tintColor,
+                    onClick = {
+                        onNewStyle.invoke(JetHabitStyle.Purple)
+                    })
+                ColorCard(color = if (isDarkMode) orangeDarkPalette.tintColor else orangeLightPalette.tintColor,
+                    onClick = {
+                        onNewStyle.invoke(JetHabitStyle.Orange)
+                    })
+                ColorCard(color = if (isDarkMode) blueDarkPalette.tintColor else blueLightPalette.tintColor,
+                    onClick = {
+                        onNewStyle.invoke(JetHabitStyle.Blue)
+                    })
+            }
+
+            Row(
+                modifier = Modifier
+                    .padding(JetHabitTheme.shapes.padding)
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceEvenly
+            ) {
+                ColorCard(color = if (isDarkMode) redDarkPalette.tintColor else redLightPalette.tintColor,
+                    onClick = {
+                        onNewStyle.invoke(JetHabitStyle.Red)
+                    })
+                ColorCard(color = if (isDarkMode) greenDarkPalette.tintColor else greenLightPalette.tintColor,
+                    onClick = {
+                        onNewStyle.invoke(JetHabitStyle.Green)
+                    })
+            }*/
+/*
+            HabbitCardItem(
+                model = HabbitCardItemModel(
+                    habbitId = 0,
+                    title = "Пример карточки",
+                    isChecked = true
+                )
+            )
+
+ */
+        }
+    }
+
+
+
+
+
+
 }
 
 @Composable
@@ -149,4 +335,21 @@ fun ExitButton2(navController: NavController, activity: Activity){
         backgroundColor = colorResource(id = R.color.colorCopy)) {
         Icon(Icons.Filled.Sync,"")
     }
+}
+
+@Composable
+fun ColorCard(
+    color: Color,
+    onClick: () -> Unit
+) {
+    Card(
+        modifier = Modifier
+            .size(60.dp)
+            .clickable {
+                onClick.invoke()
+            },
+        backgroundColor = color,
+        elevation = 8.dp,
+        shape = JetHabitTheme.shapes.cornersStyle
+    ) { }
 }

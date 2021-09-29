@@ -19,6 +19,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.google.accompanist.pager.ExperimentalPagerApi
@@ -28,84 +29,117 @@ import ru.leroymerlin.internal.phonebook.ui.screens.cards.EmptyCard
 import ru.leroymerlin.internal.phonebook.ui.screens.cards.ExpandableCard
 import ru.leroymerlin.internal.phonebook.addToFB
 import ru.leroymerlin.internal.phonebook.dataclass.IntraruAuthUserData
+import ru.leroymerlin.internal.phonebook.ui.themes.JetHabitTheme
 
 @ExperimentalComposeUiApi
 @ExperimentalPagerApi
 @ExperimentalMaterialApi
 @Composable
-fun FindUsersScreen( findUsersViewModel: FindUsersViewModel, navController:NavController){
-    val error:String by findUsersViewModel.error.observeAsState("")
+fun FindUsersScreen( findUsersViewModel: FindUsersViewModel,
+                     navController:NavController,
+modifier:Modifier) {
+    val error: String by findUsersViewModel.error.observeAsState("")
     val activity = LocalContext.current as Activity
     val sharedPref = activity.getPreferences(Context.MODE_PRIVATE)
     val keyboardController = LocalSoftwareKeyboardController.current
-    val textState = remember { mutableStateOf("")}
-    val cards:List<IntraruUserDataList> by findUsersViewModel.cards.observeAsState(emptyList())
+    val textState = remember { mutableStateOf("") }
+    val cards: List<IntraruUserDataList> by findUsersViewModel.cards.observeAsState(emptyList())
     val expandedCardIds = findUsersViewModel.expandedCardIdsList.observeAsState()
     val token = sharedPref.getString("token", "").toString() //достаем данные из shared prefs
     val account = sharedPref.getString("account", "").toString() //достаем данные из shared prefs
     val authHeader = "Bearer " + token
+    Surface(
+        modifier = modifier,
+        color = JetHabitTheme.colors.primaryBackground,
+    ) {
 
-    Scaffold {
+    Scaffold (
+        backgroundColor = JetHabitTheme.colors.secondaryBackground
+            ){
         Column {
-            Row (
+
+            Row(
                 // horizontalArrangement = Arrangement.SpaceAround
                 verticalAlignment = Alignment.CenterVertically
-            ){
-                    TextField(value = textState.value,
-                            onValueChange = { value -> textState.value = value},
-                            placeholder = {Text("Ввведи Фамилию/LDAP")},
-                            shape = RoundedCornerShape(8.dp),
-                            colors = TextFieldDefaults.textFieldColors(
-                                backgroundColor = colorResource(id = R.color.colorLightGrey),
-                                focusedIndicatorColor =  Color.Transparent,                   //Color.Transparent - hide the indicator
-                                unfocusedIndicatorColor = Color.Transparent
-                            ),
-                            modifier = Modifier.padding(8.dp)
+            ) {
+                TextField(
+                    value = textState.value,
+                    onValueChange = { value -> textState.value = value },
+                    placeholder = { Text(
+                        "Ввведи Фамилию/LDAP",
+                        color =JetHabitTheme.colors.primaryText
+                    ) },
+
+                    shape = RoundedCornerShape(8.dp),
+                    colors = TextFieldDefaults.textFieldColors(
+                       // backgroundColor = colorResource(id = R.color.colorLightGrey),
+                        backgroundColor = JetHabitTheme.colors.primaryBackground,
+                        focusedIndicatorColor = Color.Transparent,                   //Color.Transparent - hide the indicator
+                        unfocusedIndicatorColor = Color.Transparent,
+
+
+                    ),
+                    modifier = Modifier.padding(8.dp),
+
+                )
+
+                Button(
+                    onClick = {
+                        val isDigits =
+                            TextUtils.isDigitsOnly(textState.value) //проверка - является ли числом
+
+                        if (textState.value.length == 8 && isDigits) {
+                            findUsersViewModel.getInfoUser(
+                                ldap = textState.value,
+                                authHeader = authHeader
+                            )
+                        } else {
+                            findUsersViewModel.getUserByName(
+                                userName = textState.value,
+                                authHeader = authHeader
+                            )
+                        }
+                        keyboardController?.hide()
+                        //добавляем в аналитику
+                        addToFB("FindUser", account, textState.value)
+
+                    },
+                   // colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.primary),
+                    colors = ButtonDefaults.buttonColors(backgroundColor = JetHabitTheme.colors.primaryBackground),
+                    shape = RoundedCornerShape(8.dp),
+                    modifier = Modifier.fillMaxWidth().padding(end = 8.dp).height(56.dp)
+                ) {
+                    Text("Поиск",
+                        color = JetHabitTheme.colors.primaryText,
+                        style = JetHabitTheme.typography.toolbar)
+                }
+            }
+
+            //если пришли данные, то показываем список
+            if (cards.isNotEmpty()) {
+                LazyColumn {
+                    itemsIndexed(cards) { _, card ->
+                        ExpandableCard(
+                            card = card,
+                            onCardArrowClick = { findUsersViewModel.onCardArrowClicked(card.account.toInt()) },
+                            expanded = expandedCardIds.value!!.contains(card.account.toInt()),
                         )
-
-                        Button(onClick = {
-                            val isDigits = TextUtils.isDigitsOnly(textState.value) //проверка - является ли числом
-
-                            if(textState.value.length == 8 && isDigits){
-                                findUsersViewModel.getInfoUser(ldap = textState.value, authHeader = authHeader)
-                            }else{
-                                findUsersViewModel.getUserByName(userName =textState.value, authHeader = authHeader)
-                            }
-                            keyboardController?.hide()
-                            //добавляем в аналитику
-                            addToFB("FindUser", account, textState.value)
-
-                        },colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.primary),
-                            shape = RoundedCornerShape(8.dp),
-                            modifier = Modifier.fillMaxWidth().padding(end=8.dp).height(56.dp)) {
-                            Text("Поиск", color = Color.White)
-                        }
                     }
+                }
+            } else {
+                EmptyCard("Ничего не найдено")
+            }
 
-                    //если пришли данные, то показываем список
-                    if(cards.isNotEmpty()){
-                        LazyColumn {
-                            itemsIndexed(cards) { _, card ->
-                                ExpandableCard(
-                                    card = card,
-                                    onCardArrowClick = { findUsersViewModel.onCardArrowClicked(card.account.toInt()) },
-                                    expanded = expandedCardIds.value!!.contains(card.account.toInt()),
-                                )
-                            }
-                        }
-                    }else{
-                        EmptyCard("Ничего не найдено")
-                    }
-
-                    //обработка ошибок
-                    if (error.isNotBlank()) {
-                        //Ошибка 401 когда заканчивается сессия и нужно перезайти
-                        if(error.contains("401", ignoreCase = true)){
-                          //  refreshToken(activity, findUsersViewModel, refreshToken,navController)
-                        }
-                    }
+            //обработка ошибок
+            if (error.isNotBlank()) {
+                //Ошибка 401 когда заканчивается сессия и нужно перезайти
+                if (error.contains("401", ignoreCase = true)) {
+                    //  refreshToken(activity, findUsersViewModel, refreshToken,navController)
+                }
+            }
         }
     }
+}
 }
 
           /*  @Composable

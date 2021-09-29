@@ -42,6 +42,7 @@ import ru.leroymerlin.internal.phonebook.dataclass.IntraruAuthUserList
 import ru.leroymerlin.internal.phonebook.*
 import ru.leroymerlin.internal.phonebook.R
 import ru.leroymerlin.internal.phonebook.dataclass.IntraruUserDataList
+import ru.leroymerlin.internal.phonebook.ui.themes.JetHabitTheme
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
@@ -57,127 +58,158 @@ fun LoginScreen(loginViewModel: LoginViewModel, navController:NavController){
     val focusManager = LocalFocusManager.current
 
     val keyboardController = LocalSoftwareKeyboardController.current
+Surface(
+    color = JetHabitTheme.colors.primaryBackground,
+) {
+
 
     Scaffold {
 
-    Column(//verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally,
+        Column(//verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally,
 
-        modifier = Modifier
-            .fillMaxWidth()
-            ) {
-        Image(
-            painter = painterResource(id = R.drawable.logo_leroy_merlin),
-            contentDescription = "Profile pic",
-            //contentScale = ContentScale.
-        modifier = Modifier
-           // .graphicsLayer{ scaleX = 3f; scaleY = 3f}
-            .padding(top = 64.dp)
-        )
-        Text("Добро пожаловать!", modifier = Modifier.padding(8.dp))
-
-        TextField(
-            value = textStateLogin.value,
-            onValueChange = { value -> textStateLogin.value = value},
-            placeholder = {Text("LDAP")},
-            singleLine = true,
-            shape = RoundedCornerShape(8.dp),
-            colors = TextFieldDefaults.textFieldColors(
-                backgroundColor = colorResource(id = R.color.colorLightGrey),
-                focusedIndicatorColor =  Color.Transparent ,                  //Color.Transparent - hide the indicator
-                   unfocusedIndicatorColor = Color.Transparent
-            ),
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number, imeAction = ImeAction.Next),
-           //настраиваем кнопку ДАЛЕЕ, переходим на поле нижу
-            keyboardActions = KeyboardActions(
-                onNext = {
-                    focusManager.moveFocus(FocusDirection.Down)
-                }
-            ),
-            trailingIcon = { if(textStateLogin.value.length ==8){
-                                    Icon(imageVector  = Icons.Filled.Check, "")
-                                }
-                           }, //при вводе 8 знаков появится иконка
             modifier = Modifier
-                .padding(8.dp)
-                .width(200.dp)
-                .onKeyEvent {
-                    if (it.key.keyCode == Key.Tab.keyCode) {
+                .fillMaxWidth()
+        ) {
+            Image(
+                painter = painterResource(id = R.drawable.logo_leroy_merlin),
+                contentDescription = "Profile pic",
+                //contentScale = ContentScale.
+                modifier = Modifier
+                    // .graphicsLayer{ scaleX = 3f; scaleY = 3f}
+                    .padding(top = 64.dp)
+            )
+            Text("Добро пожаловать!", modifier = Modifier.padding(8.dp))
+
+            TextField(
+                value = textStateLogin.value,
+                onValueChange = { value -> textStateLogin.value = value },
+                placeholder = { Text("LDAP") },
+                singleLine = true,
+                shape = RoundedCornerShape(8.dp),
+                colors = TextFieldDefaults.textFieldColors(
+                    backgroundColor = colorResource(id = R.color.colorLightGrey),
+                    focusedIndicatorColor = Color.Transparent,                  //Color.Transparent - hide the indicator
+                    unfocusedIndicatorColor = Color.Transparent
+                ),
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Number,
+                    imeAction = ImeAction.Next
+                ),
+                //настраиваем кнопку ДАЛЕЕ, переходим на поле нижу
+                keyboardActions = KeyboardActions(
+                    onNext = {
                         focusManager.moveFocus(FocusDirection.Down)
-                        true
-                    } else {
-                        false
+                    }
+                ),
+                trailingIcon = {
+                    if (textStateLogin.value.length == 8) {
+                        Icon(imageVector = Icons.Filled.Check, "")
+                    }
+                }, //при вводе 8 знаков появится иконка
+                modifier = Modifier
+                    .padding(8.dp)
+                    .width(200.dp)
+                    .onKeyEvent {
+                        if (it.key.keyCode == Key.Tab.keyCode) {
+                            focusManager.moveFocus(FocusDirection.Down)
+                            true
+                        } else {
+                            false
+                        }
+                    },
+            )
+
+            TextField(
+                value = password,
+                onValueChange = { password = it },
+                singleLine = true,
+                placeholder = { Text("Введи пароль") },
+                shape = RoundedCornerShape(8.dp),
+                colors = TextFieldDefaults.textFieldColors(
+                    backgroundColor = colorResource(id = R.color.colorLightGrey),
+                    //focusedIndicatorColor =  colorResource(id = R.color.lmNCKD),                   //Color.Transparent - hide the indicator
+                    focusedIndicatorColor = Color.Transparent,                   //Color.Transparent - hide the indicator
+                    unfocusedIndicatorColor = Color.Transparent
+                ),
+                visualTransformation = if (passwordVisibility) VisualTransformation.None else PasswordVisualTransformation(),
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Password,
+                    imeAction = ImeAction.Send
+                ),
+                keyboardActions = KeyboardActions(
+                    onSend = {
+                        if (textStateLogin.value.isNotEmpty() && textStateLogin.value.length == 8) {
+                            if (password.isNotEmpty()) {
+                                val login = textStateLogin.value.trim()
+                                loginViewModel.authIntraru(login, password)
+                                keyboardController?.hide()
+                                //  password =""
+                            } else {
+                                Toast.makeText(
+                                    context,
+                                    "Неправильный логин или пароль",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
+                        } else {
+                            Toast.makeText(context, "Что-то не то с LDAP", Toast.LENGTH_SHORT)
+                                .show()
+                        }
+                        keyboardController?.hide()
+                    }
+                ),
+                trailingIcon = {
+                    val image = if (passwordVisibility)
+                        Icons.Filled.Visibility
+                    else Icons.Filled.VisibilityOff
+
+                    IconButton(onClick = {
+                        passwordVisibility = !passwordVisibility
+                    }) {
+                        Icon(imageVector = image, "")
                     }
                 },
-        )
+                modifier = Modifier
+                    .padding(8.dp)
+                    .width(200.dp)
+                //.height(50.dp)
+            )
 
-        TextField(
-            value = password,
-            onValueChange = { password = it },
-            singleLine = true,
-            placeholder = { Text("Введи пароль") },
-            shape = RoundedCornerShape(8.dp),
-            colors = TextFieldDefaults.textFieldColors(
-                backgroundColor = colorResource(id = R.color.colorLightGrey),
-                //focusedIndicatorColor =  colorResource(id = R.color.lmNCKD),                   //Color.Transparent - hide the indicator
-                focusedIndicatorColor =  Color.Transparent,                   //Color.Transparent - hide the indicator
-                   unfocusedIndicatorColor = Color.Transparent
-            ),
-            visualTransformation = if (passwordVisibility) VisualTransformation.None else PasswordVisualTransformation(),
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password, imeAction = ImeAction.Send),
-            keyboardActions = KeyboardActions(
-                onSend = {
-                    if(textStateLogin.value.isNotEmpty() && textStateLogin.value.length ==8){
-                        if(password.isNotEmpty()){
-                            val  login = textStateLogin.value.trim()
+            Button(
+                onClick = {
+                    if (textStateLogin.value.isNotEmpty() && textStateLogin.value.length == 8) {
+                        if (password.isNotEmpty()) {
+                            val login = textStateLogin.value.trim()
                             loginViewModel.authIntraru(login, password)
                             keyboardController?.hide()
-                          //  password =""
-                        }else{
-                            Toast.makeText( context, "Неправильный логин или пароль", Toast.LENGTH_SHORT).show()
+
+                        } else {
+                            Toast.makeText(
+                                context,
+                                "Неправильный логин или пароль",
+                                Toast.LENGTH_SHORT
+                            ).show()
                         }
-                    }else{
-                        Toast.makeText( context, "Что-то не то с LDAP", Toast.LENGTH_SHORT).show()
+                    } else {
+                        Toast.makeText(context, "Что-то не то с LDAP", Toast.LENGTH_SHORT).show()
                     }
-                    keyboardController?.hide()}
-            ),
-            trailingIcon = {
-                val image = if (passwordVisibility)
-                    Icons.Filled.Visibility
-                else Icons.Filled.VisibilityOff
+                },
+                shape = RoundedCornerShape(8.dp),
+                // colors = JetHabitTheme.colors.primaryBackground,
+                colors = ButtonDefaults.buttonColors(backgroundColor = JetHabitTheme.colors.thirdText),
+                modifier = Modifier.size(150.dp, 50.dp)
+            ) {
+                Text(
+                    "Войти",
+                    color = Color.White,
+                    style = JetHabitTheme.typography.toolbar
 
-                IconButton(onClick = {
-                    passwordVisibility = !passwordVisibility
-                }) {
-                    Icon(imageVector  = image, "")
-                }
-            },
-            modifier = Modifier
-                .padding(8.dp)
-                .width(200.dp)
-                //.height(50.dp)
-        )
-
-        Button(onClick = {
-            if(textStateLogin.value.isNotEmpty() && textStateLogin.value.length ==8){
-                if(password.isNotEmpty()){
-                    val  login = textStateLogin.value.trim()
-                    loginViewModel.authIntraru(login, password)
-                    keyboardController?.hide()
-
-                }else{
-                    Toast.makeText( context, "Неправильный логин или пароль", Toast.LENGTH_SHORT).show()
-                }
-            }else{
-                Toast.makeText( context, "Что-то не то с LDAP", Toast.LENGTH_SHORT).show()
+                )
             }
-                         },
-            shape = RoundedCornerShape(8.dp),
-            colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.primary),
-            modifier = Modifier.size(150.dp, 50.dp)) { Text("Войти", color = Color.White) }
+        }
     }
-    }
-      /*
+    /*
         //при запуске
         LaunchedEffect(Unit){
             if(signin){
@@ -194,30 +226,30 @@ fun LoginScreen(loginViewModel: LoginViewModel, navController:NavController){
 
 
     //при покиданиии
-        DisposableEffect(Unit ){
-            onDispose {
-                /*костыль, при повторном заходе на страницу Логин, liveData еще жива и
+    DisposableEffect(Unit) {
+        onDispose {
+            /*костыль, при повторном заходе на страницу Логин, liveData еще жива и
                  срабатывает скрипт повторного захода в приложение. Нужно реализовать отписку
                  от liveData когда уходим со страницы Логин*/
-                loginViewModel.authIntraru("login", "password")
-            }
+            loginViewModel.authIntraru("login", "password")
         }
+    }
 
-   /* for(row in authData){
+    /* for(row in authData){
         val r = row as IntraruAuthUserList
         Log.e("row -", r.token.toString())
         val authData = ""
     }*/
 
     if (authData.isNotEmpty()) {
-        if(authData[0].message == "Success"){
+        if (authData[0].message == "Success") {
             SignIn(
                 login = textStateLogin.value,
                 password = password,
                 authData = authData[0],
                 navController = navController
             )
-        }else if(authData[0].message == "Failed" && authData[0].login != "login"){
+        } else if (authData[0].message == "Failed" && authData[0].login != "login") {
             /*костыль, потому что при первом вводе ложного пароля Тост показывается,
             при повторном вводе кривого пароля authData не обновляется и уже не показываетсяю
             необходимо реализовать после каждого нажатия Button-> обновлять LiveData */
@@ -225,6 +257,7 @@ fun LoginScreen(loginViewModel: LoginViewModel, navController:NavController){
             loginViewModel.authIntraru("login", "password")
         }
     }
+}
 }
 
 @Composable

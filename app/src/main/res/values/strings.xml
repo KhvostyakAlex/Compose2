@@ -1,24 +1,25 @@
 <resources>
     <string name="app_name">Контакты ЛМ</string>
     <string name="days_today">Today</string>
-    <string name="title_font_size">Font size</string>
-    <string name="title_font_size_small">Small</string>
-    <string name="title_font_size_medium">Medium</string>
-    <string name="title_font_size_big">Big</string>
+    <string name="title_font_size">Размер шрифта</string>
+    <string name="title_font_size_small">Маленький</string>
+    <string name="title_font_size_medium">Средний</string>
+    <string name="title_font_size_big">Большой</string>
 
-    <string name="title_padding_size">Margins</string>
-    <string name="title_padding_small">Small</string>
-    <string name="title_padding_medium">Medium</string>
-    <string name="title_padding_big">Big</string>
+    <string name="title_padding_size">Отступ</string>
+    <string name="title_padding_small">Маленький</string>
+    <string name="title_padding_medium">Средний</string>
+    <string name="title_padding_big">Большой</string>
 
     <string name="title_daily">Daily</string>
-    <string name="title_settings">Settings</string>
+    <string name="title_settings">Настройки</string>
+    <string name="title_search">Поиск</string>
 
-    <string name="title_corners_style">Card style</string>
-    <string name="title_corners_style_rounded">Rounded</string>
-    <string name="title_corners_style_flat">Flat</string>
+    <string name="title_corners_style">Стиль карточки</string>
+    <string name="title_corners_style_rounded">Закругленный</string>
+    <string name="title_corners_style_flat">Прямоугольный</string>
 
-    <string name="action_dark_theme_enable">Enable dark theme</string>
+    <string name="action_dark_theme_enable">Включить темную тему</string>
 
     <string name="compose_new_record">New habbit</string>
     <string name="compose_title">Title</string>
