@@ -2,12 +2,10 @@ package ru.leroymerlin.internal.phonebook
 
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
@@ -23,16 +21,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.focusModifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import androidx.navigation.NavHostController
 import androidx.navigation.compose.*
 import com.google.accompanist.pager.*
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
@@ -68,22 +61,26 @@ class MainActivity : ComponentActivity() {
         setContent {
             val sharedPref = this.getPreferences(Context.MODE_PRIVATE)
             val signin = sharedPref.getBoolean("signin?", false) //достаем данные из shared prefs
+            val isDarkModeValue = sharedPref.getBoolean("isDarkModeValue", false) //достаем данные из shared prefs
+           // val textSize = sharedPref.getString("textSize", "JetHabitSize.Medium") //достаем данные из shared prefs
             val bottomItems = listOf(
             BottomNavItem("Поиск", "search", Icons.Default.Search),
             BottomNavItem("Настройки", "settings", Icons.Default.Settings))
-            val isDarkModeValue = false // isSystemInDarkTheme()
-            val currentStyle = remember { mutableStateOf(JetHabitStyle.Purple) }
-            val currentFontSize = remember { mutableStateOf(JetHabitSize.Medium) }
-            val currentPaddingSize = remember { mutableStateOf(JetHabitSize.Medium) }
-            val currentCornersStyle = remember { mutableStateOf(JetHabitCorners.Rounded) }
+           // val isDarkModeValue = isSystemInDarkTheme()
+            val currentStyle = remember { mutableStateOf(JetPhonebookStyle.Purple) }
+            val currentFontSize = remember { mutableStateOf(JetPhonebookSize.Medium) }
+            //val currentFontSize = JetHabitSize.Medium
+            val currentPaddingSize = remember { mutableStateOf(JetPhonebookSize.Medium) }
+            val currentCornersStyle = remember { mutableStateOf(JetPhonebookCorners.Rounded) }
             val isDarkMode = remember { mutableStateOf(isDarkModeValue) }
 
 
-
+            //Log.e("textSize - ", textSize.toString())
 
             MainTheme (
                 style = currentStyle.value,
                 darkTheme = isDarkMode.value,
+               // textSize = currentFontSize.value,
                 textSize = currentFontSize.value,
                 corners = currentCornersStyle.value,
                 paddingSize = currentPaddingSize.value
@@ -102,7 +99,7 @@ class MainActivity : ComponentActivity() {
                 }
 
                 Surface(
-                    color = JetHabitTheme.colors.primaryBackground,
+                    color = JetPhonebookTheme.colors.primaryBackground,
                 ) {
                     Scaffold(
 
@@ -231,8 +228,8 @@ fun BottomNavigationBar(
           val selected = item.route == backStackEntry.value?.destination?.route
           BottomNavigationItem(selected = item.route == navController.currentDestination?.route,
               onClick = { onItemClick(item) },
-              selectedContentColor = JetHabitTheme.colors.thirdText,
-              unselectedContentColor = JetHabitTheme.colors.controlColor,
+              selectedContentColor = JetPhonebookTheme.colors.thirdText,
+              unselectedContentColor = JetPhonebookTheme.colors.controlColor,
               icon = {
                     Column(horizontalAlignment = CenterHorizontally){
                         if(item.badgeCount >0){

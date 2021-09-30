@@ -11,6 +11,8 @@ import okhttp3.RequestBody.Companion.toRequestBody
 import org.json.JSONObject
 import ru.leroymerlin.internal.phonebook.dataclass.*
 import ru.leroymerlin.internal.phonebook.di.AppModule
+import ru.leroymerlin.internal.phonebook.di.AppModule.provideAuthApi
+import ru.leroymerlin.internal.phonebook.di.AppModule.provideUserApi
 
 
 class SearchViewModel: ViewModel() {
@@ -39,7 +41,7 @@ class SearchViewModel: ViewModel() {
             body.put("refreshToken", refreshToken)
             val testData = ArrayList<IntraruAuthUserList>()
 
-            AppModule.providePhonebookApi()
+            provideAuthApi()
                 .refreshToken(body.toString().toRequestBody("body".toMediaTypeOrNull()))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -78,7 +80,7 @@ class SearchViewModel: ViewModel() {
 
     fun getConnect( authHeader:String) {
         viewModelScope.launch(Dispatchers.Default) {
-            AppModule.providePhonebookApi().getDepartment(authHeader)//здесь вызывается API
+            provideUserApi().getDepartment(authHeader)//здесь вызывается API
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ response ->

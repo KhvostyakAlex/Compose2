@@ -12,11 +12,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusState
 import androidx.compose.ui.focus.onFocusChanged
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import ru.leroymerlin.internal.phonebook.ui.themes.JetHabitTheme
+import ru.leroymerlin.internal.phonebook.ui.themes.JetPhonebookTheme
 
 @Composable
 fun TextSearchBar(
@@ -37,22 +36,22 @@ fun TextSearchBar(
         shape = RoundedCornerShape(8.dp),
         value = value,
         colors = TextFieldDefaults.textFieldColors(
-            textColor = JetHabitTheme.colors.primaryText,
-            cursorColor= JetHabitTheme.colors.thirdText,
-            focusedIndicatorColor = JetHabitTheme.colors.thirdText,
-            trailingIconColor = JetHabitTheme.colors.primaryText,
-            disabledTrailingIconColor= JetHabitTheme.colors.controlColor,
-            focusedLabelColor = JetHabitTheme.colors.thirdText
+            textColor = JetPhonebookTheme.colors.primaryText,
+            cursorColor= JetPhonebookTheme.colors.thirdText,
+            focusedIndicatorColor = JetPhonebookTheme.colors.thirdText,
+            trailingIconColor = JetPhonebookTheme.colors.primaryText,
+            disabledTrailingIconColor= JetPhonebookTheme.colors.controlColor,
+            focusedLabelColor = JetPhonebookTheme.colors.thirdText
         ),
         onValueChange = { query ->
             onValueChanged(query)
         },
         label = { Text(
             text = label,
-            color = JetHabitTheme.colors.primaryText,
-            style=JetHabitTheme.typography.caption)
+            color = JetPhonebookTheme.colors.primaryText,
+            style=JetPhonebookTheme.typography.caption)
                 },
-        textStyle = JetHabitTheme.typography.body,
+        textStyle = JetPhonebookTheme.typography.body,
 
         singleLine = true,
         trailingIcon = {
@@ -68,7 +67,7 @@ fun TextSearchBar(
     )
 
     textFieldColors(
-        textColor = JetHabitTheme.colors.primaryText,
+        textColor = JetPhonebookTheme.colors.primaryText,
     )
 
 

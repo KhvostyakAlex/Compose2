@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.Divider
 import androidx.compose.material.DropdownMenu
 import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material.Icon
@@ -22,7 +21,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import ru.leroymerlin.internal.phonebook.R
-import ru.leroymerlin.internal.phonebook.ui.themes.JetHabitTheme
+import ru.leroymerlin.internal.phonebook.ui.themes.JetPhonebookTheme
 import ru.leroymerlin.internal.phonebook.ui.themes.MainTheme
 
 
@@ -42,7 +41,7 @@ fun MenuItem(
 
     Box(
         modifier = Modifier
-            .background(JetHabitTheme.colors.secondaryBackground)
+            .background(JetPhonebookTheme.colors.secondaryBackground)
             .fillMaxWidth()
     ) {
         Row(
@@ -50,33 +49,33 @@ fun MenuItem(
                 .clickable {
                     isDropdownOpen.value = true
                 }
-                .padding(JetHabitTheme.shapes.padding)
-                .background(JetHabitTheme.colors.secondaryBackground),
+                .padding(JetPhonebookTheme.shapes.padding)
+                .background(JetPhonebookTheme.colors.secondaryBackground),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
                 modifier = Modifier
                     .weight(1f)
-                    .padding(end = JetHabitTheme.shapes.padding),
+                    .padding(end = JetPhonebookTheme.shapes.padding),
                 text = model.title,
-                style = JetHabitTheme.typography.body,
-                color = JetHabitTheme.colors.primaryText
+                style = JetPhonebookTheme.typography.body,
+                color = JetPhonebookTheme.colors.primaryText
             )
 
             Text(
                 text = model.values[currentPosition.value],
-                style = JetHabitTheme.typography.body,
-                color = JetHabitTheme.colors.secondaryText
+                style = JetPhonebookTheme.typography.body,
+                color = JetPhonebookTheme.colors.secondaryText
             )
 
             Icon(
                 modifier = Modifier
-                    .padding(start = JetHabitTheme.shapes.padding / 4)
+                    .padding(start = JetPhonebookTheme.shapes.padding / 4)
                     .size(18.dp)
                     .align(Alignment.CenterVertically),
                 painter = painterResource(id = R.drawable.ic_baseline_arrow_forward_ios_24),
                 contentDescription = "Arrow",
-                tint = JetHabitTheme.colors.secondaryText
+                tint = JetPhonebookTheme.colors.secondaryText
             )
         }
 
@@ -85,7 +84,7 @@ fun MenuItem(
             onDismissRequest = {
                 isDropdownOpen.value = false
             },
-            modifier = Modifier.fillMaxWidth().background(JetHabitTheme.colors.primaryBackground)
+            modifier = Modifier.fillMaxWidth().background(JetPhonebookTheme.colors.primaryBackground)
         ) {
             model.values.forEachIndexed { index, value ->
                 DropdownMenuItem(onClick = {
@@ -95,20 +94,22 @@ fun MenuItem(
                 }) {
                     Text(
                         text = value,
-                        style = JetHabitTheme.typography.body,
-                        color = JetHabitTheme.colors.primaryText
+                        style = JetPhonebookTheme.typography.body,
+                        color = JetPhonebookTheme.colors.primaryText
                     )
                 }
             }
         }
 
-        Divider(
-            modifier = Modifier.padding(start = 16.dp).align(Alignment.BottomStart),
-            thickness = 0.5.dp,
+      /*  Divider(
+            modifier = Modifier.padding(start = JetHabitTheme.shapes.padding),
+            thickness = 1.dp,
             color = JetHabitTheme.colors.secondaryText.copy(
-                alpha = 0.3f
+                alpha = 0.5f
             )
         )
+
+       */
     }
 }
 

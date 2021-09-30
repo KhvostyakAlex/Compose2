@@ -8,7 +8,8 @@ import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.create
-import ru.leroymerlin.internal.phonebook.PhoneBookApi
+import ru.leroymerlin.internal.phonebook.repository.AuthApi
+import ru.leroymerlin.internal.phonebook.repository.UserApi
 import ru.leroymerlin.internal.phonebook.util.Constants.BASE_URL
 import java.security.SecureRandom
 import java.security.cert.X509Certificate
@@ -24,14 +25,59 @@ object AppModule {
     @Provides
     fun providePhonebookRepository(api: PhoneBookApi) = PhoneBookRepository(PhoneBookApi)*/
 
-    /* @Singleton
+    @Singleton
     @Provides
-    fun provideApi(api: PhoneBookApi) = PhoneBookApi()*/
-
+    fun provideloggingInterceptor(): HttpLoggingInterceptor {
+         val loggingInterceptor = HttpLoggingInterceptor()
+         loggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
+        return loggingInterceptor
+    }
 
     @Singleton
     @Provides
+    fun provideOkHttpClient(): OkHttpClient {
+        val okHttpClient = OkHttpClient.Builder()
+            .addInterceptor(provideloggingInterceptor())
+            .build()
+        return okHttpClient
+    }
+
+    @Singleton
+    @Provides
+    fun provideRetrofit(): Retrofit {
+        val retrofit = Retrofit.Builder()
+            .baseUrl(BASE_URL)
+            .client(provideOkHttpClient())
+            .client(getUnsafeOkHttpClientR()?.build())
+            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+        //return  retrofit.create()
+        return  retrofit
+    }
+
+    @Singleton
+    @Provides
+    fun  provideAuthApi(): AuthApi {
+        return provideRetrofit().create()
+    }
+
+    @Singleton
+    @Provides
+    fun  provideUserApi(): UserApi {
+        return provideRetrofit().create()
+    }
+
+
+   /* @Singleton
+    @Provides
     fun  providePhonebookApi(): PhoneBookApi {
+        return provideRetrofit().create()
+    }
+
+    @Singleton
+    @Provides
+    fun  providePhonebookApiOld(): PhoneBookApi {
         val loggingInterceptor = HttpLoggingInterceptor()
         loggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
 
@@ -50,7 +96,7 @@ object AppModule {
 
        // phoneBookApi = retrofit.create(PhoneBookApi::class.java)
       return  retrofit.create()
-    }
+    }*/
 
     @Singleton
     @Provides

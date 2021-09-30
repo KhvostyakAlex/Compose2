@@ -13,90 +13,94 @@ import ru.leroymerlin.internal.phonebook.R
 
 @Composable
 fun MainTheme(
-    style: JetHabitStyle = JetHabitStyle.Purple,
-    textSize: JetHabitSize = JetHabitSize.Medium,
-    paddingSize: JetHabitSize = JetHabitSize.Medium,
-    corners: JetHabitCorners = JetHabitCorners.Rounded,
+    style: JetPhonebookStyle = JetPhonebookStyle.Purple,
+    textSize: JetPhonebookSize = JetPhonebookSize.Medium,
+    paddingSize: JetPhonebookSize = JetPhonebookSize.Medium,
+    corners: JetPhonebookCorners = JetPhonebookCorners.Rounded,
     darkTheme: Boolean = isSystemInDarkTheme(),
     content: @Composable () -> Unit
 ) {
     val colors = when (darkTheme) {
         true -> {
             when (style) {
-                JetHabitStyle.Purple -> purpleDarkPalette
-                JetHabitStyle.Blue -> blueDarkPalette
-                JetHabitStyle.Orange -> orangeDarkPalette
-                JetHabitStyle.Red -> redDarkPalette
-                JetHabitStyle.Green -> greenDarkPalette
+                JetPhonebookStyle.Purple -> purpleDarkPalette
+                JetPhonebookStyle.Blue -> blueDarkPalette
+                JetPhonebookStyle.Orange -> orangeDarkPalette
+                JetPhonebookStyle.Red -> redDarkPalette
+                JetPhonebookStyle.Green -> greenDarkPalette
             }
         }
         false -> {
             when (style) {
-                JetHabitStyle.Purple -> purpleLightPalette
-                JetHabitStyle.Blue -> blueLightPalette
-                JetHabitStyle.Orange -> orangeLightPalette
-                JetHabitStyle.Red -> redLightPalette
-                JetHabitStyle.Green -> greenLightPalette
+                JetPhonebookStyle.Purple -> purpleLightPalette
+                JetPhonebookStyle.Blue -> blueLightPalette
+                JetPhonebookStyle.Orange -> orangeLightPalette
+                JetPhonebookStyle.Red -> redLightPalette
+                JetPhonebookStyle.Green -> greenLightPalette
             }
         }
     }
 
-    val typography = JetHabitTypography(
+    val typography = JetPhonebookTypography(
         heading = TextStyle(
             fontSize = when (textSize) {
-                JetHabitSize.Small -> 24.sp
-                JetHabitSize.Medium -> 28.sp
-                JetHabitSize.Big -> 32.sp
+                JetPhonebookSize.Small -> 24.sp
+                JetPhonebookSize.Medium -> 28.sp
+                JetPhonebookSize.Big -> 32.sp
             },
             fontWeight = FontWeight.Bold
         ),
         body = TextStyle(
             fontSize = when (textSize) {
-                JetHabitSize.Small -> 14.sp
-                JetHabitSize.Medium -> 16.sp
-                JetHabitSize.Big -> 18.sp
+                JetPhonebookSize.Small -> 14.sp
+                JetPhonebookSize.Medium -> 16.sp
+                JetPhonebookSize.Big -> 18.sp
             },
             fontWeight = FontWeight.Normal
         ),
         toolbar = TextStyle(
             fontSize = when (textSize) {
-                JetHabitSize.Small -> 14.sp
-                JetHabitSize.Medium -> 16.sp
-                JetHabitSize.Big -> 18.sp
+                JetPhonebookSize.Small -> 14.sp
+                JetPhonebookSize.Medium -> 16.sp
+                JetPhonebookSize.Big -> 18.sp
             },
             fontWeight = FontWeight.Medium
         ),
         caption = TextStyle(
             fontSize = when (textSize) {
-                JetHabitSize.Small -> 10.sp
-                JetHabitSize.Medium -> 12.sp
-                JetHabitSize.Big -> 14.sp
+                JetPhonebookSize.Small -> 10.sp
+                JetPhonebookSize.Medium -> 12.sp
+                JetPhonebookSize.Big -> 14.sp
             }
+        )
+        ,
+        small = TextStyle(
+            fontSize = when (textSize) {
+                JetPhonebookSize.Small -> 8.sp
+                JetPhonebookSize.Medium -> 10.sp
+                JetPhonebookSize.Big -> 12.sp
+            },
+            fontWeight = FontWeight.Normal
         )
     )
 
-    val shapes = JetHabitShape(
+    val shapes = JetPhonebookShape(
         padding = when (paddingSize) {
-            JetHabitSize.Small -> 12.dp
-            JetHabitSize.Medium -> 16.dp
-            JetHabitSize.Big -> 20.dp
+            JetPhonebookSize.Small -> 12.dp
+            JetPhonebookSize.Medium -> 16.dp
+            JetPhonebookSize.Big -> 20.dp
         },
         cornersStyle = when (corners) {
-            JetHabitCorners.Flat -> RoundedCornerShape(0.dp)
-            JetHabitCorners.Rounded -> RoundedCornerShape(8.dp)
+            JetPhonebookCorners.Flat -> RoundedCornerShape(0.dp)
+            JetPhonebookCorners.Rounded -> RoundedCornerShape(8.dp)
         }
     )
 
-    val images = JetHabitImage(
-        mainIcon = if (darkTheme) R.drawable.ic_baseline_mood_24 else R.drawable.ic_baseline_mood_bad_24,
-        mainIconDescription = if (darkTheme) "Good Mood" else "Bad Mood"
-    )
 
     CompositionLocalProvider(
-        LocalJetHabitColors provides colors,
-        LocalJetHabitTypography provides typography,
-        LocalJetHabitShape provides shapes,
-        LocalJetHabitImage provides images,
+        LocalJetPhonebookColors provides colors,
+        LocalJetPhonebookTypography provides typography,
+        LocalJetPhonebookShape provides shapes,
         content = content
     )
 }

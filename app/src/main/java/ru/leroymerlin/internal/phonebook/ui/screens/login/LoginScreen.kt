@@ -36,13 +36,11 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.google.firebase.database.FirebaseDatabase
-import kotlinx.coroutines.delay
 import ru.leroymerlin.internal.phonebook.dataclass.IntraruAuthUserList
 import ru.leroymerlin.internal.phonebook.*
 import ru.leroymerlin.internal.phonebook.R
 import ru.leroymerlin.internal.phonebook.dataclass.IntraruUserDataList
-import ru.leroymerlin.internal.phonebook.ui.themes.JetHabitTheme
+import ru.leroymerlin.internal.phonebook.ui.themes.JetPhonebookTheme
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
@@ -59,7 +57,7 @@ fun LoginScreen(loginViewModel: LoginViewModel, navController:NavController){
 
     val keyboardController = LocalSoftwareKeyboardController.current
 Surface(
-    color = JetHabitTheme.colors.primaryBackground,
+    color = JetPhonebookTheme.colors.primaryBackground,
 ) {
 
 
@@ -197,13 +195,13 @@ Surface(
                 },
                 shape = RoundedCornerShape(8.dp),
                 // colors = JetHabitTheme.colors.primaryBackground,
-                colors = ButtonDefaults.buttonColors(backgroundColor = JetHabitTheme.colors.thirdText),
+                colors = ButtonDefaults.buttonColors(backgroundColor = JetPhonebookTheme.colors.thirdText),
                 modifier = Modifier.size(150.dp, 50.dp)
             ) {
                 Text(
                     "Войти",
                     color = Color.White,
-                    style = JetHabitTheme.typography.toolbar
+                    style = JetPhonebookTheme.typography.toolbar
 
                 )
             }
@@ -232,6 +230,7 @@ Surface(
                  срабатывает скрипт повторного захода в приложение. Нужно реализовать отписку
                  от liveData когда уходим со страницы Логин*/
             loginViewModel.authIntraru("login", "password")
+
         }
     }
 

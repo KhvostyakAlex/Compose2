@@ -9,13 +9,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import ru.leroymerlin.internal.phonebook.ui.themes.JetHabitTheme
+import ru.leroymerlin.internal.phonebook.ui.themes.JetPhonebookTheme
 
 
 @Composable
-fun JetHabitButton(
+fun JetPhonebookButton(
     modifier: Modifier = Modifier,
-    backgroundColor: Color = JetHabitTheme.colors.tintColor,
+    backgroundColor: Color = JetPhonebookTheme.colors.tintColor,
     onClick: () -> Unit,
     text: String? = null,
     enabled: Boolean = true,
@@ -35,7 +35,7 @@ fun JetHabitButton(
         text?.let {
             Text(
                 text = it,
-                style = JetHabitTheme.typography.body,
+                style = JetPhonebookTheme.typography.body,
                 color = Color.White
             )
         } ?: content.invoke(this)

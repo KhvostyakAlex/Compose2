@@ -2,7 +2,7 @@ package ru.leroymerlin.internal.phonebook.ui.themes
 
 import androidx.compose.ui.graphics.Color
 
-val baseLightPalette = JetHabitColors(
+val baseLightPalette = JetPhonebookColors(
     primaryBackground = Color(0xFFFFFFFF),
     primaryText = Color(0xFF3D454C),
     secondaryBackground = Color(0xFFF3F4F5),
@@ -14,7 +14,7 @@ val baseLightPalette = JetHabitColors(
 
 )
 
-val baseDarkPalette = JetHabitColors(
+val baseDarkPalette = JetPhonebookColors(
     primaryBackground = Color(0xFF23282D),
     primaryText = Color(0xFFF2F4F5),
     secondaryBackground = Color(0xFF191E23),

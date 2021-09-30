@@ -1,4 +1,4 @@
-package ru.leroymerlin.internal.phonebook
+package ru.leroymerlin.internal.phonebook.repository
 
 import io.reactivex.Single
 import okhttp3.RequestBody
@@ -7,17 +7,7 @@ import ru.leroymerlin.internal.phonebook.dataclass.*
 
 
 
-interface PhoneBookApi {
-
-    @POST("https://intraru3.leroymerlin.ru/services/identity/api/Identity/Login")
-    @Headers("Content-Type: application/json")
-    fun getUserInt(@Body body: RequestBody): Single<IntraruAuthResponse>
-
-    @POST("https://intraru3.leroymerlin.ru/services/identity/api/Identity/RefreshToken")
-    @Headers("Content-Type: application/json")
-    fun refreshToken(@Body refreshToken: RequestBody): Single<IntraruAuthResponse>
-
-
+interface UserApi {
 
     @GET(" https://intraru3.leroymerlin.ru/services/profiles/api/profiles/{ldap}")
     fun getUser(@Path("ldap") ldap: String,

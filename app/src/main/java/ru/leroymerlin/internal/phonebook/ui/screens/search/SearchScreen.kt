@@ -14,7 +14,6 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
@@ -29,8 +28,7 @@ import ru.leroymerlin.internal.phonebook.ui.screens.finddepartment.FindDepartmen
 import ru.leroymerlin.internal.phonebook.ui.screens.finddepartment.FindDepartmentViewModel
 import ru.leroymerlin.internal.phonebook.ui.screens.findusers.FindUsersScreen
 import ru.leroymerlin.internal.phonebook.ui.screens.findusers.FindUsersViewModel
-import ru.leroymerlin.internal.phonebook.ui.screens.search.SearchViewModel
-import ru.leroymerlin.internal.phonebook.ui.themes.JetHabitTheme
+import ru.leroymerlin.internal.phonebook.ui.themes.JetPhonebookTheme
 
 
 typealias ComposableFun = @Composable () -> Unit
@@ -67,11 +65,11 @@ fun SearchScreen(searchViewModel: SearchViewModel, navController: NavController,
     Surface(
         modifier = modifier,
        // color = JetHabitTheme.colors.primaryBackground,
-        color = JetHabitTheme.colors.thirdText,
+        color = JetPhonebookTheme.colors.thirdText,
 
     ) {
             Scaffold(
-                backgroundColor = JetHabitTheme.colors.secondaryBackground
+                backgroundColor = JetPhonebookTheme.colors.secondaryBackground
             ) {
 
                 //при запуске проверяем злогинен ли пользователь?
@@ -150,16 +148,16 @@ fun SearchScreen(searchViewModel: SearchViewModel, navController: NavController,
 
                 Column {
                     TopAppBar(
-                        backgroundColor = JetHabitTheme.colors.primaryBackground,
+                        backgroundColor = JetPhonebookTheme.colors.primaryBackground,
                         elevation = 8.dp
                     ) {
                         Text(
                             modifier = Modifier
                                 .weight(1f)
-                                .padding(start = JetHabitTheme.shapes.padding),
+                                .padding(start = JetPhonebookTheme.shapes.padding),
                             text = stringResource(id = R.string.app_name),
-                            color = JetHabitTheme.colors.primaryText,
-                            style = JetHabitTheme.typography.toolbar
+                            color = JetPhonebookTheme.colors.primaryText,
+                            style = JetPhonebookTheme.typography.toolbar
                         )
                     }
 
@@ -226,7 +224,7 @@ fun Tabs(tabs: List<TabItem>, pagerState: PagerState) {
         // Override the indicator, using the provided pagerTabIndicatorOffset modifier
         // backgroundColor = colorResource(id = R.color.lmNCKD),
         //backgroundColor = Color.White,
-        backgroundColor = JetHabitTheme.colors.primaryBackground,
+        backgroundColor = JetPhonebookTheme.colors.primaryBackground,
        // contentColor = colorResource(id = R.color.black),
         indicator = { tabPositions ->
             TabRowDefaults.Indicator(
@@ -240,9 +238,9 @@ fun Tabs(tabs: List<TabItem>, pagerState: PagerState) {
         // Add tabs for all of our pages
         tabs.forEachIndexed { index, tab ->
             val selectedTabsColor = if (pagerState.currentPage == index) {
-                JetHabitTheme.colors.thirdText
+                JetPhonebookTheme.colors.thirdText
             } else {
-                JetHabitTheme.colors.controlColor
+                JetPhonebookTheme.colors.controlColor
                 //colorResource(id = R.color.colorGrey)
             }
 

@@ -2,7 +2,6 @@ package ru.leroymerlin.internal.phonebook.ui.screens.settings
 
 import android.app.Activity
 import android.content.Context
-import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
@@ -15,10 +14,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.google.accompanist.pager.ExperimentalPagerApi
 import ru.leroymerlin.internal.phonebook.BuildConfig
@@ -34,18 +31,19 @@ fun SettingsScreen(
     navController:NavController,
     modifier: Modifier = Modifier,
     isDarkMode: Boolean,
-    currentTextSize: JetHabitSize,
-    currentPaddingSize: JetHabitSize,
-    currentCornersStyle: JetHabitCorners,
+    currentTextSize: JetPhonebookSize,
+    currentPaddingSize: JetPhonebookSize,
+    currentCornersStyle: JetPhonebookCorners,
     onDarkModeChanged: (Boolean) -> Unit,
-    onNewStyle: (JetHabitStyle) -> Unit,
-    onTextSizeChanged: (JetHabitSize) -> Unit,
-    onPaddingSizeChanged: (JetHabitSize) -> Unit,
-    onCornersStyleChanged: (JetHabitCorners) -> Unit,
+    onNewStyle: (JetPhonebookStyle) -> Unit,
+    onTextSizeChanged: (JetPhonebookSize) -> Unit,
+    onPaddingSizeChanged: (JetPhonebookSize) -> Unit,
+    onCornersStyleChanged: (JetPhonebookCorners) -> Unit,
 
     ) {
     val activity = LocalContext.current as Activity
     val versionName: String = BuildConfig.VERSION_NAME
+    val sharedPref = activity.getPreferences(Context.MODE_PRIVATE)
     //Log.e("SettingScreen", isDarkMode.toString())
 /*
     Scaffold{
@@ -57,7 +55,7 @@ fun SettingsScreen(
             ExitButton2(navController = navController, activity=activity)
             ExitButton(navController = navController, activity=activity)
         }
-            Divider()
+
             SettingsView(settingsViewModel = SettingsViewModel(), activity = activity)
             Row(modifier= Modifier.fillMaxHeight().padding(start = 12.dp, bottom = 60.dp).weight(1f),
                 verticalAlignment = Alignment.Bottom) {
@@ -70,23 +68,23 @@ fun SettingsScreen(
 
     Surface(
         modifier = modifier,
-        color = JetHabitTheme.colors.secondaryBackground,
+        color = JetPhonebookTheme.colors.secondaryBackground,
     ) {
         Column(
             Modifier.fillMaxSize()
         ) {
             TopAppBar(
-                backgroundColor = JetHabitTheme.colors.primaryBackground,
+                backgroundColor = JetPhonebookTheme.colors.primaryBackground,
                 elevation = 8.dp
             ) {
 
                 Text(
                     modifier = Modifier
                         .weight(1f)
-                        .padding(start = JetHabitTheme.shapes.padding),
+                        .padding(start = JetPhonebookTheme.shapes.padding),
                     text = stringResource(id = R.string.title_settings),
-                    color = JetHabitTheme.colors.primaryText,
-                    style = JetHabitTheme.typography.toolbar
+                    color = JetPhonebookTheme.colors.primaryText,
+                    style = JetPhonebookTheme.typography.toolbar
                 )
             }
 
@@ -95,42 +93,42 @@ fun SettingsScreen(
                 ExitButton2(navController = navController, activity=activity)
                 ExitButton(navController = navController, activity=activity)
             }
+            CustomDivider()
 
             Row(
-                modifier = Modifier.padding(JetHabitTheme.shapes.padding)
+                modifier = Modifier.padding(JetPhonebookTheme.shapes.padding)
             ) {
                 Text(
                     modifier = Modifier.weight(1f),
                     text = stringResource(id = R.string.action_dark_theme_enable),
-                    color = JetHabitTheme.colors.primaryText,
-                    style = JetHabitTheme.typography.body
+                    color = JetPhonebookTheme.colors.primaryText,
+                    style = JetPhonebookTheme.typography.body
                 )
                 Checkbox(
                     checked = isDarkMode, onCheckedChange = {
                         onDarkModeChanged.invoke(it)
+                        //записываем в pref, чтобы данные сохранмлись при перезагрузке апп
+                        with (sharedPref.edit()) {
+                            putBoolean("isDarkModeValue", it)
+                            apply()
+                        }
+
                     },
                     colors = CheckboxDefaults.colors(
-                        checkedColor = JetHabitTheme.colors.thirdText,
-                        uncheckedColor = JetHabitTheme.colors.secondaryText
+                        checkedColor = JetPhonebookTheme.colors.thirdText,
+                        uncheckedColor = JetPhonebookTheme.colors.secondaryText
                     )
                 )
             }
-
-            Divider(
-                modifier = Modifier.padding(start = JetHabitTheme.shapes.padding),
-                thickness = 0.5.dp,
-                color = JetHabitTheme.colors.secondaryText.copy(
-                    alpha = 0.3f
-                )
-            )
+            CustomDivider()
 
             MenuItem(
                 model = MenuItemModel(
                     title = stringResource(id = R.string.title_font_size),
                     currentIndex = when (currentTextSize) {
-                        JetHabitSize.Small -> 0
-                        JetHabitSize.Medium -> 1
-                        JetHabitSize.Big -> 2
+                        JetPhonebookSize.Small -> 0
+                        JetPhonebookSize.Medium -> 1
+                        JetPhonebookSize.Big -> 2
                     },
                     values = listOf(
                         stringResource(id = R.string.title_font_size_small),
@@ -140,20 +138,28 @@ fun SettingsScreen(
                 ),
                 onItemSelected = {
                     when (it) {
-                        0 -> onTextSizeChanged.invoke(JetHabitSize.Small)
-                        1 -> onTextSizeChanged.invoke(JetHabitSize.Medium)
-                        2 -> onTextSizeChanged.invoke(JetHabitSize.Big)
+                        0 -> {
+                            onTextSizeChanged.invoke(JetPhonebookSize.Small)
+
+                        }
+                        1 -> {
+                            onTextSizeChanged.invoke(JetPhonebookSize.Medium)
+                        }
+                        2 -> {
+                            onTextSizeChanged.invoke(JetPhonebookSize.Big)
+                        }
                     }
                 }
             )
+            CustomDivider()
 
             MenuItem(
                 model = MenuItemModel(
                     title = stringResource(id = R.string.title_padding_size),
                     currentIndex = when (currentPaddingSize) {
-                        JetHabitSize.Small -> 0
-                        JetHabitSize.Medium -> 1
-                        JetHabitSize.Big -> 2
+                        JetPhonebookSize.Small -> 0
+                        JetPhonebookSize.Medium -> 1
+                        JetPhonebookSize.Big -> 2
                     },
                     values = listOf(
                         stringResource(id = R.string.title_padding_small),
@@ -163,19 +169,20 @@ fun SettingsScreen(
                 ),
                 onItemSelected = {
                     when (it) {
-                        0 -> onPaddingSizeChanged.invoke(JetHabitSize.Small)
-                        1 -> onPaddingSizeChanged.invoke(JetHabitSize.Medium)
-                        2 -> onPaddingSizeChanged.invoke(JetHabitSize.Big)
+                        0 -> onPaddingSizeChanged.invoke(JetPhonebookSize.Small)
+                        1 -> onPaddingSizeChanged.invoke(JetPhonebookSize.Medium)
+                        2 -> onPaddingSizeChanged.invoke(JetPhonebookSize.Big)
                     }
                 }
             )
+            CustomDivider()
 
             MenuItem(
                 model = MenuItemModel(
                     title = stringResource(id = R.string.title_corners_style),
                     currentIndex = when (currentCornersStyle) {
-                        JetHabitCorners.Rounded -> 0
-                        JetHabitCorners.Flat -> 1
+                        JetPhonebookCorners.Rounded -> 0
+                        JetPhonebookCorners.Flat -> 1
                     },
                     values = listOf(
                         stringResource(id = R.string.title_corners_style_rounded),
@@ -184,27 +191,28 @@ fun SettingsScreen(
                 ),
                 onItemSelected = {
                     when (it) {
-                        0 -> onCornersStyleChanged.invoke(JetHabitCorners.Rounded)
-                        1 -> onCornersStyleChanged.invoke(JetHabitCorners.Flat)
+                        0 -> onCornersStyleChanged.invoke(JetPhonebookCorners.Rounded)
+                        1 -> onCornersStyleChanged.invoke(JetPhonebookCorners.Flat)
                     }
                 }
             )
+            CustomDivider()
 
 
             SettingsView(settingsViewModel = SettingsViewModel(), activity = activity)
-            Row(modifier= Modifier.fillMaxHeight().padding(start = 12.dp, bottom = 60.dp).weight(1f),
-                verticalAlignment = Alignment.Bottom) {
-                Text("Версия программы $versionName", fontSize = 10.sp )
-            }
-
-
-            Row(modifier= Modifier.fillMaxHeight().padding(start = 12.dp, bottom = 60.dp).weight(1f),
+            Row(modifier= Modifier
+                .fillMaxHeight()
+                .padding(start = JetPhonebookTheme.shapes.padding, bottom = 60.dp)
+                .weight(1f),
                 verticalAlignment = Alignment.Bottom) {
                 Text(
                     "Версия программы $versionName",
-                    fontSize = 10.sp,
-                color=JetHabitTheme.colors.secondaryText)
+                    color = JetPhonebookTheme.colors.secondaryText,
+                    fontSize = JetPhonebookTheme.typography.small.fontSize )
             }
+
+
+
 
            /* Row(
                 modifier = Modifier
@@ -241,16 +249,7 @@ fun SettingsScreen(
                         onNewStyle.invoke(JetHabitStyle.Green)
                     })
             }*/
-/*
-            HabbitCardItem(
-                model = HabbitCardItemModel(
-                    habbitId = 0,
-                    title = "Пример карточки",
-                    isChecked = true
-                )
-            )
 
- */
         }
     }
 
@@ -268,7 +267,6 @@ fun ExitButton(navController: NavController, activity: Activity){
 
     FloatingActionButton(onClick = {
         with (sharedPref.edit()) {
-          //  Log.e("remove sharepref", "- true")
             remove("signin?")
             remove("token")
             remove("refreshToken")
@@ -300,8 +298,8 @@ fun SettingsView(settingsViewModel: SettingsViewModel, activity: Activity){
     val shopNumber = sharedPref.getString("shopNumber", "").toString() //достаем данные из shared prefs
     val jobTitle = sharedPref.getString("jobTitle", "").toString() //достаем данные из shared prefs
     val workPhone = sharedPref.getString("workPhone", "").toString() //достаем данные из shared prefs
-    val expiresIn = sharedPref.getInt("expiresIn", 0) //достаем данные из shared prefs
-    val expiresOn = sharedPref.getInt("expiresOn", 0) //достаем данные из shared prefs
+    //val expiresIn = sharedPref.getInt("expiresIn", 0) //достаем данные из shared prefs
+   // val expiresOn = sharedPref.getInt("expiresOn", 0) //достаем данные из shared prefs
     val refreshToken = sharedPref.getString("refreshToken", "").toString() //достаем данные из shared prefs
 
 
@@ -309,9 +307,10 @@ fun SettingsView(settingsViewModel: SettingsViewModel, activity: Activity){
     val settings =   listOf(
         SettingsModel("Имя", "$firstName $lastName"),
         SettingsModel("Магазин", "$orgUnitName (${shopNumber})"),
-        SettingsModel("Должность", jobTitle),
+       // SettingsModel("Должность", jobTitle),
         SettingsModel("Телефон", workPhone),
-        SettingsModel("refreshToken", refreshToken.toString()))
+       // SettingsModel("refreshToken", refreshToken.toString())
+    )
 
     Column(modifier = Modifier.fillMaxWidth()) {
         settings.map{ SettingsCell(model = it)}
@@ -328,42 +327,64 @@ Column{
             .height(60.dp),
         verticalAlignment = Alignment.CenterVertically
 
-    ){
-       /* Text(model.title, modifier = Modifier.weight(0.3f), style = TextStyle(color= Color.Black))
+    ) {
+
+
+
+            /* Text(model.title, modifier = Modifier.weight(0.3f), style = TextStyle(color= Color.Black))
         Text(model.value, modifier = Modifier
             .weight(0.7f)
             .padding(8.dp), style = TextStyle(color= Color.Black))*/
-        Text(
-            modifier = Modifier
-                .weight(0.3f)
-                .padding(end = JetHabitTheme.shapes.padding),
-            text = model.title,
-            style = JetHabitTheme.typography.body,
-            color = JetHabitTheme.colors.primaryText
-        )
+            Text(
+                modifier = Modifier
+                    .weight(0.3f)
+                    .padding(end = JetPhonebookTheme.shapes.padding),
+                text = model.title,
+                style = JetPhonebookTheme.typography.body,
+                color = JetPhonebookTheme.colors.primaryText
+            )
 
-        Text(
-            modifier = Modifier
-                .weight(0.7f),
-            text = model.value,
-            style = JetHabitTheme.typography.body,
-            color = JetHabitTheme.colors.secondaryText,
-            textAlign = TextAlign.End
+            Text(
+                modifier = Modifier
+                    .weight(0.7f),
+                text = model.value,
+                style = JetPhonebookTheme.typography.body,
+                color = JetPhonebookTheme.colors.secondaryText,
+                textAlign = TextAlign.End
+            )
+
+
+        }
+        Divider(
+            modifier = Modifier.padding(
+                start = JetPhonebookTheme.shapes.padding,
+                end = JetPhonebookTheme.shapes.padding),
+            thickness = 1.dp,
+            color = JetPhonebookTheme.colors.secondaryText.copy(
+                alpha = 0.3f
+            )
         )
     }
+
+
 }
+
+@Composable
+fun CustomDivider(){
     Divider(
-        modifier = Modifier.padding(start = JetHabitTheme.shapes.padding),
-        thickness = 0.5.dp,
-        color = JetHabitTheme.colors.secondaryText.copy(
+        modifier = Modifier.padding(start = JetPhonebookTheme.shapes.padding,
+            end = JetPhonebookTheme.shapes.padding),
+        thickness = 1.dp,
+        color = JetPhonebookTheme.colors.secondaryText.copy(
             alpha = 0.3f
         )
     )
 }
+
 @Composable
 fun ExitButton2(navController: NavController, activity: Activity){
     val sharedPref = activity.getPreferences(Context.MODE_PRIVATE)
-    val account = sharedPref.getString("account", "").toString() //достаем данные из shared prefs
+    //val account = sharedPref.getString("account", "").toString() //достаем данные из shared prefs
 
     FloatingActionButton(onClick = {
         with (sharedPref.edit()) {
@@ -395,6 +416,6 @@ fun ColorCard(
             },
         backgroundColor = color,
         elevation = 8.dp,
-        shape = JetHabitTheme.shapes.cornersStyle
+        shape = JetPhonebookTheme.shapes.cornersStyle
     ) { }
 }

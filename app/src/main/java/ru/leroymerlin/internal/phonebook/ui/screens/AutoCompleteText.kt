@@ -9,7 +9,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.window.PopupProperties
-import ru.leroymerlin.internal.phonebook.ui.themes.JetHabitTheme
+import ru.leroymerlin.internal.phonebook.ui.themes.JetPhonebookTheme
 
 @Composable
     fun AutoCompleteText(
@@ -40,7 +40,7 @@ import ru.leroymerlin.internal.phonebook.ui.themes.JetHabitTheme
                         onOptionSelected(label)
                     }) {
                         Text(text = label,
-                        color=JetHabitTheme.colors.primaryText)
+                        color=JetPhonebookTheme.colors.primaryText)
                     }
                 }
             }

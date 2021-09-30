@@ -2,7 +2,6 @@ package ru.leroymerlin.internal.phonebook.ui.screens.finddepartment
 
 import android.app.Activity
 import android.content.Context
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.*
@@ -26,8 +25,7 @@ import ru.leroymerlin.internal.phonebook.ui.screens.autocompletetext.components.
 import ru.leroymerlin.internal.phonebook.ui.screens.autocompletetext.components.autocomplete.utils.asAutoCompleteEntities
 import ru.leroymerlin.internal.phonebook.ui.screens.autocompletetext.components.searchbar.TextSearchBar
 import ru.leroymerlin.internal.phonebook.ui.screens.cards.ExpandableCard
-import ru.leroymerlin.internal.phonebook.ui.screens.findusers.FindUsersViewModel
-import ru.leroymerlin.internal.phonebook.ui.themes.JetHabitTheme
+import ru.leroymerlin.internal.phonebook.ui.themes.JetPhonebookTheme
 import values.arrJobTitleList
 
 import java.util.*
@@ -49,12 +47,12 @@ fun FindDepartmentScreen(findDepartmentViewModel: FindDepartmentViewModel, navCo
     val refreshToken = sharedPref.getString("refreshToken", "").toString() //достаем данные из shared prefs
     val account = sharedPref.getString("account", "").toString() //достаем данные из shared prefs
     Surface(
-        color = JetHabitTheme.colors.primaryBackground
+        color = JetPhonebookTheme.colors.primaryBackground
     ) {
 
 
         Scaffold (
-            backgroundColor = JetHabitTheme.colors.secondaryBackground
+            backgroundColor = JetPhonebookTheme.colors.secondaryBackground
                 ){
 
 
@@ -230,8 +228,8 @@ fun ValueAutoCompleteItem(item: String) {
     ) {
         Text(
             text = item,
-            color = JetHabitTheme.colors.primaryText,
-            style = JetHabitTheme.typography.caption)
+            color = JetPhonebookTheme.colors.primaryText,
+            style = JetPhonebookTheme.typography.caption)
     }
 }
 

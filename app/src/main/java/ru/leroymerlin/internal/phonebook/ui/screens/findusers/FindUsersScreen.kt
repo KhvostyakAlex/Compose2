@@ -3,8 +3,6 @@ package ru.leroymerlin.internal.phonebook.ui.screens.findusers
 import android.app.Activity
 import android.content.Context
 import android.text.TextUtils
-import android.util.Log
-import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -18,18 +16,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
-import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.google.accompanist.pager.ExperimentalPagerApi
-import ru.leroymerlin.internal.phonebook.R
 import ru.leroymerlin.internal.phonebook.dataclass.IntraruUserDataList
 import ru.leroymerlin.internal.phonebook.ui.screens.cards.EmptyCard
 import ru.leroymerlin.internal.phonebook.ui.screens.cards.ExpandableCard
 import ru.leroymerlin.internal.phonebook.addToFB
-import ru.leroymerlin.internal.phonebook.dataclass.IntraruAuthUserData
-import ru.leroymerlin.internal.phonebook.ui.themes.JetHabitTheme
+import ru.leroymerlin.internal.phonebook.ui.themes.JetPhonebookTheme
 
 @ExperimentalComposeUiApi
 @ExperimentalPagerApi
@@ -50,11 +44,11 @@ modifier:Modifier) {
     val authHeader = "Bearer " + token
     Surface(
         modifier = modifier,
-        color = JetHabitTheme.colors.primaryBackground,
+        color = JetPhonebookTheme.colors.primaryBackground,
     ) {
 
     Scaffold (
-        backgroundColor = JetHabitTheme.colors.secondaryBackground
+        backgroundColor = JetPhonebookTheme.colors.secondaryBackground
             ){
         Column {
 
@@ -67,18 +61,19 @@ modifier:Modifier) {
                     onValueChange = { value -> textState.value = value },
                     placeholder = { Text(
                         "Ввведи Фамилию/LDAP",
-                        color = JetHabitTheme.colors.primaryText,
-                        style =  JetHabitTheme.typography.caption
+                        color = JetPhonebookTheme.colors.primaryText,
+                        style =  JetPhonebookTheme.typography.caption
                     ) },
 
                     shape = RoundedCornerShape(8.dp),
                     colors = TextFieldDefaults.textFieldColors(
                        // backgroundColor = colorResource(id = R.color.colorLightGrey),
-                        backgroundColor = JetHabitTheme.colors.primaryBackground,
+                        backgroundColor = JetPhonebookTheme.colors.primaryBackground,
                         focusedIndicatorColor = Color.Transparent,                   //Color.Transparent - hide the indicator
                         unfocusedIndicatorColor = Color.Transparent,
-
-
+                        textColor = JetPhonebookTheme.colors.primaryText,
+                        cursorColor= JetPhonebookTheme.colors.thirdText,
+                        focusedLabelColor = JetPhonebookTheme.colors.thirdText
                     ),
                     modifier = Modifier.padding(8.dp),
 
@@ -106,13 +101,13 @@ modifier:Modifier) {
 
                     },
                    // colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.primary),
-                    colors = ButtonDefaults.buttonColors(backgroundColor = JetHabitTheme.colors.primaryBackground),
+                    colors = ButtonDefaults.buttonColors(backgroundColor = JetPhonebookTheme.colors.primaryBackground),
                     shape = RoundedCornerShape(8.dp),
                     modifier = Modifier.fillMaxWidth().padding(end = 8.dp).height(56.dp)
                 ) {
                     Text("Поиск",
-                        color = JetHabitTheme.colors.primaryText,
-                        style = JetHabitTheme.typography.toolbar)
+                        color = JetPhonebookTheme.colors.primaryText,
+                        style = JetPhonebookTheme.typography.toolbar)
                 }
             }
 

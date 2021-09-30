@@ -12,6 +12,7 @@ import kotlinx.coroutines.launch
 import ru.leroymerlin.internal.phonebook.dataclass.IntraruUserByNameList
 import ru.leroymerlin.internal.phonebook.dataclass.IntraruUserDataList
 import ru.leroymerlin.internal.phonebook.di.AppModule
+import ru.leroymerlin.internal.phonebook.di.AppModule.provideUserApi
 
 class CardsViewModel : ViewModel() {
 
@@ -30,7 +31,7 @@ class CardsViewModel : ViewModel() {
         // Log.e("LOG mess", "response ldap "+ldap.toString())
 
         viewModelScope.launch(Dispatchers.Default) {
-            AppModule.providePhonebookApi().getUser(ldap, authHeader)//здесь вызывается API
+            provideUserApi().getUser(ldap, authHeader)//здесь вызывается API
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ response ->
@@ -91,7 +92,7 @@ class CardsViewModel : ViewModel() {
     fun getUserByName(userName: String, authHeader:String) {
         // Log.e("LOG mess", "userName - "+userName.toString())
         viewModelScope.launch(Dispatchers.Default) {
-            AppModule.providePhonebookApi()
+            provideUserApi()
                 .getUserByName(userName, authHeader)//здесь вызывается API
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

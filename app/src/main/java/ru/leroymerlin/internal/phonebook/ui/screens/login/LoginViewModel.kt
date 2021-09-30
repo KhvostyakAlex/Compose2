@@ -1,13 +1,10 @@
 package ru.leroymerlin.internal.phonebook.ui.screens.login
 
 
-import android.util.Log
 import androidx.lifecycle.*
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.launch
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody.Companion.toRequestBody
@@ -15,7 +12,9 @@ import org.json.JSONObject
 import ru.leroymerlin.internal.phonebook.dataclass.IntraruAuthUserData
 import ru.leroymerlin.internal.phonebook.dataclass.IntraruAuthUserList
 import ru.leroymerlin.internal.phonebook.dataclass.IntraruUserDataList
-import ru.leroymerlin.internal.phonebook.di.AppModule
+import ru.leroymerlin.internal.phonebook.di.AppModule.provideAuthApi
+import ru.leroymerlin.internal.phonebook.di.AppModule.provideUserApi
+import ru.leroymerlin.internal.phonebook.repository.AuthApiImpl
 
 
 class LoginViewModel: ViewModel() {
@@ -38,10 +37,11 @@ class LoginViewModel: ViewModel() {
             val body = JSONObject()
             body.put("login", "RU1000\\$login")
             body.put("password", pass)
-            val testData = ArrayList<IntraruAuthUserList>()
+            //AuthApiImpl().getTokens(body.toString().toRequestBody("body".toMediaTypeOrNull()))
 
-              AppModule.providePhonebookApi()
-                    .getUserInt(body.toString().toRequestBody("body".toMediaTypeOrNull()))
+            val testData = ArrayList<IntraruAuthUserList>()
+              provideAuthApi()
+                    .getTokens(body.toString().toRequestBody("body".toMediaTypeOrNull()))
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe({response ->
@@ -81,7 +81,7 @@ class LoginViewModel: ViewModel() {
     //    Log.e("VM ldap", ldap.toString())
       //  Log.e("VM authHeader", authHeader.toString())
         viewModelScope.launch(Dispatchers.Default) {
-            AppModule.providePhonebookApi().getUser(ldap, authHeader)//здесь вызывается API
+            provideUserApi().getUser(ldap, authHeader)//здесь вызывается API
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe({response ->

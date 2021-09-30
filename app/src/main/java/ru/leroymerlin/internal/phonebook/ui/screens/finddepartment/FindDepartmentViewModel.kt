@@ -14,6 +14,8 @@ import okhttp3.RequestBody.Companion.toRequestBody
 import org.json.JSONObject
 import ru.leroymerlin.internal.phonebook.dataclass.*
 import ru.leroymerlin.internal.phonebook.di.AppModule
+import ru.leroymerlin.internal.phonebook.di.AppModule.provideAuthApi
+import ru.leroymerlin.internal.phonebook.di.AppModule.provideUserApi
 
 
 class FindDepartmentViewModel: ViewModel() {
@@ -47,7 +49,7 @@ class FindDepartmentViewModel: ViewModel() {
 
     fun getDepartment( authHeader:String) {
         viewModelScope.launch(Dispatchers.Default) {
-            AppModule.providePhonebookApi().getDepartment(authHeader)//здесь вызывается API
+            provideUserApi().getDepartment(authHeader)//здесь вызывается API
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ response ->
@@ -79,7 +81,7 @@ class FindDepartmentViewModel: ViewModel() {
         }
 
         viewModelScope.launch(Dispatchers.Default) {
-            AppModule.providePhonebookApi()
+            provideUserApi()
                 .getUserByDepartment(filters, authHeader)//здесь вызывается API
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -170,7 +172,7 @@ class FindDepartmentViewModel: ViewModel() {
         fun getInfoUser(ldap: String, authHeader: String) {
             // Log.e("LOG mess", "response ldap "+ldap.toString())
             viewModelScope.launch(Dispatchers.Default) {
-                AppModule.providePhonebookApi().getUser(ldap, authHeader)//здесь вызывается API
+                provideUserApi().getUser(ldap, authHeader)//здесь вызывается API
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe({ response ->
@@ -215,7 +217,7 @@ class FindDepartmentViewModel: ViewModel() {
         fun getUserByName(userName: String, authHeader: String) {
             // Log.e("LOG mess", "userName - "+userName.toString())
             viewModelScope.launch(Dispatchers.Default) {
-                AppModule.providePhonebookApi()
+                provideUserApi()
                     .getUserByName(userName, authHeader)//здесь вызывается API
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
@@ -281,7 +283,7 @@ class FindDepartmentViewModel: ViewModel() {
             body.put("refreshToken", refreshToken)
             val testData = ArrayList<IntraruAuthUserData>()
 
-            AppModule.providePhonebookApi()
+            provideAuthApi()
                 .refreshToken(body.toString().toRequestBody("body".toMediaTypeOrNull()))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
