@@ -106,11 +106,8 @@ class LoginViewModel: ViewModel() {
                     }, {
                         _error.postValue("Ошибка - ${it.localizedMessage}")
                     })
-
         }
     }
-
-
 }
 
 
