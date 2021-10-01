@@ -14,7 +14,6 @@ import ru.leroymerlin.internal.phonebook.dataclass.IntraruAuthUserList
 import ru.leroymerlin.internal.phonebook.dataclass.IntraruUserDataList
 import ru.leroymerlin.internal.phonebook.di.AppModule.provideAuthApi
 import ru.leroymerlin.internal.phonebook.di.AppModule.provideUserApi
-import ru.leroymerlin.internal.phonebook.repository.AuthApiImpl
 
 
 class LoginViewModel: ViewModel() {

@@ -10,10 +10,10 @@ import ru.leroymerlin.internal.phonebook.dataclass.IntraruUserList
 import ru.leroymerlin.internal.phonebook.di.AppModule
 import ru.leroymerlin.internal.phonebook.di.AppModule.provideUserApi
 
-class UserApiImpl:UserApi {
+class UserRepository:UserApi {
     override fun getUser(ldap: String, authHeader: String): Single<IntraruUserList?> {
         val testData = ArrayList<IntraruUserDataList>()
-       provideUserApi().getUser(ldap, authHeader)//здесь вызывается API
+   /*    provideUserApi().getUser(ldap, authHeader)//здесь вызывается API
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({response ->
@@ -43,8 +43,11 @@ class UserApiImpl:UserApi {
             }, {
                // _error.postValue("Ошибка - ${it.localizedMessage}")
             })
-        return Single
+        return Single*/
+        //return Single<IntraruUserList>
+        TODO("Not yet implemented")
     }
+
 
     override fun getUserNew(ldap: String, authHeader: String): Single<IntraruUserList?> {
         TODO("Not yet implemented")
